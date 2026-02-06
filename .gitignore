@@ -50,3 +50,5 @@ src/idf_component.yml*
 components/rusty/lib
 components/rusty/include
 target/
+
+resources/personal/qrapp/qrlist.txt

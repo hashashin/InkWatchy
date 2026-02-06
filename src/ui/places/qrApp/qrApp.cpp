@@ -14,10 +14,21 @@ static const char* kQrListPath = "/qrapp/qrlist.txt";
 // Menu state
 static int g_selected = 0;
 static bool g_viewerMode = false;
+static int g_scroll = 0;
 
 // Parsed entries
 static std::vector<std::string> g_titles;
 static std::vector<std::string> g_payloads;
+
+enum QrType {
+    QR_WEB,
+    QR_WIFI,
+    QR_TEL,
+    QR_CONTACT,
+    QR_TEXT
+};
+
+static std::vector<QrType> g_types;
 
 static void trimLine(std::string& s)
 {
@@ -29,6 +40,15 @@ static void trimLine(std::string& s)
     if (i > 0) s.erase(0, i);
 }
 
+static QrType detectType(const std::string& payload)
+{
+    if (payload.rfind("WIFI:",0)==0) return QR_WIFI;
+    if (payload.rfind("tel:",0)==0) return QR_TEL;
+    if (payload.rfind("BEGIN:VCARD",0)==0) return QR_CONTACT;
+    if (payload.rfind("http",0)==0) return QR_WEB;
+    return QR_TEXT;
+}
+
 static void pushEntryFromLine(const std::string& lineIn)
 {
     std::string line = lineIn;
@@ -36,8 +56,6 @@ static void pushEntryFromLine(const std::string& lineIn)
     if (line.empty()) return;
     if (line[0] == '#') return;
 
-    // Format: Title|payload
-    // If no '|', use whole line as both title and payload.
     auto split = line.find('|');
 
     std::string title;
@@ -58,6 +76,7 @@ static void pushEntryFromLine(const std::string& lineIn)
 
     g_titles.push_back(title);
     g_payloads.push_back(payload);
+    g_types.push_back(detectType(payload));
 }
 
 static void loadQrListOnce()
@@ -67,12 +86,12 @@ static void loadQrListOnce()
 
     g_titles.clear();
     g_payloads.clear();
+    g_types.clear();
 
     if (!LittleFS.exists(kQrListPath)) {
         g_titles.emplace_back("Missing qrlist.txt");
         g_payloads.emplace_back("Missing qrlist.txt");
-        g_titles.emplace_back("Add: Title|payload");
-        g_payloads.emplace_back("Add: Title|payload");
+        g_types.emplace_back(QR_TEXT);
         return;
     }
 
@@ -80,6 +99,7 @@ static void loadQrListOnce()
     if (!f) {
         g_titles.emplace_back("Open qrlist failed");
         g_payloads.emplace_back("Open qrlist failed");
+        g_types.emplace_back(QR_TEXT);
         return;
     }
 
@@ -101,15 +121,28 @@ static void loadQrListOnce()
     }
 
     pushEntryFromLine(line);
-
     f.close();
 
     if (g_titles.empty()) {
         g_titles.emplace_back("qrlist.txt empty");
         g_payloads.emplace_back("qrlist.txt empty");
+        g_types.emplace_back(QR_TEXT);
     }
 
     if (g_selected < 0 || g_selected >= (int)g_titles.size()) g_selected = 0;
+}
+
+// ---- ICON DRAW ----
+
+static ImageDef* getIcon(QrType t)
+{
+    switch(t){
+        case QR_WIFI: return getImg("qrapp/wifi");
+        case QR_TEL: return getImg("qrapp/tel");
+        case QR_CONTACT: return getImg("qrapp/contact");
+        case QR_WEB: return getImg("qrapp/web");
+        default: return getImg("qrapp/text");
+    }
 }
 
 // ---- QR drawing ----
@@ -159,55 +192,67 @@ static void onQrReady(esp_qrcode_handle_t qrcode)
 static void renderMenu()
 {
     dis->fillScreen(SCWhite);
-
     loadQrListOnce();
 
     setFont(font);
     setTextSize(1);
 
     const int lineH = 14;
+    const int headerY = 12;
+    const int headerPadBottom = 6;
 
-    // Header
-    const char* kHeader = "QR LIST";
-    const int headerY = 12;        // baseline aproximada
-    const int headerPadBottom = 6; // espacio debajo del header
+    String headerStr = "QR LIST";
+    uint16_t tw, th;
+    getTextBounds(headerStr, NULL, NULL, &tw, &th);
 
-    int headerX = 4;
-    // Centrado usando getTextBounds si existe (Adafruit_GFX)
-    // Si tu display class no lo soporta, usa fallback simple.
-    {
-        int16_t x1, y1;
-        uint16_t tw, th;
-        // Many InkWatchy displays inherit Adafruit_GFX so this exists.
-        dis->getTextBounds(kHeader, 0, 0, &x1, &y1, &tw, &th);
-        headerX = (dis->width() - (int)tw) / 2;
-        if (headerX < 0) headerX = 0;
-    }
+    int headerX = (dis->width() - (int)tw) / 2;
+    if (headerX < 0) headerX = 0;
 
-    dis->setTextColor(SCBlack);
     dis->setCursor(headerX, headerY);
-    dis->print(kHeader);
+    dis->print(headerStr);
 
     const int listTop = headerY + headerPadBottom + 8;
+    const int listBottom = dis->height() - 14;
+
+    int visibleRows = (listBottom - listTop) / lineH;
+    if (visibleRows < 1) visibleRows = 1;
+
+    if (g_selected < g_scroll)
+        g_scroll = g_selected;
+
+    if (g_selected >= g_scroll + visibleRows)
+        g_scroll = g_selected - visibleRows + 1;
+
+    if (g_scroll < 0) g_scroll = 0;
+    if (g_scroll > (int)g_titles.size() - visibleRows)
+        g_scroll = std::max(0, (int)g_titles.size() - visibleRows);
+
     int y = listTop;
 
-    for (int i = 0; i < (int)g_titles.size(); i++) {
-        if (y + lineH > dis->height() - 12) break; // deja espacio para footer
+    for (int i = 0; i < visibleRows; i++)
+    {
+        int idx = g_scroll + i;
+        if (idx >= (int)g_titles.size()) break;
 
-        if (i == g_selected) {
+        if (idx == g_selected) {
             dis->fillRect(0, y - (lineH - 2), dis->width(), lineH, SCBlack);
             dis->setTextColor(SCWhite);
         } else {
             dis->setTextColor(SCBlack);
         }
 
-        dis->setCursor(6, y);
-        dis->print(g_titles[i].c_str());
+        // icono
+        ImageDef* img = getIcon(g_types[idx]);
+        if (img && img->bitmap)
+            writeImageN(4, y-12, img);
+
+        // texto
+        dis->setCursor(26, y);
+        dis->print(g_titles[idx].c_str());
 
         y += lineH;
     }
 
-    // Footer count
     dis->setTextColor(SCBlack);
     dis->setCursor(4, dis->height() - 4);
     dis->print(String(g_selected + 1) + "/" + String((int)g_titles.size()));
@@ -218,7 +263,6 @@ static void renderMenu()
 static void renderViewer()
 {
     dis->fillScreen(SCWhite);
-
     loadQrListOnce();
 
     if (g_selected < 0) g_selected = 0;
@@ -232,25 +276,22 @@ static void renderViewer()
         .qrcode_ecc_level = ESP_QRCODE_ECC_MED,
     };
 
-    esp_err_t err = esp_qrcode_generate(&cfg, txt);
-    if (err != ESP_OK) {
-        setFont(font);
-        setTextSize(1);
+    if (esp_qrcode_generate(&cfg, txt) != ESP_OK) {
         writeTextCenterReplaceBack("QR error", dis->height() / 2);
         disUp(true);
         return;
     }
 
-    // NO title in viewer
     disUp(true);
 }
 
-// ---- Place lifecycle ----
+// ---- lifecycle ----
 
 void initQrApp()
 {
     g_loaded = false;
     g_selected = 0;
+    g_scroll = 0;
     g_viewerMode = false;
     renderMenu();
 }
@@ -266,19 +307,20 @@ void loopQrApp()
             if (g_selected < 0) g_selected = (int)g_titles.size() - 1;
             renderMenu();
             delayTask(120);
-        } else if (btn == Down) {
+        } 
+        else if (btn == Down) {
             loadQrListOnce();
             g_selected++;
             if (g_selected >= (int)g_titles.size()) g_selected = 0;
             renderMenu();
             delayTask(120);
-        } else if (btn == Menu) {
+        } 
+        else if (btn == Menu) {
             g_viewerMode = true;
             renderViewer();
             delayTask(120);
         }
     } else {
-        // Viewer mode: any press returns to menu
         if (btn != None) {
             g_viewerMode = false;
             renderMenu();
@@ -286,9 +328,8 @@ void loopQrApp()
         }
     }
 
-    if (btn != None) {
+    if (btn != None)
         resetSleepDelay(SLEEP_EVERY_MS);
-    }
 }
 
 #endif
