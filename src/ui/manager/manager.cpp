@@ -524,6 +524,13 @@ void loopManager()
 #endif
         break;
     }
+    case qrApp:
+    {
+#if QR_APP
+        managerLaunchFunc(qrApp, initQrApp, loopQrApp);
+#endif
+         break;
+    }
     case baikyApp:
     {
 #if BAIKY
