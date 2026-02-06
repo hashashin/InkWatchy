@@ -1,0 +1,2 @@
+Contact|BEGIN:VCARD\nVERSION:3.0\nN:test;test;;;\nFN:Pepe Test\nTEL:+3512312413\nEMAIL:test@mail.com\nEND:VCARD
+112|tel:112

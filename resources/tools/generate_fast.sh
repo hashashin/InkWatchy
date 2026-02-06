@@ -30,4 +30,13 @@ cd other/videos/
 ./convertVideos.sh &
 cd ../../
 
+echo -e ''
+echo "Processing QR"
+pushd qrapp/ >/dev/null
+./stageQrList.sh &
+QR_PID=$!
+popd >/dev/null
+
+wait $QR_PID
+
 wait

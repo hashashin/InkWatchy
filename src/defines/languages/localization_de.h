@@ -180,6 +180,7 @@
 #define MENU_SETTINGS "Einstellungen"
 #define MENU_HEART_MONITOR "Herzmonitor"
 #define MENU_HEALTH "Gesundheit"
+#define MENU_QR "QR"
 #define MENU_STEPS_PER_DAY "Schritte pro Tag"
 #define MENU_VAULT "Tresor"
 #define MENU_WIFI_TOOL "WiFi Tool"

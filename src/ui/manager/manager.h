@@ -54,6 +54,7 @@ typedef enum
     partyApp,
     healthMenu,
     heartMonitor,
+    qrApp,
     baikyApp,
     fontPreview,
     fontPreviewMenu,
@@ -128,6 +129,9 @@ void switchAccDebug();
 void switchMotorDebug();
 #if HEALTH_MENU
 void switchHealthMenu();
+#endif
+#if QR_APP
+void switchQrApp();
 #endif
 #if PRECISE_STEP_COUNTING
 void switchDailyStepsChartMenu();

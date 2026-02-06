@@ -270,6 +270,13 @@ void switchHeartMonitor()
 }
 #endif
 
+#if QR_APP
+void switchQrApp()
+{
+    generalSwitch(qrApp);
+}
+#endif
+
 #if BAIKY
 void switchBaiky()
 {

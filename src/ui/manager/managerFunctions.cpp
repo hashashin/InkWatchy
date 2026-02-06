@@ -50,6 +50,12 @@ void initMainMenu()
         buttons[count] = {MENU_HEALTH, getImg("healthIcon"), switchHealthMenu};
     }
 #endif
+#if QR_APP
+    {
+        count = count + 1;
+        buttons[count] = {MENU_QR, getImg("vault"), switchQrApp};
+    }
+#endif
 #if VAULT
     {
         count = count + 1;

@@ -203,6 +203,9 @@ extern uint16_t SCWhite;
 #if HEART_MONITOR
 #include "../ui/places/heartMonitor/heartMonitor.h"
 #endif
+#if QR_APP
+#include "../ui/places/qrApp/qrApp.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif

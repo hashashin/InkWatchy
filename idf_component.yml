@@ -3,3 +3,5 @@ dependencies:
     path: components/rusty
   tamp:
     path: components/tamp
+  qrcode:
+    version: "0.2.0"

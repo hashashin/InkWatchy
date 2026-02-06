@@ -180,6 +180,7 @@
 #define MENU_SETTINGS "Impostazioni"
 #define MENU_HEART_MONITOR "ECG"
 #define MENU_HEALTH "Salute"
+#define MENU_QR "QR"
 #define MENU_STEPS_PER_DAY "Passi al giorno"
 #define MENU_VAULT "Vault"
 #define MENU_WIFI_TOOL "Tool Wi‑Fi"
