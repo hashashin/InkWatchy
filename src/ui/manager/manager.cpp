@@ -531,6 +531,13 @@ void loopManager()
 #endif
          break;
     }
+    case haControl:
+    {
+#if HA_CONTROL
+        managerLaunchFunc(haControl, initHaControl, loopHaControl, exitHaControl);
+#endif
+        break;
+    }
     case baikyApp:
     {
 #if BAIKY

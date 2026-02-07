@@ -206,6 +206,9 @@ extern uint16_t SCWhite;
 #if QR_APP
 #include "../ui/places/qrApp/qrApp.h"
 #endif
+#if HA_CONTROL
+#include "../ui/places/haControl/haControl.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif

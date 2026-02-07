@@ -445,3 +445,20 @@
 #define TIME_UNIT_DAY "day"
 #define TIME_UNIT_DAYS "days"
 #define TIME_UNIT_AND "and"
+
+// ---- HA CONTROL ----
+#define HA_S_TITLE            "HA CONTROL"
+#define HA_S_READY            "READY"
+#define HA_S_WIFI             "WIFI..."
+#define HA_S_SENDING          "SENDING..."
+#define HA_S_OK               "OK"
+#define HA_S_BAD_SIG          "BAD SIG"
+#define HA_S_NO_ACK           "NO ACK"
+#define HA_S_WIFI_FAIL        "WIFI FAIL"
+#define HA_S_MQTT_FAIL        "MQTT FAIL"
+#define HA_S_PUBLISH_FAIL     "PUBLISH FAIL"
+#define HA_S_NO_TIME          "NO TIME"
+
+#define HA_S_CMD_PRINTER_OFF  "PRINTER OFF"
+#define HA_S_CMD_ROOMBA_START "ROOMBA START"
+#define HA_S_CMD_ROOMBA_DOCK  "ROOMBA DOCK"

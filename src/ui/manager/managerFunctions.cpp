@@ -53,7 +53,13 @@ void initMainMenu()
 #if QR_APP
     {
         count = count + 1;
-        buttons[count] = {MENU_QR, getImg("vault"), switchQrApp};
+        buttons[count] = {MENU_QR, getImg("qrapp/qr"), switchQrApp};
+    }
+#endif
+#if HA_CONTROL
+    {
+        count = count + 1;
+        buttons[count] = { HA_S_TITLE, getImg("haControl/ha"), switchHaControl };
     }
 #endif
 #if VAULT

@@ -445,3 +445,20 @@
 #define TIME_UNIT_DAY "dia"
 #define TIME_UNIT_DAYS "dias"
 #define TIME_UNIT_AND "y"
+
+// ---- HA CONTROL ----
+#define HA_S_TITLE            "HA Control"
+#define HA_S_READY            "Listo"
+#define HA_S_WIFI             "WIFI..."
+#define HA_S_SENDING          "ENVIANDO..."
+#define HA_S_OK               "OK"
+#define HA_S_BAD_SIG          "FIRMA MAL"
+#define HA_S_NO_ACK           "SIN ACK"
+#define HA_S_WIFI_FAIL        "WIFI FAIL"
+#define HA_S_MQTT_FAIL        "MQTT FAIL"
+#define HA_S_PUBLISH_FAIL     "PUB FAIL"
+#define HA_S_NO_TIME          "SIN HORA"
+
+#define HA_S_CMD_PRINTER_OFF  "Apagar impresora"
+#define HA_S_CMD_ROOMBA_START "Juanita start"
+#define HA_S_CMD_ROOMBA_DOCK  "Juanita dock"

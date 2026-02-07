@@ -322,6 +322,9 @@ The default is this:
 // QR code generator
 #define QR_APP 0
 
+//HomeAssistant cmds via mqtt
+#define HA_CONTROL 0
+
 // BLE things
 // BLE is heavy, if you enable it and the watch doesn't boot up, it means you exceeded the flash size. Disable other features to reduce flash usage
 // It's really heavy on memory too. DO NOT ENABLE BLE until you know what you want.

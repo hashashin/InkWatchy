@@ -447,3 +447,20 @@
 #define TIME_UNIT_DAYS "dni"
 #define TIME_UNIT_DAYS_2_4 "dni" // Same as TIME_UNIT_DAYS in Polish
 #define TIME_UNIT_AND "i"
+
+// ---- HA CONTROL ----
+#define HA_S_TITLE            "HA CONTROL"
+#define HA_S_READY            "GOTOWE"
+#define HA_S_WIFI             "WIFI..."
+#define HA_S_SENDING          "WYSYLAM..."
+#define HA_S_OK               "OK"
+#define HA_S_BAD_SIG          "ZLY PODPIS"
+#define HA_S_NO_ACK           "BRAK ACK"
+#define HA_S_WIFI_FAIL        "BLAD WIFI"
+#define HA_S_MQTT_FAIL        "BLAD MQTT"
+#define HA_S_PUBLISH_FAIL     "BLAD PUB"
+#define HA_S_NO_TIME          "BRAK CZASU"
+
+#define HA_S_CMD_PRINTER_OFF  "WYL DRUKARKE"
+#define HA_S_CMD_ROOMBA_START "ROOMBA START"
+#define HA_S_CMD_ROOMBA_DOCK  "ROOMBA DOCK"

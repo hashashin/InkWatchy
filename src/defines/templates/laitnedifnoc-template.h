@@ -53,3 +53,8 @@ const wifiQuickCred alarmWifiQuick = {
 // #define CALENDAR_URL "web.com/second.ics"
 // if your website doesnt have proper ssl certificate or self signed certificate dont forget to allow ALLOW_INSECURE_CAL 1 in config.h
 #define CALENDAR_URL "" // https://MyIcsFileSomewhere.toDownload
+
+inline constexpr const char* HA_MQTT_HOST = "somehost.com";
+inline constexpr uint16_t HA_MQTT_PORT = 1883;
+
+inline constexpr const char* HA_MQTT_SECRET = "SAME_SECRET_AS_IN_HA_AUTOMATION";

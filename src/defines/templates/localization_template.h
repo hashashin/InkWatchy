@@ -417,6 +417,23 @@
 #define TIME_UNIT_DAYS ""    // "days"
 #define TIME_UNIT_AND ""     // "and"
 
+// HA control translations
+#define HA_S_TITLE            ""
+#define HA_S_READY            ""
+#define HA_S_WIFI             ""
+#define HA_S_SENDING          ""
+#define HA_S_OK               ""
+#define HA_S_BAD_SIG          ""
+#define HA_S_NO_ACK           ""
+#define HA_S_WIFI_FAIL        ""
+#define HA_S_MQTT_FAIL        ""
+#define HA_S_PUBLISH_FAIL     ""
+#define HA_S_NO_TIME          ""
+
+#define HA_S_CMD_PRINTER_OFF  ""
+#define HA_S_CMD_ROOMBA_START ""
+#define HA_S_CMD_ROOMBA_DOCK  ""
+
 
 // ==============================================================================
 // TRANSLATION CHECKLIST

@@ -277,6 +277,13 @@ void switchQrApp()
 }
 #endif
 
+#if HA_CONTROL
+void switchHaControl()
+{
+    generalSwitch(haControl);
+}
+#endif
+
 #if BAIKY
 void switchBaiky()
 {
