@@ -3,15 +3,14 @@
 #if APPLE_JOKE
 #include "appleJoke.h"
 #include "appleSour.h"
-#include <NimBLEDevice.h>
 
-NimBLEAdvertising *NimPAdvertising;
-NimBLEServer *NimPServer;
+BLEAdvertising *NimPAdvertising;
+BLEServer *NimPServer;
 
 // https://github.com/RapierXbox/ESP32-Sour-Apple
 
-NimBLEAdvertisementData getOAdvertisementData() {
-  NimBLEAdvertisementData randomAdvertisementData = NimBLEAdvertisementData();
+BLEAdvertisementData getOAdvertisementData() {
+  BLEAdvertisementData randomAdvertisementData = BLEAdvertisementData();
   uint8_t packet[17];
   uint8_t i = 0;
 
@@ -31,7 +30,7 @@ NimBLEAdvertisementData getOAdvertisementData() {
   packet[i++] =  0x10;  // Type ???
   esp_fill_random(&packet[i], 3);
 
-  randomAdvertisementData.addData(std::string((char *)packet, 17));
+  randomAdvertisementData.addData((char *)packet, sizeof(packet));
   return randomAdvertisementData;
 }
 
@@ -43,21 +42,22 @@ void initAppleSour() {
     simpleCenterText("Smashing apples");
     disUp(true);
 
-    NimBLEDevice::init("");
+    BLEDevice::init("");
 
     esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_DEFAULT, ESP_PWR_LVL_P9);
     esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, ESP_PWR_LVL_P9);
     esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_SCAN ,ESP_PWR_LVL_P9);
 
-    NimPServer = NimBLEDevice::createServer();
+    NimPServer = BLEDevice::createServer();
 
     NimPAdvertising = NimPServer->getAdvertising();
 }
 
 void loopAppleSour() {
+  resetSleepDelay();
   debugLog("Executing loopAppleSour");
   delay(40);
-  NimBLEAdvertisementData advertisementData = getOAdvertisementData();
+  BLEAdvertisementData advertisementData = getOAdvertisementData();
   NimPAdvertising->setAdvertisementData(advertisementData);
   NimPAdvertising->start();
   delay(20);
@@ -69,15 +69,13 @@ void loopAppleSour() {
 void exitAppleSour() {
     debugLog("Executing exitAppleSour");
     // Idk
-    // delete NimPAdvertising;
-    // delete NimPServer;
+    delete NimPAdvertising;
+    delete NimPServer;
 
-    NimBLEDevice::deinit(true);
-
-    deInitButtonTask(); // We need to go to sleep because this exit function is not complete, i quess
-    setButton(LongBack);
-    sleepDelayMs = sleepDelayMs + SLEEP_EVERY_MS;
+    BLEDevice::deinit(true);
     appleJokeRunning = false;
+
+    switchBack();
 }
 
 #endif

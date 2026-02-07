@@ -4,14 +4,11 @@
 #include "appleJoke.h"
 
 #include "esp_gap_ble_api.h"
-#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEServer.h>
 
 #include "../../other/EvilAppleJuice-ESP32/src/devices.hpp"
 
-BLEAdvertising *pAdvertising;
-BLEServer *pServer;
+BLEAdvertising *ApAdvertising;
+BLEServer *ApServer;
 
 bool appleJokeRunning = false;
 int appleDelay;
@@ -27,20 +24,21 @@ void initAppleJoke()
     disUp(true);
 
     // Init EvilAppleJuice
-    BLEDevice::init(APPLE_JOKE_DEVICE_NAME);
+    BLEDevice::init("test");
 
     // Create the BLE Server
-    pServer = BLEDevice::createServer();
-    pAdvertising = pServer->getAdvertising();
+    ApServer = BLEDevice::createServer();
+    ApAdvertising = ApServer->getAdvertising();
 
     // seems we need to init it with an address in setup() step.
     esp_bd_addr_t null_addr = {0xFE, 0xED, 0xC0, 0xFF, 0xEE, 0x69};
-    pAdvertising->setDeviceAddress(null_addr, BLE_ADDR_TYPE_RANDOM);
-    appleDelay = APPLE_JOKE_DELAY;
+    ApAdvertising->setDeviceAddress(null_addr, BLE_ADDR_TYPE_RANDOM);
+    appleDelay = 800;
 }
 
 void loopAppleJoke()
 {
+    resetSleepDelay();
     debugLog("Executing loopAppleJoke");
     // First generate fake random MAC
     esp_bd_addr_t dummy_addr = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -66,12 +64,12 @@ void loopAppleJoke()
     if (device_choice == 0)
     {
         int index = betterRandom(17);
-        oAdvertisementData.addData(std::string((char *)DEVICES[index], 31));
+        oAdvertisementData.addData((char*)DEVICES[index], sizeof(DEVICES[index]));
     }
     else
     {
         int index = betterRandom(12);
-        oAdvertisementData.addData(std::string((char *)SHORT_DEVICES[index], 23));
+        oAdvertisementData.addData((char*)SHORT_DEVICES[index], sizeof(SHORT_DEVICES[index]));
     }
 
     /*  Page 191 of Apple's "Accessory Design Guidelines for Apple Devices (Release R20)" recommends to use only one of
@@ -90,20 +88,20 @@ void loopAppleJoke()
     int adv_type_choice = betterRandom(3);
     if (adv_type_choice == 0)
     {
-        pAdvertising->setAdvertisementType(ADV_TYPE_IND);
+        ApAdvertising->setAdvertisementType(ADV_TYPE_IND);
     }
     else if (adv_type_choice == 1)
     {
-        pAdvertising->setAdvertisementType(ADV_TYPE_SCAN_IND);
+        ApAdvertising->setAdvertisementType(ADV_TYPE_SCAN_IND);
     }
     else
     {
-        pAdvertising->setAdvertisementType(ADV_TYPE_NONCONN_IND);
+        ApAdvertising->setAdvertisementType(ADV_TYPE_NONCONN_IND);
     }
 
     // Set the device address, advertisement data
-    pAdvertising->setDeviceAddress(dummy_addr, BLE_ADDR_TYPE_RANDOM);
-    pAdvertising->setAdvertisementData(oAdvertisementData);
+    ApAdvertising->setDeviceAddress(dummy_addr, BLE_ADDR_TYPE_RANDOM);
+    ApAdvertising->setAdvertisementData(oAdvertisementData);
 
     // Set advertising interval
     /*  According to Apple' Technical Q&A QA1931 (https://developer.apple.com/library/archive/qa/qa1931/_index.html), Apple recommends
@@ -112,14 +110,14 @@ void loopAppleJoke()
         These lines of code fixes the interval to 20ms. Enabling these MIGHT increase the effectiveness of the DoS. Note this has not undergone thorough testing.
     */
 
-    // pAdvertising->setMinInterval(0x20);
-    // pAdvertising->setMaxInterval(0x20);
-    // pAdvertising->setMinPreferred(0x20);
-    // pAdvertising->setMaxPreferred(0x20);
+    // ApAdvertising->setMinInterval(0x20);
+    // ApAdvertising->setMaxInterval(0x20);
+    // ApAdvertising->setMinPreferred(0x20);
+    // ApAdvertising->setMaxPreferred(0x20);
 
     // Start advertising
     debugLog("Sending Advertisement...");
-    pAdvertising->start();
+    ApAdvertising->start();
 
     bool ignoreDelay = false;
     switch (useButton())
@@ -157,21 +155,20 @@ void loopAppleJoke()
     if(ignoreDelay == false) {
         delayTask(appleDelay);
     }
-    pAdvertising->stop();
+    ApAdvertising->stop();
 }
 
 void exitAppleJoke()
 {
     debugLog("Executing exitAppleJoke");
     // Idk
-    delete pAdvertising;
-    delete pServer;
+    delete ApAdvertising;
+    delete ApServer;
     BLEDevice::deinit(true);
-
-    deInitButtonTask(); // We need to go to sleep because this exit function is not complete, i quess
-    setButton(LongBack);
-    sleepDelayMs = sleepDelayMs + SLEEP_EVERY_MS;
     appleJokeRunning = false;
+
+    switchBack();
+    
 }
 
 #endif

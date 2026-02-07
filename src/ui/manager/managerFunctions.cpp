@@ -87,12 +87,12 @@ void initMainMenu()
     {
         debugLog("Adding apple joke to menu");
         count = count + 1;
-        buttons[count] = {MENU_EATING_APPLES, getImg("apple"), switchApple};
+        buttons[count] = {MENU_EATING_APPLES, getImg("apple/apple"), switchApple};
     }
     {
         debugLog("Adding apple joke to menu");
         count = count + 1;
-        buttons[count] = {MENU_SMASHING_APPLES, getImg("apple"), switchApple2};
+        buttons[count] = {MENU_SMASHING_APPLES, getImg("apple/apple"), switchApple2};
     }
 #endif
     {

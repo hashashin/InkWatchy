@@ -41,7 +41,11 @@ void wfNetrequestShow(buttonState button, bool *showBool)
         dis->setCursor(modSq.cord.x, modSq.cord.y + 25);
         setFont(getFont("dogicapixel4"));
         setTextSize(1);
-        dis->print(WiFi.SSID());
+        //dis->print(WiFi.SSID()+ "\n" + WiFi.localIP().toString());
+        String s = WiFi.SSID();
+        s += " ";
+        s += WiFi.localIP().toString();
+        dis->print(s);
     }
     dUChange = true;
 }

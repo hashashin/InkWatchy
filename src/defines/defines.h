@@ -194,8 +194,8 @@ extern uint16_t SCWhite;
 #include "../ui/places/credits/credits.h"
 #endif
 #if APPLE_JOKE
-#include "../ui/appleJoke/appleJoke.h"
-#include "../ui/appleJoke/appleSour.h"
+#include "../ui/places/appleJoke/appleJoke.h"
+#include "../ui/places/appleJoke/appleSour.h"
 #endif
 #if RGB_DIODE
 #include "../ui/places/party/party.h"
