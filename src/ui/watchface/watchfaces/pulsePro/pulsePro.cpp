@@ -7,7 +7,7 @@
 // -------------------------
 // Fonts
 // -------------------------
-#define PP_TIME_FONT  getFont("domain/JackInput40")
+#define PP_TIME_FONT  getFont("inkfield/JackInput40")
 #define PP_SMALL_FONT getFont("dogicapixel4")
 #define PP_DATE_FONT  getFont("JackInput17")
 #define PP_DAY_FONT   getFont("JackInput17")
