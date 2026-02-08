@@ -135,6 +135,13 @@ struct rtcMem
         bool positionEngaged : 1;
     } terrain;
 #endif
+// pulsepro watchface
+#if WATCHFACE_PULSEPRO
+    struct
+    {
+        int16_t lastTemp; // redibujo temp/icono
+    } pulsepro;
+#endif
     // Watchface modules
     uint64_t latestModuleUpdate;
     int currentModule; // Int because checkMinMax again
