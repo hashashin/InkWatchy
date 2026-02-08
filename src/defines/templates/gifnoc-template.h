@@ -325,6 +325,9 @@ The default is this:
 //HomeAssistant cmds via mqtt
 #define HA_CONTROL 0
 
+// Chess
+#define CHESS 0
+
 // BLE things
 // BLE is heavy, if you enable it and the watch doesn't boot up, it means you exceeded the flash size. Disable other features to reduce flash usage
 // It's really heavy on memory too. DO NOT ENABLE BLE until you know what you want.
@@ -454,7 +457,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 
 // Other other, resources thing
 #define RESOURCES_NAME_LENGTH 50
-#define IMG_COUNT 10
+#define IMG_COUNT 24
 #define FONT_COUNT 10
 
 // Priorities - max is 24

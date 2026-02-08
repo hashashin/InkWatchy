@@ -434,6 +434,8 @@
 #define HA_S_CMD_ROOMBA_START ""
 #define HA_S_CMD_ROOMBA_DOCK  ""
 
+#define MENU_CHESS ""         // "Chess"
+
 
 // ==============================================================================
 // TRANSLATION CHECKLIST

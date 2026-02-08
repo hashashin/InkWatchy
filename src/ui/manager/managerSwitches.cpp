@@ -284,6 +284,13 @@ void switchHaControl()
 }
 #endif
 
+#if CHESS
+void switchChessApp()
+{
+    generalSwitch(chessApp);
+}
+#endif
+
 #if BAIKY
 void switchBaiky()
 {

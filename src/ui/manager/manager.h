@@ -56,6 +56,7 @@ typedef enum
     heartMonitor,
     qrApp,
     haControl,
+    chessApp,
     baikyApp,
     fontPreview,
     fontPreviewMenu,
@@ -136,6 +137,9 @@ void switchQrApp();
 #endif
 #if HA_CONTROL
 void switchHaControl();
+#endif
+#if CHESS
+void switchChessApp();
 #endif
 #if PRECISE_STEP_COUNTING
 void switchDailyStepsChartMenu();

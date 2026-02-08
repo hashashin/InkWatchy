@@ -197,6 +197,9 @@ extern uint16_t SCWhite;
 #include "../ui/places/appleJoke/appleJoke.h"
 #include "../ui/places/appleJoke/appleSour.h"
 #endif
+#if CHESS
+#include "../ui/places/chessApp/chessApp.h"
+#endif
 #if RGB_DIODE
 #include "../ui/places/party/party.h"
 #endif

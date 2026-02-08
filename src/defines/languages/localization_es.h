@@ -462,3 +462,5 @@
 #define HA_S_CMD_PRINTER_OFF  "Apagar impresora"
 #define HA_S_CMD_ROOMBA_START "Juanita start"
 #define HA_S_CMD_ROOMBA_DOCK  "Juanita dock"
+
+#define MENU_CHESS "Ajedrez"

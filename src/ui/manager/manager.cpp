@@ -538,6 +538,13 @@ void loopManager()
 #endif
         break;
     }
+    case chessApp:
+    {
+#if CHESS
+        managerLaunchFunc(chessApp, initChessApp, loopChessApp, exitChessApp);
+#endif
+    break;
+    }
     case baikyApp:
     {
 #if BAIKY
