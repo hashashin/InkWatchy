@@ -67,6 +67,14 @@ const watchfaceDef szybetAnalogConway = {
 };
 #endif
 
+#if WATCHFACE_PULSEPRO
+const watchfaceDef pulseProWatchface = {
+    .manager = wfmOne,
+    .name = "PulsePro",
+    .data = (genPointer)&pulseProDef,
+};
+#endif
+
 #if GSR_WATCHFACES && GSR_STARFIELD
 const watchfaceDef gsrStarfield = {
     .manager = wfmGSR,
@@ -92,6 +100,11 @@ const watchfaceDef gsrStationary = {
 #endif
 
 const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
+#if WATCHFACE_PULSEPRO
+    &pulseProWatchface,
+#else
+    &noWatchFace,
+#endif
 #if WATCHFACE_INKFIELD_SZYBET
     &szybetStarfield,
 #else
