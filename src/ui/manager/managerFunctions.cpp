@@ -195,7 +195,7 @@ void initSettingsMenu()
 void initGamesMenu()
 {
     int count = -1;
-    entryMenu buttons[7];
+    entryMenu buttons[8];
 #if TETRIS
     {
         debugLog("Adding Tetris");
@@ -244,6 +244,14 @@ void initGamesMenu()
         debugLog("Adding party");
         count = count + 1;
         buttons[count] = {MENU_PARTY, getImg("rgb"), switchParty};
+    }
+#endif
+#if CHESS
+    {
+        debugLog("Adding Chess");
+        count = count + 1;
+        // Reuse an existing icon to avoid adding new image resources
+        buttons[count] = {MENU_CHESS, getImg("chess/chess"), switchChessApp};
     }
 #endif
     count = count + 1;
