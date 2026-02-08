@@ -14,22 +14,22 @@
 #define PP_BAT_FONT   getFont("DisposableDroidBB9")
 
 // -------------------------
-// Night mode auto
+// Night slow refresh (23-06)
 // -------------------------
-static bool isNight()
+static bool isSleepHours()
 {
     int h = timeRTCLocal.Hour;
-    return (h >= 22 || h < 7);
+    return (h >= 23 || h < 6);
 }
 
-static uint16_t colFG() { return isNight()?SCWhite:SCBlack; }
-static uint16_t colBG() { return isNight()?SCBlack:SCWhite; }
+static uint32_t g_lastSleepDraw = 0;
+static const uint32_t SLEEP_REFRESH_MS = 45UL * 60UL * 1000UL;
 
 // -------------------------
-// 3h FULL REFRESH TIMER
+// 6h FULL REFRESH TIMER
 // -------------------------
 static uint32_t g_lastFullRefresh = 0;
-static const uint32_t FULL_REFRESH_MS = 3UL * 60UL * 60UL * 1000UL;
+static const uint32_t FULL_REFRESH_MS = 6UL * 60UL * 60UL * 1000UL;
 
 static void smartFullRefreshCheck()
 {
@@ -88,7 +88,7 @@ static String g_lastTimeDrawn = "";
 // -------------------------
 static void clearRect(int16_t x,int16_t y,int16_t w,int16_t h)
 {
-    dis->fillRect(x,y,w,h,colBG());
+    dis->fillRect(x,y,w,h,SCWhite);
     dUChange=true;
 }
 
@@ -182,14 +182,14 @@ static void drawMoonIcon(int16_t x,int16_t y)
     int cy=y+12;
     int r=10;
 
-    dis->fillCircle(cx,cy,r,colFG());
+    dis->fillCircle(cx,cy,r,SCBlack);
 
     int maxShift=r-1;
     int shift=(int)round((1.0-t)*(double)maxShift);
     if(!waxing)shift=-shift;
 
-    dis->fillCircle(cx+shift,cy,r,colBG());
-    dis->drawCircle(cx,cy,r,colFG());
+    dis->fillCircle(cx+shift,cy,r,SCWhite);
+    dis->drawCircle(cx,cy,r,SCBlack);
 
     dUChange=true;
 }
@@ -224,7 +224,7 @@ static int16_t drawBatteryPercent()
     int16_t x=200-(int16_t)w-rightMargin;
 
     clearRect(x-2,PP_BAND_TOP_Y0,w+6,PP_BAND_TOP_Y1-PP_BAND_TOP_Y0);
-    writeTextReplaceBack(s,x,PP_BATT_Y,colFG(),colBG());
+    writeTextReplaceBack(s,x,PP_BATT_Y,SCBlack,SCWhite);
     dUChange=true;
 
     return x;
@@ -258,6 +258,14 @@ static void drawTimeBeforeApply()
 {
     smartFullRefreshCheck();
 
+    if(isSleepHours())
+    {
+        uint32_t now=millis();
+        if(g_lastSleepDraw!=0 && (now-g_lastSleepDraw)<SLEEP_REFRESH_MS)
+            return;
+        g_lastSleepDraw=now;
+    }
+
     String newT=timeStr(timeRTCLocal);
 
     if(g_lastTimeDrawn=="")
@@ -265,7 +273,7 @@ static void drawTimeBeforeApply()
         clearTimeArea();
         setTextSize(1);
         setFont(PP_TIME_FONT);
-        writeTextReplaceBack(newT,centeredXForTime(newT),PP_TIME_Y,colFG(),colBG());
+        writeTextReplaceBack(newT,centeredXForTime(newT),PP_TIME_Y,SCBlack,SCWhite);
         g_lastTimeDrawn=newT;
         return;
     }
@@ -277,7 +285,7 @@ static void drawTimeBeforeApply()
         clearTimeArea();
         setTextSize(1);
         setFont(PP_TIME_FONT);
-        writeTextReplaceBack(newT,centeredXForTime(newT),PP_TIME_Y,colFG(),colBG());
+        writeTextReplaceBack(newT,centeredXForTime(newT),PP_TIME_Y,SCBlack,SCWhite);
         g_lastTimeDrawn=newT;
         return;
     }
@@ -287,7 +295,7 @@ static void drawTimeBeforeApply()
 
     int16_t x=centeredXForTime(newT);
     clearRect(x+60,PP_BAND_TIME_Y0,100,PP_BAND_TIME_Y1);
-    writeTextReplaceBack(newT,x,PP_TIME_Y,colFG(),colBG());
+    writeTextReplaceBack(newT,x,PP_TIME_Y,SCBlack,SCWhite);
 
     g_lastTimeDrawn=newT;
 }
@@ -301,7 +309,7 @@ static void drawDay()
 
     setTextSize(1);
     setFont(PP_DAY_FONT);
-    writeTextCenterReplaceBack(d,centeredDayBaseline(d),colFG(),colBG());
+    writeTextCenterReplaceBack(d,centeredDayBaseline(d),SCBlack,SCWhite);
 }
 
 static void drawMonth()
@@ -312,7 +320,7 @@ static void drawMonth()
 
     setTextSize(1);
     setFont(PP_DATE_FONT);
-    writeTextReplaceBack(ds,PP_DATE_X,PP_DATE_Y,colFG(),colBG());
+    writeTextReplaceBack(ds,PP_DATE_X,PP_DATE_Y,SCBlack,SCWhite);
 
     int16_t battX=drawBatteryPercent();
 
@@ -355,7 +363,7 @@ static void drawTimeAfterApply(bool forceDraw)
 
         setTextSize(1);
         setFont(PP_DATE_FONT);
-        writeTextReplaceBack(formatTemperature(w.temp),PP_TEMP_X,PP_TEMP_Y,colFG(),colBG());
+        writeTextReplaceBack(formatTemperature(w.temp),PP_TEMP_X,PP_TEMP_Y,SCBlack,SCWhite);
 
         rM.pulsepro.lastTemp=(int)round(w.temp);
     }else{
@@ -365,7 +373,7 @@ static void drawTimeAfterApply(bool forceDraw)
         setTextSize(1);
         setFont(PP_DATE_FONT);
         String dash="--";
-        writeTextReplaceBack(dash,PP_TEMP_X,PP_TEMP_Y,colFG(),colBG());
+        writeTextReplaceBack(dash,PP_TEMP_X,PP_TEMP_Y,SCBlack,SCWhite);
 
         rM.pulsepro.lastTemp=-9999;
     }
@@ -382,7 +390,7 @@ static void showTimeFull()
     setTextSize(1);
     setFont(PP_TIME_FONT);
     String t=timeStr(timeRTCLocal);
-    writeTextReplaceBack(t,centeredXForTime(t),PP_TIME_Y,colFG(),colBG());
+    writeTextReplaceBack(t,centeredXForTime(t),PP_TIME_Y,SCBlack,SCWhite);
 
     drawDay();
     drawMonth();
@@ -397,6 +405,7 @@ static void initWatchface()
     g_lastMoonDay=-1;
     g_lastTimeDrawn="";
     g_lastFullRefresh=millis();
+    g_lastSleepDraw=0;
 }
 
 // -------------------------
