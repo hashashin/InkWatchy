@@ -330,6 +330,10 @@ The default is this:
 // Chess
 #define CHESS 0
 
+// Web to upload files
+#define FS_UPLOAD 0
+
+
 // BLE things
 // BLE is heavy, if you enable it and the watch doesn't boot up, it means you exceeded the flash size. Disable other features to reduce flash usage
 // It's really heavy on memory too. DO NOT ENABLE BLE until you know what you want.
@@ -493,3 +497,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 
 #define IMAGE_MODULE_PATH "watchfaceImages/"
 #define PRECISE_STEP_COUNTING_DIR "/other/steps/"
+
+#define FS_UPLOAD_DEFAULT_DIR "/"
+#define FS_UPLOAD_PORT 80
+#define FS_UPLOAD_MAX_UPLOAD_BYTES (6 * 1024 * 1024)

@@ -466,3 +466,5 @@
 #define HA_S_CMD_ROOMBA_DOCK  "ROOMBA DOCK"
 
 #define MENU_CHESS "Chess"
+
+#define MENU_FS_UPLOAD "FS Upload"

@@ -57,6 +57,7 @@ typedef enum
     qrApp,
     haControl,
     chessApp,
+    fsUpload,
     baikyApp,
     fontPreview,
     fontPreviewMenu,
@@ -141,6 +142,9 @@ void switchHaControl();
 #if CHESS
 void switchChessApp();
 #endif
+#if FS_UPLOAD
+void switchFsUpload();
+#endif
 #if PRECISE_STEP_COUNTING
 void switchDailyStepsChartMenu();
 #endif
@@ -177,7 +181,9 @@ void switchVideoMenu();
 #endif
 void switchApple();
 void switchApple2();
+#if PONG
 void switchPong();
+#endif
 #if TETRIS
 void switchTetris();
 #endif

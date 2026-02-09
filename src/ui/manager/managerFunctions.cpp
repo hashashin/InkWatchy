@@ -161,7 +161,7 @@ void initDebugMenu()
 void initSettingsMenu()
 {
     int count = -1;
-    entryMenu buttons[6];
+    entryMenu buttons[7];
     {
         debugLog("Adding wifi to menu");
         count = count + 1;
@@ -185,6 +185,13 @@ void initSettingsMenu()
     {
         count = count + 1;
         buttons[count] = {SETCLOCK_CLOCK_SETTINGS, getImg("setTimeGui/setTimeClock"), switchSetClockMenu};
+    }
+#endif
+#if FS_UPLOAD
+    {
+        count = count + 1;
+        // Reuse a stock icon to avoid adding new assets
+        buttons[count] = {MENU_FS_UPLOAD, getImg("wifiIcon"), switchFsUpload};
     }
 #endif
 

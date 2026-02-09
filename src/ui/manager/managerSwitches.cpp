@@ -291,6 +291,13 @@ void switchChessApp()
 }
 #endif
 
+#if FS_UPLOAD
+void switchFsUpload()
+{
+    generalSwitch(fsUpload);
+}
+#endif
+
 #if BAIKY
 void switchBaiky()
 {

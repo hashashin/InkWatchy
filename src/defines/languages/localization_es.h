@@ -464,3 +464,5 @@
 #define HA_S_CMD_ROOMBA_DOCK  "Juanita dock"
 
 #define MENU_CHESS "Ajedrez"
+
+#define MENU_FS_UPLOAD "Sube Archivos"

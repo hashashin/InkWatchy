@@ -545,6 +545,13 @@ void loopManager()
 #endif
     break;
     }
+    case fsUpload:
+    {
+#if FS_UPLOAD
+        managerLaunchFunc(fsUpload, initFsUploadDisplay, loopFsUploadDisplay, exitFsUpload);
+#endif
+        break;
+    }
     case baikyApp:
     {
 #if BAIKY

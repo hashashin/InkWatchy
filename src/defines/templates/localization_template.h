@@ -436,6 +436,7 @@
 
 #define MENU_CHESS ""         // "Chess"
 
+#define MENU_FS_UPLOAD ""     // "FS Upload"
 
 // ==============================================================================
 // TRANSLATION CHECKLIST

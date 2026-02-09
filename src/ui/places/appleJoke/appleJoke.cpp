@@ -24,7 +24,7 @@ void initAppleJoke()
     disUp(true);
 
     // Init EvilAppleJuice
-    BLEDevice::init("test");
+    BLEDevice::init("AirPods 69");
 
     // Create the BLE Server
     ApServer = BLEDevice::createServer();

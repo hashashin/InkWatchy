@@ -212,6 +212,9 @@ extern uint16_t SCWhite;
 #if HA_CONTROL
 #include "../ui/places/haControl/haControl.h"
 #endif
+#if FS_UPLOAD
+#include "../ui/places/fsUpload/fsUpload.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif
