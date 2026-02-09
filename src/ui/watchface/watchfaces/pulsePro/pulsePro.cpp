@@ -14,38 +14,6 @@
 #define PP_BAT_FONT   getFont("DisposableDroidBB9")
 
 // -------------------------
-// Night slow refresh (23-06)
-// -------------------------
-static bool isSleepHours()
-{
-    int h = timeRTCLocal.Hour;
-    return (h >= 23 || h < 6);
-}
-
-static uint32_t g_lastSleepDraw = 0;
-static const uint32_t SLEEP_REFRESH_MS = 45UL * 60UL * 1000UL;
-
-// -------------------------
-// 6h FULL REFRESH TIMER
-// -------------------------
-static uint32_t g_lastFullRefresh = 0;
-static const uint32_t FULL_REFRESH_MS = 6UL * 60UL * 60UL * 1000UL;
-
-static void smartFullRefreshCheck()
-{
-    uint32_t now = millis();
-
-    if (g_lastFullRefresh == 0)
-        g_lastFullRefresh = now;
-
-    if (now - g_lastFullRefresh > FULL_REFRESH_MS)
-    {
-        updateDisplay(true);
-        g_lastFullRefresh = now;
-    }
-}
-
-// -------------------------
 // Layout
 // -------------------------
 static constexpr int16_t PP_TIME_Y = 56;
@@ -256,16 +224,8 @@ static int16_t centeredXForTime(const String& t)
 // -------------------------
 static void drawTimeBeforeApply()
 {
-    smartFullRefreshCheck();
-
-    if(isSleepHours())
-    {
-        uint32_t now=millis();
-        if(g_lastSleepDraw!=0 && (now-g_lastSleepDraw)<SLEEP_REFRESH_MS)
-            return;
-        g_lastSleepDraw=now;
-    }
-
+    // Night slow refresh: lo gestiona el CORE (NIGHT_SLEEP_*), aquí no hacemos throttle con millis().
+    // Solo dibujamos cuando cambia el string de hora/minuto.
     String newT=timeStr(timeRTCLocal);
 
     if(g_lastTimeDrawn=="")
@@ -404,8 +364,6 @@ static void initWatchface()
     g_lastWeatherCode=-9999;
     g_lastMoonDay=-1;
     g_lastTimeDrawn="";
-    g_lastFullRefresh=millis();
-    g_lastSleepDraw=0;
 }
 
 // -------------------------
