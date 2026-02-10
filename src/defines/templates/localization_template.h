@@ -441,6 +441,8 @@
 #define TIME_UNIT_DAY_B ""    // "Capital day "DAY"
 #define TIME_UNIT_MONTH ""    // "Capital month "MON"
 
+#define MENU_PRESENCE_BEACON ""    // "Presence beacon"
+
 // ==============================================================================
 // TRANSLATION CHECKLIST
 // ==============================================================================

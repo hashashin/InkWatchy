@@ -272,6 +272,10 @@ extern uint16_t SCWhite;
 #if WATCHFACE_BINWATCH
 #include "../ui/watchface/watchfaces/binWatch/binWatch.h"
 #endif
+#if PRESENCE_BEACON
+#include "../services/presenceBeaconSvc.h"
+#include "../ui/places/presenceBeacon/presenceBeacon.h"
+#endif
 #if GSR_WATCHFACES
 #include "../ui/watchface/watchfaceManagers/wManageGSR/wManageGSR.h"
 #endif

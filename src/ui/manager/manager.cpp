@@ -86,6 +86,9 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
 
 void loopManager()
 {
+#if PRESENCE_BEACON
+    presenceBeaconSvcTick();
+#endif
     // We want watchface to be able to use
     if (currentPlaceIndex != 0)
     {
@@ -551,6 +554,13 @@ void loopManager()
         managerLaunchFunc(fsUpload, initFsUploadDisplay, loopFsUploadDisplay, exitFsUpload);
 #endif
         break;
+    }
+    case presenceBeaconCfg:
+    {
+#if PRESENCE_BEACON
+    managerLaunchFunc(presenceBeaconCfg, initPresenceBeaconCfg, loopPresenceBeaconCfg, exitPresenceBeaconCfg);
+#endif
+    break;
     }
     case baikyApp:
     {

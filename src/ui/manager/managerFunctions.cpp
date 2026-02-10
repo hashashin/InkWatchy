@@ -59,7 +59,7 @@ void initMainMenu()
 #if HA_CONTROL
     {
         count = count + 1;
-        buttons[count] = { HA_S_TITLE, getImg("haControl/ha"), switchHaControl };
+        buttons[count] = {HA_S_TITLE, getImg("haControl/ha"), switchHaControl};
     }
 #endif
 #if VAULT
@@ -161,7 +161,7 @@ void initDebugMenu()
 void initSettingsMenu()
 {
     int count = -1;
-    entryMenu buttons[7];
+    entryMenu buttons[8];
     {
         debugLog("Adding wifi to menu");
         count = count + 1;
@@ -192,6 +192,12 @@ void initSettingsMenu()
         count = count + 1;
         // Reuse a stock icon to avoid adding new assets
         buttons[count] = {MENU_FS_UPLOAD, getImg("wifiIcon"), switchFsUpload};
+    }
+#endif
+#if PRESENCE_BEACON
+    {
+        count = count + 1;
+        buttons[count] = {MENU_PRESENCE_BEACON, getImg("presence/beacon"), switchPresenceBeaconCfg};
     }
 #endif
 

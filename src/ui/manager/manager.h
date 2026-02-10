@@ -58,6 +58,7 @@ typedef enum
     haControl,
     chessApp,
     fsUpload,
+    presenceBeaconCfg,
     baikyApp,
     fontPreview,
     fontPreviewMenu,
@@ -144,6 +145,9 @@ void switchChessApp();
 #endif
 #if FS_UPLOAD
 void switchFsUpload();
+#endif
+#if PRESENCE_BEACON
+void switchPresenceBeaconCfg();
 #endif
 #if PRECISE_STEP_COUNTING
 void switchDailyStepsChartMenu();

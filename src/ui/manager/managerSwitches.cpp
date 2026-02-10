@@ -298,6 +298,13 @@ void switchFsUpload()
 }
 #endif
 
+#if PRESENCE_BEACON
+void switchPresenceBeaconCfg()
+{
+    generalSwitch(presenceBeaconCfg);
+}
+#endif
+
 #if BAIKY
 void switchBaiky()
 {

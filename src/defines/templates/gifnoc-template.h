@@ -335,6 +335,7 @@ The default is this:
 // Web to upload files
 #define FS_UPLOAD 0
 
+#define PRESENCE_BEACON 0
 
 // BLE things
 // BLE is heavy, if you enable it and the watch doesn't boot up, it means you exceeded the flash size. Disable other features to reduce flash usage
@@ -503,3 +504,10 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define FS_UPLOAD_DEFAULT_DIR "/"
 #define FS_UPLOAD_PORT 80
 #define FS_UPLOAD_MAX_UPLOAD_BYTES (6 * 1024 * 1024)
+
+#define PRESENCE_BEACON_UUID "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+#define PRESENCE_BEACON_MAJOR 1
+#define PRESENCE_BEACON_MINOR 1
+#define PRESENCE_BEACON_PERIOD_MS (30UL * 1000UL)
+#define PRESENCE_BEACON_BURST_MS 1500UL
+#define PRESENCE_BEACON_TX_PWR_INDEX 0   // 0:-12, 1:-6, 2:0, 3:+3

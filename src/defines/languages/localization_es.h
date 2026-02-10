@@ -469,3 +469,5 @@
 
 #define TIME_UNIT_DAY_B "DIA"
 #define TIME_UNIT_MONTH "MES"
+
+#define MENU_PRESENCE_BEACON "Presence beacon"
