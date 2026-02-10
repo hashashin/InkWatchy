@@ -54,6 +54,15 @@ static int g_lastMoonDay = -1;
 static String g_lastTimeDrawn = "";
 
 // -------------------------
+// Refresh (core queue)
+// -------------------------
+static inline void requestCoreFullRefresh()
+{
+    dUChange = true;
+    rM.updateCounter = FULL_DISPLAY_UPDATE_QUEUE; // next disUp() will be FULL
+}
+
+// -------------------------
 static void clearRect(int16_t x,int16_t y,int16_t w,int16_t h)
 {
     dis->fillRect(x,y,w,h,SCWhite);
@@ -224,8 +233,6 @@ static int16_t centeredXForTime(const String& t)
 // -------------------------
 static void drawTimeBeforeApply()
 {
-    // Night slow refresh: lo gestiona el CORE (NIGHT_SLEEP_*), aquí no hacemos throttle con millis().
-    // Solo dibujamos cuando cambia el string de hora/minuto.
     String newT=timeStr(timeRTCLocal);
 
     if(g_lastTimeDrawn=="")
@@ -381,7 +388,7 @@ static void manageInput(buttonState bt)
 
 #if LONG_BACK_FULL_REFRESH
     if(bt==LongBack){
-        updateDisplay(true);
+        requestCoreFullRefresh();
         return;
     }
 #endif
