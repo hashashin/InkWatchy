@@ -215,6 +215,9 @@ extern uint16_t SCWhite;
 #if FS_UPLOAD
 #include "../ui/places/fsUpload/fsUpload.h"
 #endif
+#if STOPWATCH
+#include "../ui/places/stopWatch/stopWatch.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif

@@ -443,6 +443,18 @@
 
 #define MENU_PRESENCE_BEACON ""    // "Presence beacon"
 
+#define MENU_STOPWATCH "" // "Stopwatch"
+#define STOPWATCH_TITLE ""  // "STOPWATCH"
+#define STOPWATCH_LAP_LABEL ""   // "Lap"
+#define STOPWATCH_HINT_MENU ""   // "UP"
+#define STOPWATCH_HINT_DOWN ""   // "DOWN"
+#define STOPWATCH_HINT_BACK ""   // "BACK"
+#define STOPWATCH_HINT_START ""  // "Start"
+#define STOPWATCH_HINT_PAUSE ""  // "Pause"
+#define STOPWATCH_HINT_RESET ""  // "Reset"
+#define STOPWATCH_HINT_LAP ""    // "Lap"
+
+
 // ==============================================================================
 // TRANSLATION CHECKLIST
 // ==============================================================================

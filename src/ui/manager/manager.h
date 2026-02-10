@@ -59,6 +59,7 @@ typedef enum
     chessApp,
     fsUpload,
     presenceBeaconCfg,
+    stopwatch,
     baikyApp,
     fontPreview,
     fontPreviewMenu,
@@ -148,6 +149,9 @@ void switchFsUpload();
 #endif
 #if PRESENCE_BEACON
 void switchPresenceBeaconCfg();
+#endif
+#if STOPWATCH
+void switchStopwatch();
 #endif
 #if PRECISE_STEP_COUNTING
 void switchDailyStepsChartMenu();

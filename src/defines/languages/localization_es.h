@@ -471,3 +471,14 @@
 #define TIME_UNIT_MONTH "MES"
 
 #define MENU_PRESENCE_BEACON "Presence beacon"
+
+#define MENU_STOPWATCH "Cronometro"
+#define STOPWATCH_TITLE "CRONOMETRO"
+#define STOPWATCH_LAP_LABEL "Vuelta"
+#define STOPWATCH_HINT_MENU "ARRIBA"
+#define STOPWATCH_HINT_DOWN "ABAJO"
+#define STOPWATCH_HINT_BACK "ATRAS"
+#define STOPWATCH_HINT_START "Iniciar"
+#define STOPWATCH_HINT_PAUSE "Pausa"
+#define STOPWATCH_HINT_RESET "Reiniciar"
+#define STOPWATCH_HINT_LAP "Vuelta"

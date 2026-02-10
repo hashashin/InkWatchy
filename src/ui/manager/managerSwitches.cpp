@@ -305,6 +305,13 @@ void switchPresenceBeaconCfg()
 }
 #endif
 
+#if STOPWATCH
+void switchStopwatch()
+{
+    generalSwitch(stopwatch);
+}
+#endif
+
 #if BAIKY
 void switchBaiky()
 {

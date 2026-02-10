@@ -562,6 +562,13 @@ void loopManager()
 #endif
     break;
     }
+    case stopwatch:
+    {
+#if STOPWATCH
+        managerLaunchFunc(stopwatch, initStopwatch, loopStopwatch, exitStopwatch);
+#endif
+        break;
+    }
     case baikyApp:
     {
 #if BAIKY

@@ -468,3 +468,5 @@
 #define MENU_FS_UPLOAD "FS Upload"
 
 #define MENU_PRESENCE_BEACON "Presence beacon"
+
+#define MENU_STOPWATCH "Stopwatch"

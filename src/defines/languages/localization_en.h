@@ -468,3 +468,15 @@
 #define MENU_FS_UPLOAD "FS Upload"
 
 #define MENU_PRESENCE_BEACON "Presence beacon"
+
+#define MENU_STOPWATCH "Stopwatch"
+// Stopwatch
+#define STOPWATCH_TITLE "STOPWATCH"
+#define STOPWATCH_LAP_LABEL "Lap"
+#define STOPWATCH_HINT_MENU "MENU"
+#define STOPWATCH_HINT_DOWN "DOWN"
+#define STOPWATCH_HINT_BACK "BACK"
+#define STOPWATCH_HINT_START "Start"
+#define STOPWATCH_HINT_PAUSE "Pause"
+#define STOPWATCH_HINT_RESET "Reset"
+#define STOPWATCH_HINT_LAP "Lap"

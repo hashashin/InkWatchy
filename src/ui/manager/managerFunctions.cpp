@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[14];
+    entryMenu buttons[15];
 #if CALENDAR
     {
         count = count + 1;
@@ -60,6 +60,12 @@ void initMainMenu()
     {
         count = count + 1;
         buttons[count] = {HA_S_TITLE, getImg("haControl/ha"), switchHaControl};
+    }
+#endif
+#if STOPWATCH
+    {
+        count = count + 1;
+        buttons[count] = {MENU_STOPWATCH, getImg("stopWatch/stopWatch"), switchStopwatch};
     }
 #endif
 #if VAULT
