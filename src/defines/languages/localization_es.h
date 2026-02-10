@@ -466,3 +466,6 @@
 #define MENU_CHESS "Ajedrez"
 
 #define MENU_FS_UPLOAD "Sube Archivos"
+
+#define TIME_UNIT_DAY_B "DIA"
+#define TIME_UNIT_MONTH "MES"

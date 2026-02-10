@@ -269,6 +269,9 @@ extern uint16_t SCWhite;
 #if WATCHFACE_PULSEPRO
 #include "../ui/watchface/watchfaces/pulsePro/pulsePro.h"
 #endif
+#if WATCHFACE_BINWATCH
+#include "../ui/watchface/watchfaces/binWatch/binWatch.h"
+#endif
 #if GSR_WATCHFACES
 #include "../ui/watchface/watchfaceManagers/wManageGSR/wManageGSR.h"
 #endif

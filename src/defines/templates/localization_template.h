@@ -438,6 +438,9 @@
 
 #define MENU_FS_UPLOAD ""     // "FS Upload"
 
+#define TIME_UNIT_DAY_B ""    // "Capital day "DAY"
+#define TIME_UNIT_MONTH ""    // "Capital month "MON"
+
 // ==============================================================================
 // TRANSLATION CHECKLIST
 // ==============================================================================

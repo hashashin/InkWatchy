@@ -75,6 +75,14 @@ const watchfaceDef pulseProWatchface = {
 };
 #endif
 
+#if WATCHFACE_BINWATCH
+const watchfaceDef binWatch = {
+    .manager = wfmOne,
+    .name = "Binary Clock",
+    .data = (genPointer)&binWatchDef,
+};
+#endif
+
 #if GSR_WATCHFACES && GSR_STARFIELD
 const watchfaceDef gsrStarfield = {
     .manager = wfmGSR,
@@ -102,6 +110,11 @@ const watchfaceDef gsrStationary = {
 const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #if WATCHFACE_PULSEPRO
     &pulseProWatchface,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_BINWATCH
+    &binWatch,
 #else
     &noWatchFace,
 #endif
