@@ -26,6 +26,8 @@
 
 #define WATCHFACE_BINWATCH 0
 
+#define WATCHFACE_ANALOG_PULSEPRO 0
+
 // GSR watchfaces
 // Because of the ways they are written (even in native watchyGSR) they will provide worse battery life than native inkwatchy watchfaces -
 // Because they write everything every minute, unlike inkwatchy watchfaces which check what needs to be rewritten

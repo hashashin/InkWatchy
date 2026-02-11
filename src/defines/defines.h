@@ -215,6 +215,10 @@ extern uint16_t SCWhite;
 #if FS_UPLOAD
 #include "../ui/places/fsUpload/fsUpload.h"
 #endif
+#if PRESENCE_BEACON
+#include "../services/presenceBeaconSvc.h"
+#include "../ui/places/presenceBeacon/presenceBeacon.h"
+#endif
 #if STOPWATCH
 #include "../ui/places/stopWatch/stopWatch.h"
 #endif
@@ -275,9 +279,8 @@ extern uint16_t SCWhite;
 #if WATCHFACE_BINWATCH
 #include "../ui/watchface/watchfaces/binWatch/binWatch.h"
 #endif
-#if PRESENCE_BEACON
-#include "../services/presenceBeaconSvc.h"
-#include "../ui/places/presenceBeacon/presenceBeacon.h"
+#if WATCHFACE_ANALOG_PULSEPRO
+#include "../ui/watchface/watchfaces/analogPulsePro/analogPulsePro.h"
 #endif
 #if GSR_WATCHFACES
 #include "../ui/watchface/watchfaceManagers/wManageGSR/wManageGSR.h"
