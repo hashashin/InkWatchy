@@ -34,11 +34,15 @@
 #define PRESENCE_BEACON_TX_PWR_INDEX 0
 #endif
 
+#ifndef PRESENCE_BEACON_DEFAULT_ENABLED
+#define PRESENCE_BEACON_DEFAULT_ENABLED 0
+#endif
+
 // -----------------------------------------------------------------------------
 // Internal state
 // -----------------------------------------------------------------------------
 static bool g_inited = false;
-static bool g_enabled = true;
+static bool g_enabled = (PRESENCE_BEACON_DEFAULT_ENABLED != 0);
 static uint32_t g_periodMs = PRESENCE_BEACON_PERIOD_MS;
 static uint32_t g_burstMs = PRESENCE_BEACON_BURST_MS;
 static int g_txIndex = PRESENCE_BEACON_TX_PWR_INDEX;

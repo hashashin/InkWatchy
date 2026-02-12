@@ -516,3 +516,4 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define PRESENCE_BEACON_PERIOD_MS (30UL * 1000UL)
 #define PRESENCE_BEACON_BURST_MS 1500UL
 #define PRESENCE_BEACON_TX_PWR_INDEX 0   // 0:-12, 1:-6, 2:0, 3:+3
+#define PRESENCE_BEACON_DEFAULT_ENABLED 0
