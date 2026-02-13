@@ -277,6 +277,13 @@ void switchQrApp()
 }
 #endif
 
+#if RSS_READER
+void switchRssReader()
+{
+    generalSwitch(rssReader);
+}
+#endif
+
 #if HA_CONTROL
 void switchHaControl()
 {

@@ -534,6 +534,13 @@ void loopManager()
 #endif
          break;
     }
+case rssReader:
+{
+#if RSS_READER
+    managerLaunchFunc(rssReader, initRssReader, loopRssReader, exitRssReader);
+#endif
+    break;
+}
     case haControl:
     {
 #if HA_CONTROL

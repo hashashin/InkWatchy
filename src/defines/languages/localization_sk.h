@@ -181,6 +181,7 @@
 #define MENU_HEART_MONITOR "Monitor srdca"
 #define MENU_HEALTH "Zdravie"
 #define MENU_QR "QR"
+#define MENU_RSS "RSS"
 #define MENU_STEPS_PER_DAY "Kroky za den"
 #define MENU_VAULT "Trezor"
 #define MENU_WIFI_TOOL "Wifi nastroj"

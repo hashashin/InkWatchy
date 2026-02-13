@@ -329,6 +329,9 @@ The default is this:
 // QR code generator
 #define QR_APP 0
 
+// Poor man rss reader
+#define RSS_READER 0
+
 //HomeAssistant cmds via mqtt
 #define HA_CONTROL 0
 
@@ -517,3 +520,6 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define PRESENCE_BEACON_BURST_MS 1500UL
 #define PRESENCE_BEACON_TX_PWR_INDEX 0   // 0:-12, 1:-6, 2:0, 3:+3
 #define PRESENCE_BEACON_DEFAULT_ENABLED 0
+
+#define RSS_READER_ENDPOINT "https://yourendpoint/v1/rss/xxxx" // shoud return a json with this format: {"src":"xxxx","ts":0,"items":[{"t":"","u":""},{"t":"","u":""},{"t":"","u":""}]} 
+#define RSS_READER_CACHE_PATH "/rss/xxxx.json"

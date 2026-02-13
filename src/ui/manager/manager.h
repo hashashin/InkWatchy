@@ -55,6 +55,7 @@ typedef enum
     healthMenu,
     heartMonitor,
     qrApp,
+    rssReader,
     haControl,
     chessApp,
     fsUpload,
@@ -137,6 +138,9 @@ void switchHealthMenu();
 #endif
 #if QR_APP
 void switchQrApp();
+#endif
+#if RSS_READER
+void switchRssReader();
 #endif
 #if HA_CONTROL
 void switchHaControl();

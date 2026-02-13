@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[15];
+    entryMenu buttons[16];
 #if CALENDAR
     {
         count = count + 1;
@@ -54,6 +54,12 @@ void initMainMenu()
     {
         count = count + 1;
         buttons[count] = {MENU_QR, getImg("qrapp/qr"), switchQrApp};
+    }
+#endif
+#if RSS_READER
+    {
+        count = count + 1;
+        buttons[count] = {MENU_RSS, getImg("qrapp/web"), switchRssReader};
     }
 #endif
 #if HA_CONTROL

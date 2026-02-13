@@ -181,6 +181,7 @@
 #define MENU_HEART_MONITOR "Monitor cardiaco"
 #define MENU_HEALTH "Salud"
 #define MENU_QR "QR"
+#define MENU_RSS "RSS"
 #define MENU_STEPS_PER_DAY "Pasos por dia"
 #define MENU_VAULT "Boveda"
 #define MENU_WIFI_TOOL "Herramienta Wifi"
