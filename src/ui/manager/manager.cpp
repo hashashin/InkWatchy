@@ -583,6 +583,27 @@ case rssReader:
 #endif
         break;
     }
+    case notesApp:
+    {
+#if NOTES_APP
+        managerLaunchFunc(notesApp, initNotes, loopNotes, exitNotes);
+#endif
+        break;
+    }
+    case notesManager:
+    {
+#if NOTES_APP
+        managerLaunchFunc(notesManager, initNotesManager, loopNotesManager, exitNotesManager);
+#endif
+        break;
+    }
+    case bluetoothHostScanner:
+    {
+#if BLE_HOST_ENABLED
+        managerLaunchFunc(bluetoothHostScanner, initBluetoothHostScanner, loopBluetoothHostScanner, exitBluetoothHostScanner);
+#endif
+        break;
+    }
     case fontPreview:
     {
 #if FONT_MENU_ENABLED

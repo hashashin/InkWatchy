@@ -24,7 +24,12 @@ float precision(float f, int places);
 void setBoolMutex(std::mutex *theMutex, bool *theBool, bool boolValue);
 int betterRandom(int min, int max);
 int betterRandom(int max);
+String precisionToString(float f, int places);
 
 void setBit(uint8_t *num, uint8_t position, bool value);
 bool getBit(uint8_t num, uint8_t position);
 void toggleBit(uint8_t *num, uint8_t position);
+
+#if WATCHFACE_12H
+String convertTo12HourFormat(String time24);
+#endif

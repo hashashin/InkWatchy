@@ -68,31 +68,6 @@ void clearTime()
     dis->fillRect(TIME_CORD_X, TIME_CORD_Y - TIME_HEIGHT, TIME_WIDTH, TIME_HEIGHT, SCWhite);
 }
 
-#if WATCHFACE_12H
-String convertTo12HourFormat(String time24) {
-    // Split the input time (hh:mm) into hours and minutes
-    int colonIndex = time24.indexOf(':');
-    int hour = time24.substring(0, colonIndex).toInt();
-    String minute = time24.substring(colonIndex + 1);
-
-    // Convert the hour to 12-hour format
-    if (hour == 0) {
-        hour = 12; // Midnight case
-    } else if (hour > 12) {
-        hour -= 12; // Afternoon case
-    }
-
-    // Add leading zero to the hour if necessary
-    String hourStr = String(hour);
-    if (hourStr.length() == 1) {
-        hourStr = "0" + hourStr;
-    }
-
-    // Combine hour and minute for the final result
-    return hourStr + ":" + minute;
-}
-#endif
-
 // Formats time string according to 12H/24H setting from config.h
 String getTerrainLocalizedTimeString(tmElements_t timeEl)
 {
@@ -226,6 +201,9 @@ static void drawTimeAfterApply(bool forceDraw)
 
         // Bar
         writeImageN(4, 30, getImg("terrain/stepsbar"));
+        if(steps > STEPS_GOAL) {
+            steps = STEPS_GOAL;
+        }
         uint16_t percentStepsTmp = uint16_t(((float)steps / (float)STEPS_GOAL) * 100.0);
         int toX = map(percentStepsTmp, 4, 103, 0, 100);
         // debugLog("toX: " + String(toX) + " percentStepsTmp: " + String(percentStepsTmp));
