@@ -2,76 +2,58 @@
 #include "rtcMem.h"
 
 bool buttonsActivated = false;
-buttonState buttonPressed = None;
+std::atomic<buttonState> buttonPressed(None);
 TaskHandle_t buttonTask = NULL;
-std::mutex buttMut;
 
 buttonState useButtonBack()
 {
-    buttMut.lock();
-    // debugLog("useButtonBack state: " + getButtonString(buttonPressed));
-    if (buttonPressed == Back || buttonPressed == LongBack)
+    buttonState state = buttonPressed.load();
+    if (state == Back || state == LongBack)
     {
-        buttonState buttonPressedTmp = buttonPressed;
-        buttonPressed = None;
-        buttMut.unlock();
-        return buttonPressedTmp;
+        if (buttonPressed.compare_exchange_strong(state, None))
+        {
+            return state;
+        }
     }
-    buttMut.unlock();
     return None;
 }
 
 buttonState useButton()
 {
-    buttMut.lock();
-    if (buttonPressed == Back || buttonPressed == LongBack)
+    buttonState state = buttonPressed.load();
+    if (state != Back && state != LongBack && state != None)
     {
-        buttMut.unlock();
-        return None;
+        if (buttonPressed.compare_exchange_strong(state, None))
+        {
+            debugLog("Used button by UI: " + getButtonString(state));
+            return state;
+        }
     }
-    buttonState buttonPressedTmp = buttonPressed;
-    buttonPressed = None;
-
-    // debugLog("Used button by UI: " + getButtonString(buttonPressedTmp));
-    if (buttonPressedTmp != None)
-    {
-        debugLog("Used button by UI: " + getButtonString(buttonPressedTmp));
-    }
-    buttMut.unlock();
-    return buttonPressedTmp;
+    return None;
 }
 
 // Should be used only in watchface
 buttonState useAllButtons()
 {
-    buttMut.lock();
-    // if (buttonPressed == Back || buttonPressed == LongBack)
-    // {
-    //     buttMut.unlock();
-    //     return None;
-    // }
-    buttonState buttonPressedTmp = buttonPressed;
-    buttonPressed = None;
+    buttonState buttonPressedTmp = buttonPressed.exchange(None);
 
-    // debugLog("Used button by UI: " + getButtonString(buttonPressedTmp));
+#if DEBUG
     if (buttonPressedTmp != None)
     {
-        debugLog("Used button by UI: " + getButtonString(buttonPressedTmp));
+        debugLog("Used all button by UI: " + getButtonString(buttonPressedTmp));
     }
-    buttMut.unlock();
+#endif
     return buttonPressedTmp;
 }
 
 // To unlock the button
 void useButtonBlank()
 {
-    buttMut.lock();
-    if (buttonPressed != Back && buttonPressed != LongBack)
+    buttonState state = buttonPressed.load();
+    if (state != Back && state != LongBack)
     {
-        buttonPressed = None;
+        buttonPressed.compare_exchange_strong(state, None);
     }
-    buttMut.unlock();
-    // This function is used by UI without a loop update, so we should delayTask here to not be so fast
     delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
 }
 
@@ -91,10 +73,8 @@ void initButtons()
 
 void setButton(buttonState button)
 {
-    buttMut.lock();
     debugLog("setButton called: " + getButtonString(button));
-    buttonPressed = button;
-    buttMut.unlock();
+    buttonPressed.store(button);
     vibrateMotor();
     resetSleepDelay();
     debugLog("setButton done");
@@ -107,7 +87,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
     int elapsedtime = 0;
     initCombinations();
     loopCombinations();
-    while (buttonRead(buttonPin) == BUT_CLICK_STATE && elapsedtime <= BUTTON_LONG_PRESS_MS)
+    while (readOnlyOneButton(buttonPin) == BUT_CLICK_STATE && elapsedtime <= BUTTON_LONG_PRESS_MS)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
         elapsedtime = millisBetter() - startime;
@@ -138,7 +118,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
         debugLog("Vibrating long button now");
         vibrateMotor(VIBRATION_BUTTON_LONG_TIME);
         int64_t now = millisBetter();
-        while (buttonRead(buttonPin) == BUT_CLICK_STATE)
+        while (readOnlyOneButton(buttonPin) == BUT_CLICK_STATE)
         {
             delayTask(SMALL_BUTTON_DELAY_MS);
             if (millisBetter() - now > BUTTON_STUCK_MS)
@@ -161,9 +141,11 @@ void loopButtonsTask(void *parameter)
     if (isFullMode() == false)
     {
         // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
-        while (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
+        buttonStates btns = readButtons();
+        while (btns.back || btns.menu || btns.up || btns.down)
         {
             delayTask(SMALL_BUTTON_DELAY_MS * 3);
+            btns = readButtons();
         }
     }
     interruptedButton = None;
@@ -186,32 +168,23 @@ void loopButtonsTask(void *parameter)
         }
 #endif
 
-        buttMut.lock();
-        if (interruptedButtonCopy == Back && buttonPressed != LongBack)
+        buttonState currentPressed = buttonPressed.load();
+        if (interruptedButtonCopy == Back && currentPressed != LongBack)
         {
-            buttMut.unlock();
             longButtonCheck(BACK_PIN, Back, LongBack);
-            buttMut.lock();
         }
-        else if (interruptedButtonCopy == Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu)
+        else if (interruptedButtonCopy == Menu && currentPressed != Back && currentPressed != LongBack && currentPressed != LongMenu)
         {
-            buttMut.unlock();
             longButtonCheck(MENU_PIN, Menu, LongMenu);
-            buttMut.lock();
         }
-        else if (interruptedButtonCopy == Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu && buttonPressed != LongUp)
+        else if (interruptedButtonCopy == Up && currentPressed != Menu && currentPressed != Back && currentPressed != LongBack && currentPressed != LongMenu && currentPressed != LongUp)
         {
-            buttMut.unlock();
             longButtonCheck(UP_PIN, Up, LongUp);
-            buttMut.lock();
         }
-        else if (interruptedButtonCopy == Down && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongUp && buttonPressed != LongBack && buttonPressed != LongDown && buttonPressed != LongMenu)
+        else if (interruptedButtonCopy == Down && currentPressed != Up && currentPressed != Menu && currentPressed != Back && currentPressed != LongUp && currentPressed != LongBack && currentPressed != LongDown && currentPressed != LongMenu)
         {
-            buttMut.unlock();
             longButtonCheck(DOWN_PIN, Down, LongDown);
-            buttMut.lock();
         }
-        buttMut.unlock();
         if (interruptedButtonCopy == interruptedButton || wasCombination == true)
         {
 #if ATCHY_VER == YATCHY
@@ -245,32 +218,23 @@ void loopButtonsTask(void *parameter)
     while (true)
     {
         delayTask(BUTTON_TASK_DELAY);
-        buttMut.lock();
-        if (buttonRead(BACK_PIN) == HIGH && buttonPressed != LongBack)
+        buttonState currentPressed = buttonPressed.load();
+        if (buttonRead(BACK_PIN) == HIGH && currentPressed != LongBack)
         {
-            buttMut.unlock();
             longButtonCheck(BACK_PIN, Back, LongBack);
-            buttMut.lock();
         }
-        else if (buttonRead(MENU_PIN) == HIGH && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu)
+        else if (buttonRead(MENU_PIN) == HIGH && currentPressed != Back && currentPressed != LongBack && currentPressed != LongMenu)
         {
-            buttMut.unlock();
             longButtonCheck(MENU_PIN, Menu, LongMenu);
-            buttMut.lock();
         }
-        else if (buttonRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu && buttonPressed != LongUp)
+        else if (buttonRead(UP_PIN) == HIGH && currentPressed != Menu && currentPressed != Back && currentPressed != LongBack && currentPressed != LongMenu && currentPressed != LongUp)
         {
-            buttMut.unlock();
             longButtonCheck(UP_PIN, Up, LongUp);
-            buttMut.lock();
         }
-        else if (buttonRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongUp && buttonPressed != LongBack && buttonPressed != LongDown && buttonPressed != LongMenu)
+        else if (buttonRead(DOWN_PIN) == HIGH && currentPressed != Up && currentPressed != Menu && currentPressed != Back && currentPressed != LongUp && currentPressed != LongBack && currentPressed != LongDown && currentPressed != LongMenu)
         {
-            buttMut.unlock();
             longButtonCheck(DOWN_PIN, Down, LongDown);
-            buttMut.lock();
         }
-        buttMut.unlock();
     }
 }
 #endif
@@ -394,27 +358,6 @@ void manageButtonWakeUp()
 #endif
 }
 
-#if DEBUG
-void dumpButtons()
-{
-    if (buttonRead(MENU_PIN) == BUT_CLICK_STATE)
-    {
-        debugLog("Menu button pressed");
-    }
-    else if (buttonRead(BACK_PIN) == BUT_CLICK_STATE)
-    {
-        debugLog("Back button pressed");
-    }
-    else if (buttonRead(UP_PIN) == BUT_CLICK_STATE)
-    {
-        debugLog("Up button pressed");
-    }
-    else if (buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
-    {
-        debugLog("Down button pressed");
-    }
-}
-#endif
 String getButtonString(buttonState state)
 {
     switch (state)
@@ -456,7 +399,31 @@ void turnOnButtons()
     }
 }
 
-bool buttonRead(uint8_t pin)
+buttonStates readButtons()
+{
+    buttonStates btns = { 0 };
+#if ATCHY_VER != YATCHY
+    btns.back = digitalRead(BACK_PIN) == BUT_CLICK_STATE;
+    btns.menu = digitalRead(MENU_PIN) == BUT_CLICK_STATE;
+    btns.down = digitalRead(DOWN_PIN) == BUT_CLICK_STATE;
+    btns.up = digitalRead(UP_PIN) == BUT_CLICK_STATE;
+#else
+#if YATCHY_SHIPPING_MODE == 0
+    if (rM.gpioExpander.simplerInit() == false)
+    {
+        return btns;
+    }
+    uint16_t reg = rM.gpioExpander.readRegister(MCP_GPIO);
+    btns.back = !rM.gpioExpander.checkBit(reg, BACK_PIN);
+    btns.menu = !rM.gpioExpander.checkBit(reg, MENU_PIN);
+    btns.down = !rM.gpioExpander.checkBit(reg, DOWN_PIN);
+    btns.up = !rM.gpioExpander.checkBit(reg, UP_PIN);
+#endif
+#endif
+    return btns;
+}
+
+bool readOnlyOneButton(uint8_t pin)
 {
 #if ATCHY_VER != YATCHY
     return digitalRead(pin);

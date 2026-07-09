@@ -49,6 +49,7 @@ RTC_DATA_ATTR rtcMem rM = {
 // Time drift correction
 #if TIME_DRIFT_CORRECTION
     .driftStartUnix = 0,
+    .driftDone = false,
 #endif
     // Power settings
     .disableAllVibration = false,
@@ -126,6 +127,14 @@ RTC_DATA_ATTR rtcMem rM = {
         .watchfacePos = 0,
         .positionEngaged = true,
         .energySaving = false,
+    },
+#endif
+// dosy watchface
+#if WATCHFACE_DOSY
+    .dosy = {
+        .weatherAvailable = false, .lastHourWeatherCheck = 255,
+        .lastTemp = 0,
+        .lastCondition = 255,
     },
 #endif
     // Watchface modules

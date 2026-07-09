@@ -1,7 +1,7 @@
 #include "accDebug.h"
-#include "rtcMem.h"
 
-#if DEBUG_MENUS == 1
+#if DEBUG_MENUS
+#include "rtcMem.h"
 
 bool workingAcc = false;
 
@@ -75,16 +75,6 @@ void turn3D()
   }
 #endif
   is3DOn = !is3DOn;
-}
-
-float getAxisDegrees(int16_t val, int16_t axisA, int16_t axisB)
-{
-  float magnitude = sqrt((float)val * val + (float)axisA * axisA + (float)axisB * axisB);
-
-  if (magnitude == 0)
-    return 0;
-
-  return asin((float)val / magnitude) * 57.29577f;
 }
 
 void initAccDebug()

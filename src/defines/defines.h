@@ -184,11 +184,20 @@ extern uint16_t SCWhite;
 #if PONG
 #include "../ui/places/pong/pong.h"
 #endif
+#if PAINT
+#include "../ui/places/paint/paint.h"
+#endif
+#if MAZE
+#include "../ui/places/maze/maze.h"
+#endif
 #if TETRIS
 #include "../ui/places/tetris/tetrisPlace.h"
 #endif
 #if JUMPER
 #include "../ui/places/jumper/jumper.h"
+#endif
+#if DICE
+#include "../ui/places/dice/dice.h"
 #endif
 #if CREDITS
 #include "../ui/places/credits/credits.h"
@@ -264,11 +273,17 @@ extern uint16_t SCWhite;
 #if WATCHFACE_SHADES_SZYBET
 #include "../ui/watchface/watchfaces/shades_Szybet/shades.h"
 #endif
+#if WATCHFACE_STATION
+#include "../ui/watchface/watchfaces/station_Szybet/station.h"
+#endif
 #if WATCHFACE_ANALOG_SHARP_SZYBET
 #include "../ui/watchface/watchfaces/analogSharp_Szybet/analogSharp.h"
 #endif
 #if WATCHFACE_TAYCHRON
 #include "../ui/watchface/watchfaces/taychron_tay/taychron.h"
+#endif
+#if WATCHFACE_ORBITAL
+#include "../ui/watchface/watchfaces/orbital_Defaltastra/orbital.h"
 #endif
 #if WATCHFACE_SLATE
 #include "../ui/watchface/watchfaces/slate_Suddoku/slate.h"
@@ -285,6 +300,9 @@ extern uint16_t SCWhite;
 #if WATCHFACE_ANALOG_PULSEPRO
 #include "../ui/watchface/watchfaces/analogPulsePro/analogPulsePro.h"
 #endif
+#if WATCHFACE_DOSY
+#include "../ui/watchface/watchfaces/dosy_choyg/dosy.h"
+#endif
 #if GSR_WATCHFACES
 #include "../ui/watchface/watchfaceManagers/wManageGSR/wManageGSR.h"
 #endif
@@ -297,6 +315,9 @@ extern uint16_t SCWhite;
 #endif
 #if BLE_HOST_ENABLED
 #include "../ui/places/BLEHostScanner/BLEHostScanner.h"
+#endif
+#if BLE_PERIPHERAL
+#include "../ui/places/blePeripheral/blePeripheral.h"
 #endif
 #include "../ui/places/errorScreen/errorScreen.h"
 #if SET_CLOCK_GUI

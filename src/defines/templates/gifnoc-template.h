@@ -17,7 +17,13 @@
 // Domain
 #define WATCHFACE_DOMAIN_DOTP 1
 // Terrain
-#define WATCHFACE_TERRAIN 0
+#define WATCHFACE_TERRAIN 1
+// Orbital watchface
+#define WATCHFACE_ORBITAL 1
+// Dosy watchface
+#define WATCHFACE_DOSY 1
+// Station watchface
+#define WATCHFACE_STATION 0
 // Shades & Analog (Code preview watchfaces)
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
@@ -45,8 +51,6 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define GSR_WATCHFACES_OPTIMISE 1 // Draws only every minute, not all the time, small optimisations, doesn't change much but could break things but hey
 #define GSR_STARFIELD 0
 #define GSR_STARFIELD_TIMEZONE_THING 0.0 // Hours.Minutes of your timezone (kind of UTC) - yes too lazy to automate that
-#define GSR_CLASSICS 0
-// Only one of them needs to be enabled at the time.
 #define GSR_CLASSICS_BASICS 0
 #define GSR_CLASSICS_7SEG 0
 #define GSR_CLASSICS_DOS 0
@@ -55,7 +59,6 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define GSR_CLASSICS_TETRIS 0
 #define GSR_CLASSICS_MAC 0
 #define GSR_CLASSICS_MARIO 0
-// No more classics
 #define GSR_STATIONARY 0
 
 // Basics
@@ -302,6 +305,10 @@ The default is this:
 #define SOFT_START_DELAY_MS 4500
 #define FORCE_DISABLE_ACC 0   // 1 Means ACC is disabled, BMA530 doesn't like that, increases power consumption
 #define LED_MAX_TIME_MS 30000 // Fallback if diode is on and you forgot to turn it off (flashlight)
+// When this is off, if a watchface doesn't have a lp core, the default one will be selected
+// When this is on, depending on the watchface yatchy could run without a lp core
+// This makes battery life A LOT WORSE, ONLY ENABLE IT IF YOU ACCEPT THAT
+#define HYBRID_LP_CORE 0
 
 // Vault
 #define VAULT 1
@@ -318,6 +325,16 @@ The default is this:
 
 // Snake
 #define SNAKE 1
+
+// Paint, requires ACC
+#define PAINT 1
+
+// Maze game, requires ACC
+#define MAZE 1
+
+// Dice app
+#define DICE 1
+#define DICE_ANIMATION_TIME_MS 2000
 
 // Credits page
 #define CREDITS 1 // Feel free to disable it for your own usage :D
@@ -349,7 +366,7 @@ The default is this:
 // It's really heavy on memory too. DO NOT ENABLE BLE until you know what you want.
 // If PANIC happens with this enabled, turn it off, check again
 // If it works without it, disable other things (snake, bitcoin etc.)
-#define BLE_ENABLED 1 // Ble in general
+#define BLE_ENABLED 0 // Ble in general
 #define BLE_NAME "InkWatchy"
 
 // For keyboard for example
@@ -373,6 +390,12 @@ CONFIG_BT_BLE_ENABLED=y
 
 // Notes, needs BLE_HOST_ENABLED
 #define NOTES_APP 0
+
+// Ble peripheral apps, needs BLE_ENABLED
+#define BLE_PERIPHERAL 0
+// Enable at least one of them
+#define PERIPHERAL_TOWERFALL 0
+#define PERIPHERAL_BROFORCE 0
 
 // Advanced
 #define BUTTON_TASK_DELAY 30 // In ms, lower means faster button detection but more cpu usage
@@ -475,10 +498,6 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define SIMPLE_DEEP_SLEEP_TEST 0 // Only if WAIT_FOR_INPUT or WAIT_FOR_MONITOR and DEBUG. No interrupts able to wake up it. Remember to disable Usb jtag communication if it's pure uart comm, also only for yatchy
 #define YATCHY_SHIPPING_MODE 0
 
-// Voltage reading average
-#define VOLTAGE_AVG_COUNT 8
-#define VOLTAGE_AVG_DELAY 0
-
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3
 #define BATTERY_CRIT_VOLTAGE 3.15
@@ -488,50 +507,12 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 // #define BAD_BATTERY_CHARGE_VOLTAGE 4.05
 #define BATTERY_CHARGE_DETECTION_DIFFERENCE 0.10 // The minimum difference to detect that the battery is charging
 
-// Other
-#define FULL_MODE_AFTER_S 10 // Entering full mode after x seconds.
-
-// Other other, resources thing
-#define RESOURCES_NAME_LENGTH 50
-#define IMG_COUNT 24
-#define FONT_COUNT 10
-
-// Priorities - max is 24
-#define MAIN_LOOP_PRIORITY 20
-#define WIFI_PRIORITY_REGULAR 10
-#define BUTTONS_PRIORITY 12
-#define WIFI_PRIORITY_PERSISTENT 4
-#define SCOM_PRIORITY 3
-#define MOTOR_PRIORITY 22
-#define WATCHDOG_PRIORITY 1
-#define RGB_PRIORITY 22
-
-// Config
-#define CONF_BOOK_CURRENT_PAGE "current_page_"
-#define CONF_BOOK_CURRENT_BOOK "current_book"
-#define CONF_DISABLE_ALL_VIBRATION "disable_all_vibrations"
-#define CONF_DISABLE_WAKE_UP "disable_wake_up"
-#define CONF_BITCOIN "bitcoin"
-#define CONF_DRIFT "drift"
-#define CONF_DRIFT_FAST "drift_fast"
-#define CONF_UNIX_LAST_SYNC "last_sync_unix"
-#define CONF_UNIX_PREVIOUS_SYNC "previous_sync_unix"
-#define CONF_SECONDS_DRIFT "drift_sync_seconds"
-#define CONF_UNIX_LAST_CHARGE "last_charge_unix"
-#define CONF_RTC_BACKUP "rtc_memory_backup"
-
-#define WEATHER_HOURLY_DIR "/weather/hourly"
-#define WEATHER_DIR "/weather"
-#define AIR_QUALITY_HOURLY_DIR "/air_quality/hourly"
-#define AIR_QUALITY_DIR "/air_quality"
-
-#define IMAGE_MODULE_PATH "watchfaceImages/"
-#define PRECISE_STEP_COUNTING_DIR "/other/steps/"
-
+// FS upload
 #define FS_UPLOAD_DEFAULT_DIR "/"
 #define FS_UPLOAD_PORT 80
 #define FS_UPLOAD_MAX_UPLOAD_BYTES (6 * 1024 * 1024)
 
+// Presence beacon
 #define PRESENCE_BEACON_UUID "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 #define PRESENCE_BEACON_MAJOR 1
 #define PRESENCE_BEACON_MINOR 1
@@ -540,6 +521,6 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define PRESENCE_BEACON_TX_PWR_INDEX 0   // 0:-12, 1:-6, 2:0, 3:+3
 #define PRESENCE_BEACON_DEFAULT_ENABLED 0
 
-#define RSS_READER_ENDPOINT "https://yourendpoint/v1/rss/xxxx" // shoud return a json with this format: {"src":"xxxx","ts":0,"items":[{"t":"","u":""},{"t":"","u":""},{"t":"","u":""}]} 
+// RSS reader
+#define RSS_READER_ENDPOINT "https://yourendpoint/v1/rss/xxxx" // shoud return a json with this format: {"src":"xxxx","ts":0,"items":[{"t":"","u":""},{"t":"","u":""},{"t":"","u":""}]}
 #define RSS_READER_CACHE_PATH "/rss/xxxx.json"
-#define NOTES_DIR "/notes"

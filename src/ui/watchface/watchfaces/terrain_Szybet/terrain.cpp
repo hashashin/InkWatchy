@@ -3,14 +3,14 @@
 
 #if WATCHFACE_TERRAIN
 
-#define TIME_CORD_X 7
-#define TIME_CORD_Y 118
+#define TIME_CORD_X 4
+#define TIME_CORD_Y 113
 #define TIME_CORD TIME_CORD_X, TIME_CORD_Y
 #define TIME_WIDTH 142
 #define TIME_HEIGHT 33
 
 // #define TIME_FONT getFont("terrain/font_terrain20")
-#define TIME_FONT getFont("terrain/octosquares21")
+#define TIME_FONT getFont("terrain/font_terrain17")
 #define STEPS_FONT getFont("terrain/octosquares11")
 #define DAY_FONT getFont("terrain/fullmoon10")
 #define DATE_FONT getFont("terrain/fullmoon9")
@@ -65,7 +65,7 @@ void drawFancyDuskDawn()
 
 void clearTime()
 {
-    dis->fillRect(TIME_CORD_X, TIME_CORD_Y - TIME_HEIGHT, TIME_WIDTH, TIME_HEIGHT, SCWhite);
+    dis->fillRect(4, 123 - 39, 144, 39, SCWhite);
 }
 
 // Formats time string according to 12H/24H setting from config.h
@@ -86,30 +86,25 @@ void drawAmPm()
 {
     bool isPM = (timeRTCLocal.Hour >= 12);
     writeImageN(1, 82 - 19, getImg("terrain/PmAm"));
-    if(isPM == true) {
+    if (isPM == true)
+    {
         writeImageN(AM_PM_X, AM_PM_Y, getImg("terrain/pm"));
-    }  else {
+    }
+    else
+    {
         writeImageN(AM_PM_X, AM_PM_Y, getImg("terrain/am"));
     }
 }
 #endif
-
-static void showTimeBeforeApply()
-{
-#if WATCHFACE_12H
-    if (rM.wFTime.Hour != timeRTCLocal.Hour)
-    {
-        drawAmPm();
-    }
-#endif
-}
 
 static void showTimeFull()
 {
     setTextSize(1);
     setFont(TIME_FONT);
     clearTime();
-    writeTextReplaceBack(getTerrainLocalizedTimeString(timeRTCLocal), TIME_CORD);
+    dis->setCursor(TIME_CORD);
+    dis->print(getTerrainLocalizedTimeString(timeRTCLocal));
+
 #if WATCHFACE_12H
     drawAmPm();
 #endif
@@ -165,6 +160,20 @@ static void drawBattery()
         int upY = map(rM.bat.percentage, 0, 100, BATTERY_START_SHORT_Y, BATTERY_START_SHORT_Y - BATTERY_START_SHORT_HEIGHT);
         dis->drawLine(195, BATTERY_START_SHORT_Y, 195, upY, SCBlack);
     }
+
+    // Voltage as text
+    String voltage = String(rM.bat.curV);
+    while (voltage.length() > 4)
+    {
+        voltage.remove(voltage.length() - 1);
+    }
+    voltage = voltage + "V";
+    dis->fillRect(157, 104, 31, 15, SCWhite);
+    setTextSize(1);
+    setFont(getFont("dogicapixel4"));
+    // writeTextReplaceBack(voltage, 160, 87);
+    dis->setCursor(157, 114);
+    dis->print(voltage);
 }
 
 void drawDuskDawnText()
@@ -201,7 +210,8 @@ static void drawTimeAfterApply(bool forceDraw)
 
         // Bar
         writeImageN(4, 30, getImg("terrain/stepsbar"));
-        if(steps > STEPS_GOAL) {
+        if (steps > STEPS_GOAL)
+        {
             steps = STEPS_GOAL;
         }
         uint16_t percentStepsTmp = uint16_t(((float)steps / (float)STEPS_GOAL) * 100.0);
@@ -275,7 +285,7 @@ static void drawDay()
 }
 
 const watchfaceDefOne terrainDefOne = {
-    .drawTimeBeforeApply = showTimeBeforeApply,
+    .drawTimeBeforeApply = showTimeFull,
     .drawTimeAfterApply = drawTimeAfterApply,
     .drawDay = drawDay,
     .drawMonth = []() {},
@@ -295,6 +305,7 @@ const watchfaceDefOne terrainDefOne = {
         }
         return false; },
     .lpCoreScreenPrepareCustom = clearTime,
+    .lpCoreFile = LP_CORE_FILE_TERRAIN,
 };
 
 #endif

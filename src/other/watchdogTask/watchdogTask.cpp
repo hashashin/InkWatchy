@@ -3,7 +3,8 @@
 
 bool allButtonCheck()
 {
-    if (buttonRead(BACK_PIN) == BUT_CLICK_STATE && buttonRead(MENU_PIN) == BUT_CLICK_STATE && buttonRead(UP_PIN) == BUT_CLICK_STATE && buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
+    buttonStates btns = readButtons();
+    if (btns.back && btns.menu && btns.up && btns.down)
     {
         return true;
     }
@@ -12,7 +13,8 @@ bool allButtonCheck()
 
 bool anyButtonCheck()
 {
-    if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
+    buttonStates btns = readButtons();
+    if (btns.back || btns.menu || btns.up || btns.down)
     {
         return true;
     }
@@ -22,7 +24,7 @@ bool anyButtonCheck()
 #if WATCHDOG_TASK
 TaskHandle_t watchdogTask = NULL;
 
-#define WATCHDOG_DELAY 30 * 1000
+#define WATCHDOG_DELAY 7 * 1000
 #define WATCHDOG_SMALL_DELAY 3 * 1000
 #if WATCHDOG_TASK_TIMEOUT
 int64_t watchdogMillis = 0;
@@ -31,8 +33,8 @@ std::atomic<bool> watchdogFlag{false};
 
 void loopWatchdogTask(void *parameter)
 {
-// debugLog("Watchdog starting, slowly");
-// delayTask(WATCHDOG_DELAY);
+    // debugLog("Watchdog starting, slowly");
+    delayTask(WATCHDOG_DELAY);
 // debugLog("Watchdog finally started!");
 #if WATCHDOG_TASK_TIMEOUT
     watchdogMillis = millisBetter();

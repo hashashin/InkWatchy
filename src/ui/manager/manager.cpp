@@ -466,6 +466,20 @@ void loopManager()
 #endif
         break;
     }
+    case paint:
+    {
+#if PAINT
+        managerLaunchFunc(paint, initPaint, loopPaint, exitPaint);
+#endif
+        break;
+    }
+    case maze:
+    {
+#if MAZE
+        managerLaunchFunc(maze, initMaze, loopMaze, exitMaze);
+#endif
+        break;
+    }
     case tetris:
     {
 #if TETRIS
@@ -487,6 +501,20 @@ void loopManager()
 #endif
         break;
     }
+    case diceMenu:
+    {
+#if DICE
+        managerLaunchFunc(diceMenu, initDiceMenu, loopMenu);
+#endif
+        break;
+    }
+    case diceApp:
+    {
+#if DICE
+        managerLaunchFunc(diceApp, initDiceApp, loopDiceApp, exitDiceApp);
+#endif
+        break;
+    }
     case gamesMenu:
     {
         managerLaunchFunc(gamesMenu, initGamesMenu, loopMenu);
@@ -502,7 +530,7 @@ void loopManager()
     case conwayApp:
     {
 #if CONWAY
-        managerLaunchFunc(conwayApp, initConway, loopConway);
+        managerLaunchFunc(conwayApp, initConway, loopConway, exitConway);
 #endif
         break;
     }
@@ -601,6 +629,20 @@ case rssReader:
     {
 #if BLE_HOST_ENABLED
         managerLaunchFunc(bluetoothHostScanner, initBluetoothHostScanner, loopBluetoothHostScanner, exitBluetoothHostScanner);
+#endif
+        break;
+    }
+    case blePeripheral:
+    {
+#if BLE_PERIPHERAL
+        managerLaunchFunc(blePeripheral, initBlePeripheral, loopBlePeripheral, exitBlePeripheral);
+#endif
+        break;
+    }
+    case blePeripheralMenu:
+    {
+#if BLE_PERIPHERAL
+        managerLaunchFunc(blePeripheralMenu, initBlePeripheralMenu, loopMenu);
 #endif
         break;
     }

@@ -1,4 +1,5 @@
-[![](https://dcbadge.limes.pink/api/server/6PUmRXZRGD)](https://discord.gg/6PUmRXZRGD)
+[![Chat on Matrix](https://img.shields.io/badge/Chat%20on-Matrix-000000.svg?style=flat&logo=matrix&logoColor=white)](https://matrix.to/#/#*atchy-community:matrix.org)
+[![Chat on Discord](https://img.shields.io/badge/Chat%20on-Discord-%235865F2.svg?logo=discord&logoColor=white)](https://discord.gg/6PUmRXZRGD)
 
 <h1 align="center">
   InkWatchy
@@ -11,7 +12,7 @@
 A <b>firmware</b> written from the ground up for the <a href="https://watchy.sqfmi.com">watchy</a> and now also <a href="https://github.com/Szybet/Yatchy">yatchy</a>
 </p>
 <p align="center">
-Now getting a bit <a href="https://github.com/Szybet/InkWatchy/tree/master/components/rusty/inkrusty">rusty</a>🦀
+Getting <a href="https://github.com/Szybet/InkWatchy/tree/master/components/rusty/inkrusty">rusty</a>🦀 and better looking with <a href="https://slint.dev">slint</a>
 </p>
   
 ### [Demo video previews here](https://github.com/Szybet/InkWatchy/wiki/Demo-videos)
@@ -52,8 +53,11 @@ Now getting a bit <a href="https://github.com/Szybet/InkWatchy/tree/master/compo
    - Snake (Written in rust!)
    - Pong game
    - Jumper game
+   - Dice app, with 3D animation
+   - Maze game, Paint - controller by accelerometer
    - Conway game of life
    - Small video player
+   - [BLE game controller](https://github.com/Szybet/InkWatchy/wiki/Demo-videos#ble-game-controller)
 - Experimental heart rate monitor (Just a proof of concept, works best on Yatchy)
 <details> <summary>Baiky app - Navigation & speed via BLE from your phone (Click for details)</summary>
 
@@ -81,31 +85,6 @@ Experimental, but works for me
 - ~~I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.~~
 - ~~https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.~~ <sub>Those 2 options were removed because I updated the build system and didn't bother to make it work with it, with some cmake you should be able to easily re-add those features, I you can't use cmake, then you shouldn't probably use either of those features anyway</sub>
 
-<details> 
-<summary><h2>Code features</h2></summary>
-
-This list is outdated ;)
-
-It doesn't use the watchy sub-class but it uses the same libraries. With that in mind, those are further diffrences from other firmwares:
-<sub>Every small text is a reason why I was mad enough to rewrite everything myself...</sub>
-- Welcome to contributions!
-- It's splitted into files and folders <sub>In my opinion a file that has 5k lines is heresy</sub>
-- It's function - not object based for the reason above and to make it easier for beginners to use
-- It uses free rtos tasks where needed
-- All resources like images, fonts, books are converted into variables dynamically via scripts. Editing images, changing font spacing is just one click. <sub>I can't believe I was the first to make this that way</sub>
-- The Ui is dynamically written. There are functions to do it eassly. Adding a new menu is just a few lines for example<sub>It's not just a collection of drawBitmap</sub>
-- It has a "manager" and design for various apps to run eassly
-- Has logs via serial. They can be disabled that they don't get compiled with changing one define - and the code doesn't look bad because it's a macro. Amazing <sub>Yea, this is a feature compared to other ones I have looked at</sub>
-- Uses libraries instead of pure calls to NTP or open weather
-- Many configurable values via defines in config.h
-- Many debugging tools in config.h
-- Most UI is rendered only when needed / values it's showing changed. Good for battery life
-- <sub> Proper variable naming and camelCase everywhere</sub>
-- LittleFS is used instead of NVS. Which means better code, logs in file system. Resources not uploaded on every program change. Awesome
-- Various tasks which speed up the debugging / development process (`resources/tools/other/tasks`)
-
-</details>
-
 ## Devices supported
 Supported devices:
 - [Yatchy](https://github.com/Szybet/Yatchy)
@@ -118,24 +97,13 @@ Don't try anything by yourself without the wiki, you will probably fail.
 
 Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 
-## Donations
-This is a passion project at this point. To help an open source developer and motivate him to create this software feel free to donate
-
-For paypall you need to contact me
-
-Bitcoin address: `bc1qm2d3w6a3qd93zrfuz4l6rs9yr30dmkl2t2z3y5`
-
-For a small coffe I can manage your firmware and provide you personalised binaries, if you can't compile it yourself, even add some features for you
-
 ## Sister projects
+- https://github.com/Szybet/Yatchy
 - https://github.com/Szybet/WatchySourcingHub
 - https://github.com/Szybet/watchy-scom
-- https://github.com/Szybet/Yatchy
 
 ## Questions / Contact
-Create a github issue or get in touch with me on <a href="https://discord.gg/6PUmRXZRGD">*atchy community</a> discord server
-
-or via matrix: @szybet:matrix.org
+Create a github issue or get in touch with me on the discord server or matrix space (on top of this read are links)
 
 <details>
 <summary><h2>Outdated demos</h2></summary>

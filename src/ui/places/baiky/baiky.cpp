@@ -12,8 +12,9 @@
 uint64_t mapWriteMillis = 0;
 #endif
 
-uint8_t mapMemory[5000] = {0};
+uint8_t *mapMemory = NULL;
 uint16_t mapMemoryIndex = 0;
+
 class mapCallBack : public BLECharacteristicCallbacks
 {
     void onWrite(BLECharacteristic *pCharacteristic)
@@ -51,53 +52,94 @@ class doneCallBack : public BLECharacteristicCallbacks
 
 float speed = 0;
 float speedOld = 0;
+uint64_t totalSpeedSum = 0;
+uint32_t speedCount = 0;
+
 class speedCallBack : public BLECharacteristicCallbacks
 {
     void onWrite(BLECharacteristic *pCharacteristic)
     {
         uint8_t *data = pCharacteristic->getData();
-        speed = ((data[0] << 8) | data[1]) / 10.0f;
-        // speed = ((data[0] << 8) | data[1]);
-        if(speed < 0.8) {
-            speed = 0.0;
+        float currentSpeed = ((data[0] << 8) | data[1]) / 10.0f;
+        if (currentSpeed < 0.8)
+        {
+            currentSpeed = 0.0;
         }
+        speed = currentSpeed;
+
+        uint32_t currentTime = millisBetter();
+        totalSpeedSum += (uint32_t)(speed * 10);
+        speedCount++;
+
         debugLog("Speed is: " + String(speed));
     }
 };
 
 bool baikyBleClient = false;
-void drawBleStatus() {
-    if(baikyBleClient == true) {
+void drawBleStatus()
+{
+    if (baikyBleClient == true)
+    {
         writeImageN(175, 0, getImg("baiky/bleConnected"));
-    } else {
+    }
+    else
+    {
         writeImageN(175, 0, getImg("baiky/bleDisconnected"));
     }
 }
 
-void drawSpeed() {
+void drawSpeed()
+{
     dis->fillRect(0, 0, 130, 38, SCWhite);
     setFont(getFont("baiky/UbuntuMono31"));
     String speedStr = String(speed);
-    while(speedStr.length() < 4) {
+    while (speedStr.length() < 4)
+    {
         speedStr = "0" + speedStr;
     }
-    while(speedStr.length() > 4) {
+    while (speedStr.length() > 4)
+    {
         speedStr.remove(speedStr.length() - 1);
     }
+    while (speedStr.endsWith(".") && speedStr.length() > 0)
+    {
+        speedStr.remove(speedStr.length() - 1);
+    }
+
+    dis->fillRect(0, 0, 130, 40, SCWhite);
     writeTextReplaceBack(speedStr, 0, 38);
 
-    writeImageN(130, 15, getImg("baiky/kms"));
+    float avgSpeed = (speedCount == 0) ? 0 : (float)totalSpeedSum / speedCount;
+    avgSpeed /= 10.0f;
+
+    String avgStr = String(avgSpeed);
+    while (avgStr.length() > 3)
+    {
+        avgStr.remove(avgStr.length() - 1);
+    }
+    while (avgStr.endsWith(".") && avgStr.length() > 0)
+    {
+        avgStr.remove(avgStr.length() - 1);
+    }
+
+    setFont(getFont("UbuntuMono10"));
+    dis->fillRect(130, 0, 30, 15, SCWhite);
+    writeTextReplaceBack(avgStr, 130, 13);
+    // debugLog("Average Speed: " + String(avgSpeed));
+
+    writeImageN(130, 15, getImg("baiky/kmh"));
 }
 
-cpuSpeed bleCpuSpeed;
 void initBaiky()
 {
     debugLog("Init baiky called");
-    bleCpuSpeed = getCpuSpeed();
+    saveCpuSpeed();
     setCpuSpeed(maxSpeed);
     initBle();
-
     bleService = pServer->createService(GPS_SERVICE_UUID);
+
+    mapMemory = (uint8_t *)malloc(5000 * sizeof(uint8_t));
+    memset(mapMemory, 0, 5000 * sizeof(uint8_t));
 
     {
         BLECharacteristic *pCharacteristic = bleService->createCharacteristic(
@@ -121,8 +163,9 @@ void initBaiky()
     }
 
     startBle();
+
     drawSpeed();
-    
+
     drawBleStatus();
     disUp(true);
 }
@@ -131,13 +174,15 @@ void loopBaiky()
 {
     useButton();
 
-    if(baikyBleClient != bleClientConnected) {
+    if (baikyBleClient != bleClientConnected)
+    {
         baikyBleClient = bleClientConnected;
         drawBleStatus();
         dUChange = true;
     }
 
-    if(speed != speedOld) {
+    if (speed != speedOld)
+    {
         speedOld = speed;
         drawSpeed();
         dUChange = true;
@@ -164,7 +209,9 @@ void loopBaiky()
 void exitBaiky()
 {
     exitBle();
-    setCpuSpeed(bleCpuSpeed);
+    free(mapMemory);
+    mapMemory = NULL;
+    restoreCpuSpeed();
 }
 
 #endif

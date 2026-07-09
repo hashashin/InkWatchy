@@ -4,6 +4,7 @@
 
 #if BLE_ENABLED || BLE_HOST_ENABLED
 extern bool bleClientConnected;
+esp_power_level_t getBlePower();
 #endif
 
 #if BLE_ENABLED
@@ -15,6 +16,7 @@ extern BLEService *bleService;
 void initBle();
 void startBle();
 void exitBle();
+void cleanupBleDevice(); // For use with other ble implementation that don't use exitBle
 #endif
 
 #if BLE_HOST_ENABLED
@@ -25,7 +27,6 @@ void hostBleStartScan(uint32_t durationSeconds);
 int hostBleGetScannedDevicesCount();
 String hostBleGetScannedDeviceName(int index);
 bool hostBleConnectToDevice(int index);
-void hostBleDisconnectDevice();
 extern String hostBleClientName;
 extern notify_callback hostBleNotifyCallback;
 #endif

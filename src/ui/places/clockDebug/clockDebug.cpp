@@ -35,8 +35,8 @@ String timeSince(int64_t unixTime)
     return output;
 }
 
-void cleanClockFiles() {
-    fsRemoveFile("/conf/" + String(CONF_SECONDS_DRIFT));
+void cleanClockFiles()
+{
     fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_SYNC));
     fsRemoveFile("/conf/" + String(CONF_UNIX_PREVIOUS_SYNC));
     fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_CHARGE));
@@ -44,27 +44,44 @@ void cleanClockFiles() {
     initClockDebug();
 }
 
+#if TIME_DRIFT_CORRECTION
+void resetDrift()
+{
+    fsRemoveFile("/conf/" + String(CONF_DRIFT));
+    fsRemoveFile("/conf/" + String(CONF_DRIFT_FAST));
+    rM.SRTC.setDrift(0, 0);
+    rM.driftStartUnix = 0;
+    rM.driftDone = false;
+    slintExit();
+    initClockDebug();
+}
+#endif
+
 void initClockDebug()
 {
-    init_general_page(5);
+    init_general_page(7);
     general_page_set_title(DEBUG_MENU_CLOCK);
     genpage_set_center();
 
-    GeneralPageButton button = GeneralPageButton{DEBUG_CLOCK_REMOVE_FILES, cleanClockFiles};
-    general_page_set_buttons(&button, 1);
+#if TIME_DRIFT_CORRECTION
+    GeneralPageButton buttons[2] = {GeneralPageButton{DEBUG_CLOCK_REMOVE_FILES, cleanClockFiles}, GeneralPageButton{"Undo drift fix", resetDrift}};
+    general_page_set_buttons(buttons, 2);
+#else
+    GeneralPageButton buttons[1] = {GeneralPageButton{DEBUG_CLOCK_REMOVE_FILES, cleanClockFiles}};
+    general_page_set_buttons(buttons, 1);
+#endif
 
     readRTC();
     timeClockLine = genpage_add(getClockPrecise().c_str());
 
     genpage_add(String("Timezone:").c_str());
     genpage_add(String(rM.posixTimeZone).c_str());
-    
-    if(strlen(TIMEZONE_OLSON) != 0) {
+
+    if (strlen(TIMEZONE_OLSON) != 0)
+    {
         genpage_add(String(String("Olson timezone: ") + String(TIMEZONE_OLSON)).c_str());
     }
-    
-    genpage_add(DEBUG_CLOCK_DRIFT_SYNCS);
-    genpage_add(fsGetString(CONF_SECONDS_DRIFT, DEBUG_CLOCK_NOT_AVAILABLE).c_str());
+
     {
         genpage_add(DEBUG_CLOCK_LAST_SYNC);
         String lastSync = fsGetString(CONF_UNIX_LAST_SYNC, "");
@@ -107,6 +124,15 @@ void initClockDebug()
         }
         genpage_add(lastSync.c_str());
     }
+#if TIME_DRIFT_CORRECTION
+    {
+        genpage_add(DEBUG_CLOCK_DRIFT_SYNCS);
+        genpage_add(fsGetString(CONF_SECONDS_DRIFT, DEBUG_CLOCK_NOT_AVAILABLE).c_str());
+        genpage_add(DEBUG_CLOCK_DRIFT_VALUES);
+        genpage_add(String("DRIFT: " + fsGetString(CONF_DRIFT, DEBUG_CLOCK_NOT_AVAILABLE)).c_str());
+        genpage_add(String("DRIFT_FAST: " + fsGetString(CONF_DRIFT_FAST, DEBUG_CLOCK_NOT_AVAILABLE)).c_str());
+    }
+#endif
     general_page_set_main();
 }
 
@@ -114,8 +140,9 @@ uint8_t savedSeconds = 0;
 void loopClockDebug()
 {
     resetSleepDelay();
-    
-    if(genpage_is_menu() == false) {
+
+    if (genpage_is_menu() == false)
+    {
         readRTC();
         if (savedSeconds != timeRTCLocal.Second)
         {

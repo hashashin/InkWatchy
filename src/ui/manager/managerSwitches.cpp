@@ -221,6 +221,20 @@ void switchPong()
     generalSwitch(pong);
 }
 
+#if PAINT
+void switchPaint()
+{
+    generalSwitch(paint);
+}
+#endif
+
+#if MAZE
+void switchMaze()
+{
+    generalSwitch(maze);
+}
+#endif
+
 #if TETRIS
 void switchTetris()
 {
@@ -239,6 +253,18 @@ void switchJumper()
 void switchSnake()
 {
     generalSwitch(snake);
+}
+#endif
+
+#if DICE
+void switchDiceMenu()
+{
+    generalSwitch(diceMenu);
+}
+
+void switchDiceApp()
+{
+    generalSwitch(diceApp);
 }
 #endif
 
@@ -342,6 +368,18 @@ void switchNotesManager()
 void switchBluetoothHostScanner()
 {
     generalSwitch(bluetoothHostScanner);
+}
+#endif
+
+#if BLE_PERIPHERAL
+void switchBlePeripheral()
+{
+    generalSwitch(blePeripheral);
+}
+
+void switchBlePeripheralMenu()
+{
+    generalSwitch(blePeripheralMenu);
 }
 #endif
 

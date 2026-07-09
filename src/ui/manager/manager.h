@@ -45,9 +45,13 @@ typedef enum
     videoPlayer,
     videoMenu,
     pong,
+    paint,
+    maze,
     tetris,
     jumperGame,
     snake,
+    diceMenu,
+    diceApp,
     gamesMenu,
     credits,
     conwayApp,
@@ -65,6 +69,8 @@ typedef enum
     notesManager,
     notesApp,
     bluetoothHostScanner,
+    blePeripheral,
+    blePeripheralMenu,
     fontPreview,
     fontPreviewMenu,
     watchfaceSelector,
@@ -199,6 +205,12 @@ void switchApple2();
 #if PONG
 void switchPong();
 #endif
+#if PAINT
+void switchPaint();
+#endif
+#if MAZE
+void switchMaze();
+#endif
 #if TETRIS
 void switchTetris();
 #endif
@@ -207,6 +219,10 @@ void switchJumper();
 #endif
 #if SNAKE
 void switchSnake();
+#endif
+#if DICE
+void switchDiceMenu();
+void switchDiceApp();
 #endif
 #if CREDITS
 void switchCredits();
@@ -229,6 +245,10 @@ void switchNotesManager();
 #endif
 #if BLE_HOST_ENABLED
 void switchBluetoothHostScanner();
+#endif
+#if BLE_PERIPHERAL
+void switchBlePeripheral();
+void switchBlePeripheralMenu();
 #endif
 #if FONT_MENU_ENABLED
 void switchFontsPreview();

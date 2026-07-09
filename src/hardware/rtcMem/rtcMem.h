@@ -47,6 +47,7 @@ struct rtcMem
 // Time drift correction
 #if TIME_DRIFT_CORRECTION
     uint64_t driftStartUnix;
+    bool driftDone: 1;
 #endif
     // Power settings
     bool disableAllVibration : 1;
@@ -143,6 +144,16 @@ struct rtcMem
     {
         int16_t lastTemp; // redibujo temp/icono
     } pulsepro;
+#endif
+// dosy watchface
+#if WATCHFACE_DOSY
+    struct
+    {
+        bool weatherAvailable : 1;
+        uint8_t lastHourWeatherCheck;
+        int16_t lastTemp;
+        uint8_t lastCondition;
+    } dosy;
 #endif
     // Watchface modules
     uint64_t latestModuleUpdate;

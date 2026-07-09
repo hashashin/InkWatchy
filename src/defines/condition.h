@@ -3,15 +3,6 @@
 #include "config.h"
 #include "bareDefines.h"
 
-/*
-Template for versioning
-#if ATCHY_VER == WATCHY_2
-
-#elif ATCHY_VER == WATCHY_3
-
-#endif
-*/
-
 #if YATCHY_SHIPPING_MODE
 #undef AVOID_SLEEP_USB_JTAG
 #define AVOID_SLEEP_USB_JTAG 0
@@ -397,4 +388,14 @@ Template for versioning
 #define HEALTH_MENU 1
 #else
 #define HEALTH_MENU 0
+#endif
+
+// Resources
+// Needs to be larger than anything that will reuse the same img pointers over and over again (not menu, that's fixed)
+#if ATCHY_VER == WATCHY_3
+#define IMG_COUNT 5
+#define FONT_COUNT 5
+#else
+#define IMG_COUNT 20
+#define FONT_COUNT 20
 #endif

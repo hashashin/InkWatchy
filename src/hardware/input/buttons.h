@@ -3,8 +3,7 @@
 #include "defines.h"
 
 extern bool buttonsActivated;
-extern std::mutex buttMut;
-extern buttonState buttonPressed;
+extern std::atomic<buttonState> buttonPressed;
 extern TaskHandle_t buttonTask;
 
 buttonState useButtonBack();
@@ -21,11 +20,9 @@ void deInitButtonTask();
 void setButton(buttonState button);
 void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton);
 void turnOnInterrupts();
+void turnOffInterrupts();
 void resumeButtonTask();
 extern buttonState interruptedButton;
-bool buttonRead(uint8_t pin); // Wrapper for digitalRead for buttons
-
-#if DEBUG
-void dumpButtons();
-#endif
+buttonStates readButtons();
+bool readOnlyOneButton(uint8_t pin); // Inneficient, if you check more than 2 buttons, use readButtons
 String getButtonString(buttonState state);
