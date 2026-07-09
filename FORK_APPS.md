@@ -1,91 +1,103 @@
-# Apps propias de este fork
+# Fork-specific apps
 
-Aplicaciones y features añadidas sobre [Szybet/InkWatchy](https://github.com/Szybet/InkWatchy).
-Cada una se activa/desactiva con su `#define` en `src/defines/config.h` (no versionado).
-Los secretos (endpoints privados, contraseñas, claves de firma) van en `src/defines/confidential.h` (no versionado).
+Applications and features added on top of [Szybet/InkWatchy](https://github.com/Szybet/InkWatchy).
+Each app can be enabled or disabled with its `#define` in `src/defines/config.h` (not versioned).
+Secrets such as private endpoints, passwords, and signing keys belong in `src/defines/confidential.h` (not versioned).
 
-## Resumen
+## Summary
 
-| App | Flag (`config.h`) | Dónde aparece | Qué hace |
+| App | Flag (`config.h`) | Where it appears | What it does |
 |---|---|---|---|
-| QR | `QR_APP` | Menú principal | Muestra QRs desde una lista en el filesystem |
-| RSS reader | `RSS_READER` | Menú principal | Lee titulares desde un endpoint propio |
-| HA control | `HA_CONTROL` | Menú principal | Manda comandos a Home Assistant por MQTT |
-| Cronómetro | `STOPWATCH` | Menú principal | Cronómetro con vueltas |
-| Ajedrez | `CHESS` | Menú de juegos | Partida contra una IA |
-| FS upload | `FS_UPLOAD` | Ajustes | Servidor HTTP para subir archivos al reloj |
-| Presence beacon | `PRESENCE_BEACON` | Ajustes | iBeacon BLE para detección de presencia en HA |
+| QR | `QR_APP` | Main menu | Shows QR codes from a filesystem-backed list |
+| RSS reader | `RSS_READER` | Main menu | Reads headlines from a private endpoint |
+| HA control | `HA_CONTROL` | Main menu | Sends MQTT commands to Home Assistant |
+| Stopwatch | `STOPWATCH` | Main menu | Stopwatch with lap tracking |
+| Moon / Sun | `MOON_SUN_APP` | Main menu | Compact lunar phase and solar times view |
+| Chess | `CHESS` | Games menu | Chess game against a small AI |
+| FS upload | `FS_UPLOAD` | Settings | HTTP server for uploading files to the watch |
+| Presence beacon | `PRESENCE_BEACON` | Settings | BLE iBeacon for Home Assistant presence detection |
 
 ---
 
-## QR — `QR_APP`
+## QR - `QR_APP`
 
-Muestra códigos QR a partir de una lista de texto en el filesystem (`/qrapp/qrlist.txt`).
+Displays QR codes from a text list stored in the filesystem (`/qrapp/qrlist.txt`).
 
-- **Archivos:** `src/ui/places/qrApp/`
-- **Formato de `qrlist.txt`:** una entrada por línea, `Título|contenido`. Sin `|`, la línea entera es título y contenido. `#` = comentario. Detecta el tipo por el prefijo del contenido y muestra icono: `WIFI:`, `tel:`, `http`, `BEGIN:VCARD` / `MECARD:` (contacto), o texto.
-- **vCard multilínea:** se admite en una sola línea usando `\n` (se convierte a CRLF al generar el QR). Ej: `Yo|BEGIN:VCARD\nVERSION:3.0\nFN:Ivan\nTEL:...\nEND:VCARD`.
+- **Files:** `src/ui/places/qrApp/`
+- **`qrlist.txt` format:** one entry per line, `Title|content`. Without `|`, the whole line is used as both title and content. `#` marks a comment. The app detects the content type from common prefixes and shows a matching icon: `WIFI:`, `tel:`, `http`, `BEGIN:VCARD` / `MECARD:` for contacts, or plain text.
+- **Multiline vCards:** supported on a single line using `\n`, which is converted to CRLF while generating the QR. Example: `Me|BEGIN:VCARD\nVERSION:3.0\nFN:Ivan\nTEL:...\nEND:VCARD`.
 
-## RSS reader — `RSS_READER`
+## RSS reader - `RSS_READER`
 
-Descarga titulares desde un endpoint JSON propio y los muestra (con QR a la URL de cada item).
+Downloads headlines from a private JSON endpoint and displays them, with a QR code for each item URL.
 
-- **Archivos:** `src/ui/places/rssReader/`
-- **Config:** `RSS_READER_ENDPOINT` (URL), `RSS_READER_CACHE_PATH` (caché en FS).
-- **Formato esperado del endpoint:** `{"src":"...","ts":0,"items":[{"t":"titulo","u":"url"}, ...]}`
-- ⚠️ Usa TLS sin validar certificado (`setInsecure`). Ver pendientes.
+- **Files:** `src/ui/places/rssReader/`
+- **Config:** `RSS_READER_ENDPOINT` (URL), `RSS_READER_CACHE_PATH` (filesystem cache).
+- **Expected endpoint format:** `{"src":"...","ts":0,"items":[{"t":"title","u":"url"}, ...]}`
+- **Security note:** currently uses TLS without certificate validation (`setInsecure`). See pending work.
 
-## HA control — `HA_CONTROL`
+## HA control - `HA_CONTROL`
 
-Envía comandos a Home Assistant por MQTT (firmados con un secreto compartido).
+Sends MQTT commands to Home Assistant, signed with a shared secret.
 
-- **Archivos:** `src/ui/places/haControl/`
-- **Config (secretos, `confidential.h`):** `HA_MQTT_HOST`, `HA_MQTT_PORT`, `HA_MQTT_SECRET`.
-- **Comandos actuales:** `printer_off`, `roomba_start`, `roomba_dock` (editables en `haControl.cpp`).
-- Los textos de estado/comandos están localizados (`HA_S_*` en los archivos de idioma).
+- **Files:** `src/ui/places/haControl/`
+- **Secret config (`confidential.h`):** `HA_MQTT_HOST`, `HA_MQTT_PORT`, `HA_MQTT_SECRET`.
+- **Current commands:** `printer_off`, `roomba_start`, `roomba_dock` (editable in `haControl.cpp`).
+- Status and command strings are localized through `HA_S_*` keys in the language files.
 
-## Cronómetro — `STOPWATCH`
+## Stopwatch - `STOPWATCH`
 
-Cronómetro con marcas de vuelta.
+Stopwatch with lap markers.
 
-- **Archivos:** `src/ui/places/stopWatch/`
-- Textos localizados: `STOPWATCH_*`.
+- **Files:** `src/ui/places/stopWatch/`
+- Localized strings: `STOPWATCH_*`.
 
-## Ajedrez — `CHESS`
+## Moon / Sun - `MOON_SUN_APP`
 
-Partida de ajedrez contra una IA, en el menú de juegos.
+Compact offline view for the current date, solar times, and lunar phase.
 
-- **Archivos:** `src/ui/places/chessApp/` — separado en:
-  - `chessApp.cpp` — flujo/UI de la app
-  - `chessRules.cpp` — reglas y movimientos
-  - `chessAi.cpp` — IA del rival
-  - `chessRender.cpp` — dibujado del tablero
+- **Files:** `src/ui/places/moonSun/`
+- **Config:** `WEATHER_LATIT` and `WEATHER_LONGTIT` are reused as the location source. If either value is missing, the app shows a setup hint instead of solar times.
+- **Shown data:** local date/time, sunrise, sunset, solar noon, daylight duration, moon phase, moon illumination percentage, and configured location.
+- **Dependencies:** uses the existing `MoonPhasePlus` library for lunar phase/illumination and a local solar-time calculation adapted from the existing watchface code.
+- **Localization:** app labels use `MOON_SUN_*`; lunar phase labels use `MOON_PHASE_*`. Spanish has compact translated phase names; the other non-English languages currently use English fallbacks.
+- **Menu icon:** reuses the existing `weather` image key to avoid adding another filesystem image asset.
 
-## FS upload — `FS_UPLOAD`
+## Chess - `CHESS`
 
-Levanta un servidor HTTP en el reloj para subir archivos al filesystem por WiFi.
+Chess game against an AI, available from the games menu.
 
-- **Archivos:** `src/ui/places/fsUpload/`
+- **Files:** `src/ui/places/chessApp/`, split into:
+  - `chessApp.cpp` - app flow and UI
+  - `chessRules.cpp` - rules and legal moves
+  - `chessAi.cpp` - opponent AI
+  - `chessRender.cpp` - board rendering
+
+## FS upload - `FS_UPLOAD`
+
+Starts an HTTP server on the watch to upload files to the filesystem over WiFi.
+
+- **Files:** `src/ui/places/fsUpload/`
 - **Config:** `FS_UPLOAD_DEFAULT_DIR`, `FS_UPLOAD_PORT`, `FS_UPLOAD_MAX_UPLOAD_BYTES`.
-- **Secretos (`confidential.h`):** `FS_UPLOAD_HTTP_USER`, `FS_UPLOAD_HTTP_PASS`, `FS_UPLOAD_SIGN_KEY`.
+- **Secrets (`confidential.h`):** `FS_UPLOAD_HTTP_USER`, `FS_UPLOAD_HTTP_PASS`, `FS_UPLOAD_SIGN_KEY`.
 
-## Presence beacon — `PRESENCE_BEACON`
+## Presence beacon - `PRESENCE_BEACON`
 
-Emite un iBeacon BLE periódico para que Home Assistant detecte presencia.
+Emits a periodic BLE iBeacon so Home Assistant can detect presence.
 
-- **Archivos:** `src/ui/places/presenceBeacon/` + `src/services/presenceBeaconSvc.*`
-- **Config:** `PRESENCE_BEACON_UUID`, `PRESENCE_BEACON_MAJOR/MINOR`, `PRESENCE_BEACON_PERIOD_MS`, `PRESENCE_BEACON_BURST_MS`, `PRESENCE_BEACON_TX_PWR_INDEX`, `PRESENCE_BEACON_DEFAULT_ENABLED`.
+- **Files:** `src/ui/places/presenceBeacon/` and `src/services/presenceBeaconSvc.*`
+- **Config:** `PRESENCE_BEACON_UUID`, `PRESENCE_BEACON_MAJOR`, `PRESENCE_BEACON_MINOR`, `PRESENCE_BEACON_PERIOD_MS`, `PRESENCE_BEACON_BURST_MS`, `PRESENCE_BEACON_TX_PWR_INDEX`, `PRESENCE_BEACON_DEFAULT_ENABLED`.
 
 ---
 
-## Watchfaces propias
+## Fork-specific watchfaces
 
-Además de las apps: `WATCHFACE_PULSEPRO`, `WATCHFACE_ANALOG_PULSEPRO` y `WATCHFACE_BINWATCH` (reloj binario) — flags en `config.h`.
+Additional watchfaces: `WATCHFACE_PULSEPRO`, `WATCHFACE_ANALOG_PULSEPRO`, and `WATCHFACE_BINWATCH` (binary watch). Their flags live in `config.h`.
 
-## Pendientes / ideas
+## Pending work / ideas
 
-- **Seguridad:** validar el certificado TLS en RSS reader (hoy `setInsecure`); auto-apagar el servidor de FS upload tras inactividad.
-- **Batería:** auditar que WiFi/BLE no queden activos entre wakes.
-- **Tests host-side** para la lógica pura (parser de `qrlist.txt`, RSS, etc.).
-- **CI** que compile en cada push (protege los merges con upstream).
-- **App nueva candidata:** autenticador TOTP/2FA offline (encaja con el vault + RTC).
+- **Security:** validate the RSS reader TLS certificate instead of using `setInsecure`; auto-stop the FS upload server after inactivity.
+- **Battery:** audit that WiFi/BLE do not stay active between wake cycles.
+- **Host-side tests** for pure logic such as the `qrlist.txt` parser and RSS parsing.
+- **CI** that builds on every push to protect upstream merges.
+- **Candidate app:** offline TOTP/2FA authenticator, which fits well with the vault and RTC.

@@ -65,6 +65,7 @@ typedef enum
     fsUpload,
     presenceBeaconCfg,
     stopwatch,
+    moonSun,
     baikyApp,
     notesManager,
     notesApp,
@@ -170,6 +171,7 @@ void switchStopwatch();
 void switchDailyStepsChartMenu();
 #endif
 void switchWeatherMenu();
+void switchMoonSun();
 void switchWeatherDateMenu();
 void switchWeatherConditionMenu();
 void switchAirQualityDateMenu();

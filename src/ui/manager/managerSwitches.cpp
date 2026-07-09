@@ -310,6 +310,13 @@ void switchRssReader()
 }
 #endif
 
+#if MOON_SUN_APP
+void switchMoonSun()
+{
+    generalSwitch(moonSun);
+}
+#endif
+
 #if HA_CONTROL
 void switchHaControl()
 {

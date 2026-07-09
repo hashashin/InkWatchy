@@ -234,6 +234,9 @@ extern uint16_t SCWhite;
 #if STOPWATCH
 #include "../ui/places/stopWatch/stopWatch.h"
 #endif
+#if MOON_SUN_APP
+#include "../ui/places/moonSun/moonSun.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif

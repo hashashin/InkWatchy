@@ -476,3 +476,23 @@
 #define MENU_PRESENCE_BEACON "Presence beacon"
 
 #define MENU_STOPWATCH "Stopwatch"
+#define MENU_MOON_SUN "Moon / Sun"
+
+#define MOON_SUN_TITLE "Moon / Sun"
+#define MOON_SUN_NO_LOCATION "Set weather location"
+#define MOON_SUN_SUNRISE "Rise "
+#define MOON_SUN_SUNSET "Set "
+#define MOON_SUN_SOLAR_NOON "Noon "
+#define MOON_SUN_DAYLIGHT "Light "
+#define MOON_SUN_MOON "Moon "
+#define MOON_SUN_ILLUM "Illum "
+#define MOON_SUN_LOCATION "Loc "
+
+#define MOON_PHASE_NEW "New"
+#define MOON_PHASE_EVENING_CRESCENT "Evening Crescent"
+#define MOON_PHASE_FIRST_QUARTER "First Quarter"
+#define MOON_PHASE_WAXING_GIBBOUS "Waxing Gibbous"
+#define MOON_PHASE_FULL "Full"
+#define MOON_PHASE_WANING_GIBBOUS "Waning Gibbous"
+#define MOON_PHASE_LAST_QUARTER "Last Quarter"
+#define MOON_PHASE_MORNING_CRESCENT "Morning Crescent"

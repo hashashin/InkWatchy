@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[16];
+    entryMenu buttons[20];
 #if CALENDAR
     {
         count = count + 1;
@@ -72,6 +72,12 @@ void initMainMenu()
     {
         count = count + 1;
         buttons[count] = {MENU_STOPWATCH, "stopWatch/stopWatch", switchStopwatch};
+    }
+#endif
+#if MOON_SUN_APP
+    {
+        count = count + 1;
+        buttons[count] = {MENU_MOON_SUN, "weather", switchMoonSun};
     }
 #endif
 #if VAULT

@@ -604,6 +604,13 @@ case rssReader:
 #endif
         break;
     }
+    case moonSun:
+    {
+#if MOON_SUN_APP
+        managerLaunchFunc(moonSun, initMoonSun, loopMoonSun, exitMoonSun);
+#endif
+        break;
+    }
     case baikyApp:
     {
 #if BAIKY

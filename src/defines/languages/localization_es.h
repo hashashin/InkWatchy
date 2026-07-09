@@ -474,6 +474,7 @@
 #define MENU_PRESENCE_BEACON "Presence beacon"
 
 #define MENU_STOPWATCH "Cronometro"
+#define MENU_MOON_SUN "Luna / Sol"
 #define STOPWATCH_TITLE "CRONOMETRO"
 #define STOPWATCH_LAP_LABEL "Vuelta"
 #define STOPWATCH_HINT_MENU "ARRIBA"
@@ -483,6 +484,24 @@
 #define STOPWATCH_HINT_PAUSE "Pausa"
 #define STOPWATCH_HINT_RESET "Reiniciar"
 #define STOPWATCH_HINT_LAP "Vuelta"
+#define MOON_SUN_TITLE "LUNA / SOL"
+#define MOON_SUN_NO_LOCATION "Configura WEATHER_LATIT/LONGTIT"
+#define MOON_SUN_SUNRISE "Amanecer: "
+#define MOON_SUN_SUNSET "Atardecer: "
+#define MOON_SUN_SOLAR_NOON "Mediodia: "
+#define MOON_SUN_DAYLIGHT "Luz dia: "
+#define MOON_SUN_MOON "Luna: "
+#define MOON_SUN_ILLUM "Ilum: "
+#define MOON_SUN_LOCATION "Loc: "
+
+#define MOON_PHASE_NEW "Nueva"
+#define MOON_PHASE_EVENING_CRESCENT "Creciente"
+#define MOON_PHASE_FIRST_QUARTER "Cuarto crec."
+#define MOON_PHASE_WAXING_GIBBOUS "Gibosa crec."
+#define MOON_PHASE_FULL "Llena"
+#define MOON_PHASE_WANING_GIBBOUS "Gibosa meng."
+#define MOON_PHASE_LAST_QUARTER "Cuarto meng."
+#define MOON_PHASE_MORNING_CRESCENT "Menguante"
 
 // Claves anadidas tras merge con upstream
 #define VAULT_TITLE "Boveda"
