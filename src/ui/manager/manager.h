@@ -11,6 +11,7 @@ typedef enum
     mainMenu,
     debugMenu,
     settingsMenu,
+    utilitiesMenu,
     generalDebug,
     clockDebug,
     batteryDebug,
@@ -66,6 +67,7 @@ typedef enum
     presenceBeaconCfg,
     stopwatch,
     moonSun,
+    subnetCalc,
     baikyApp,
     notesManager,
     notesApp,
@@ -112,6 +114,7 @@ void initMainMenu();
 void initDebugMenu();
 #endif
 void initSettingsMenu();
+void initUtilitiesMenu();
 void initGamesMenu();
 #if HEALTH_MENU
 void initHealthMenu();
@@ -135,6 +138,7 @@ void overwriteSwitch(UiPlace place);
 
 void switchDebugMenu();
 void switchSettingsMenu();
+void switchUtilitiesMenu();
 void switchGamesMenu();
 void switchGeneralDebug();
 void switchClockDebug();
@@ -172,6 +176,7 @@ void switchDailyStepsChartMenu();
 #endif
 void switchWeatherMenu();
 void switchMoonSun();
+void switchSubnetCalc();
 void switchWeatherDateMenu();
 void switchWeatherConditionMenu();
 void switchAirQualityDateMenu();

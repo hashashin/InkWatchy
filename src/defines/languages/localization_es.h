@@ -178,6 +178,7 @@
 #define MENU_ALARMS "Alarmas"
 #define MENU_WEATHER "Clima"
 #define MENU_SETTINGS "Ajustes"
+#define MENU_UTILITIES "Utilidades"
 #define MENU_HEART_MONITOR "Monitor cardiaco"
 #define MENU_HEALTH "Salud"
 #define MENU_QR "QR"
@@ -502,6 +503,19 @@
 #define MOON_PHASE_WANING_GIBBOUS "Gibosa meng."
 #define MOON_PHASE_LAST_QUARTER "Cuarto meng."
 #define MOON_PHASE_MORNING_CRESCENT "Menguante"
+
+#define MENU_SUBNET_CALC "Subredes"
+#define SUBNET_TITLE "SUBREDES"
+#define SUBNET_INPUT_IP "IP: "
+#define SUBNET_INPUT_CIDR "CIDR: "
+#define SUBNET_LABEL_MASK "M:"
+#define SUBNET_LABEL_NET "R:"
+#define SUBNET_LABEL_BCAST "B:"
+#define SUBNET_LABEL_FIRST "P:"
+#define SUBNET_LABEL_LAST "U:"
+#define SUBNET_LABEL_HOSTS "H:"
+#define SUBNET_LABEL_EDIT "E:"
+#define SUBNET_HINT "M sig U/D"
 
 // Claves anadidas tras merge con upstream
 #define VAULT_TITLE "Boveda"

@@ -23,6 +23,11 @@ void switchSettingsMenu()
     generalSwitch(settingsMenu);
 }
 
+void switchUtilitiesMenu()
+{
+    generalSwitch(utilitiesMenu);
+}
+
 void switchGamesMenu()
 {
     generalSwitch(gamesMenu);
@@ -314,6 +319,13 @@ void switchRssReader()
 void switchMoonSun()
 {
     generalSwitch(moonSun);
+}
+#endif
+
+#if SUBNET_CALC_APP
+void switchSubnetCalc()
+{
+    generalSwitch(subnetCalc);
 }
 #endif
 

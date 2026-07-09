@@ -50,34 +50,10 @@ void initMainMenu()
         buttons[count] = {MENU_HEALTH, "healthIcon", switchHealthMenu};
     }
 #endif
-#if QR_APP
+#if QR_APP || RSS_READER || HA_CONTROL || STOPWATCH || MOON_SUN_APP || SUBNET_CALC_APP || APPLE_JOKE
     {
         count = count + 1;
-        buttons[count] = {MENU_QR, "qrapp/qr", switchQrApp};
-    }
-#endif
-#if RSS_READER
-    {
-        count = count + 1;
-        buttons[count] = {MENU_RSS, "qrapp/web", switchRssReader};
-    }
-#endif
-#if HA_CONTROL
-    {
-        count = count + 1;
-        buttons[count] = {HA_S_TITLE, "haControl/ha", switchHaControl};
-    }
-#endif
-#if STOPWATCH
-    {
-        count = count + 1;
-        buttons[count] = {MENU_STOPWATCH, "stopWatch/stopWatch", switchStopwatch};
-    }
-#endif
-#if MOON_SUN_APP
-    {
-        count = count + 1;
-        buttons[count] = {MENU_MOON_SUN, "weather", switchMoonSun};
+        buttons[count] = {MENU_UTILITIES, "settings", switchUtilitiesMenu};
     }
 #endif
 #if VAULT
@@ -105,18 +81,6 @@ void initMainMenu()
             wifiToolFunc = initWifiTool;
         }
         buttons[count] = {MENU_WIFI_TOOL ": " + wifiToolStatus(), "wifiTool", wifiToolFunc};
-    }
-#endif
-#if APPLE_JOKE
-    {
-        debugLog("Adding apple joke to menu");
-        count = count + 1;
-        buttons[count] = {MENU_EATING_APPLES, "apple/apple", switchApple};
-    }
-    {
-        debugLog("Adding apple joke to menu");
-        count = count + 1;
-        buttons[count] = {MENU_SMASHING_APPLES, "apple/apple", switchApple2};
     }
 #endif
 #if PONG || TETRIS || JUMPER || SNAKE || DICE || PAINT
@@ -229,6 +193,63 @@ void initSettingsMenu()
 
     count = count + 1;
     initMenu(buttons, count, MENU_SETTINGS, 1);
+}
+
+void initUtilitiesMenu()
+{
+    int count = -1;
+    entryMenu buttons[8];
+#if QR_APP
+    {
+        count = count + 1;
+        buttons[count] = {MENU_QR, "qrapp/qr", switchQrApp};
+    }
+#endif
+#if RSS_READER
+    {
+        count = count + 1;
+        buttons[count] = {MENU_RSS, "qrapp/web", switchRssReader};
+    }
+#endif
+#if HA_CONTROL
+    {
+        count = count + 1;
+        buttons[count] = {HA_S_TITLE, "haControl/ha", switchHaControl};
+    }
+#endif
+#if STOPWATCH
+    {
+        count = count + 1;
+        buttons[count] = {MENU_STOPWATCH, "stopWatch/stopWatch", switchStopwatch};
+    }
+#endif
+#if MOON_SUN_APP
+    {
+        count = count + 1;
+        buttons[count] = {MENU_MOON_SUN, "weather", switchMoonSun};
+    }
+#endif
+#if SUBNET_CALC_APP
+    {
+        count = count + 1;
+        buttons[count] = {MENU_SUBNET_CALC, "wifiIcon", switchSubnetCalc};
+    }
+#endif
+#if APPLE_JOKE
+    {
+        debugLog("Adding apple joke to utilities");
+        count = count + 1;
+        buttons[count] = {MENU_EATING_APPLES, "apple/apple", switchApple};
+    }
+    {
+        debugLog("Adding apple joke to utilities");
+        count = count + 1;
+        buttons[count] = {MENU_SMASHING_APPLES, "apple/apple", switchApple2};
+    }
+#endif
+
+    count = count + 1;
+    initMenu(buttons, count, MENU_UTILITIES, 1);
 }
 
 void initGamesMenu()

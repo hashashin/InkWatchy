@@ -160,6 +160,11 @@ void loopManager()
         managerLaunchFunc(settingsMenu, initSettingsMenu, loopMenu);
         break;
     }
+    case utilitiesMenu:
+    {
+        managerLaunchFunc(utilitiesMenu, initUtilitiesMenu, loopMenu);
+        break;
+    }
     case setTimeWatchPlace:
     {
 #if SET_CLOCK_GUI
@@ -608,6 +613,13 @@ case rssReader:
     {
 #if MOON_SUN_APP
         managerLaunchFunc(moonSun, initMoonSun, loopMoonSun, exitMoonSun);
+#endif
+        break;
+    }
+    case subnetCalc:
+    {
+#if SUBNET_CALC_APP
+        managerLaunchFunc(subnetCalc, initSubnetCalc, loopSubnetCalc, exitSubnetCalc);
 #endif
         break;
     }

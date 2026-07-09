@@ -237,6 +237,9 @@ extern uint16_t SCWhite;
 #if MOON_SUN_APP
 #include "../ui/places/moonSun/moonSun.h"
 #endif
+#if SUBNET_CALC_APP
+#include "../ui/places/subnetCalc/subnetCalc.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif
