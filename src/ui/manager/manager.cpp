@@ -558,7 +558,7 @@ void loopManager()
     case qrApp:
     {
 #if QR_APP
-        managerLaunchFunc(qrApp, initQrApp, loopQrApp);
+        managerLaunchFunc(qrApp, initQrApp, loopQrApp, exitQrApp);
 #endif
          break;
     }

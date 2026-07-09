@@ -30,6 +30,14 @@ enum QrType {
 
 static std::vector<QrType> g_types;
 
+static void clearQrList()
+{
+    std::vector<std::string>().swap(g_titles);
+    std::vector<std::string>().swap(g_payloads);
+    std::vector<QrType>().swap(g_types);
+    g_loaded = false;
+}
+
 static void trimLine(std::string& s)
 {
     while (!s.empty() && (s.back() == '\n' || s.back() == '\r' || s.back() == ' ' || s.back() == '\t')) {
@@ -354,6 +362,14 @@ void loopQrApp()
 
     if (btn != None)
         resetSleepDelay(SLEEP_EVERY_MS);
+}
+
+void exitQrApp()
+{
+    clearQrList();
+    g_selected = 0;
+    g_scroll = 0;
+    g_viewerMode = false;
 }
 
 #endif

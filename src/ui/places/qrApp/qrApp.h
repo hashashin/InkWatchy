@@ -5,4 +5,5 @@
 #if QR_APP
 void initQrApp();
 void loopQrApp();
+void exitQrApp();
 #endif
