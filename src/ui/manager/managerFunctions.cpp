@@ -111,12 +111,12 @@ void initMainMenu()
     {
         debugLog("Adding apple joke to menu");
         count = count + 1;
-        buttons[count] = {MENU_EATING_APPLES, "apple", switchApple};
+        buttons[count] = {MENU_EATING_APPLES, "apple/apple", switchApple};
     }
     {
         debugLog("Adding apple joke to menu");
         count = count + 1;
-        buttons[count] = {MENU_SMASHING_APPLES, "apple", switchApple2};
+        buttons[count] = {MENU_SMASHING_APPLES, "apple/apple", switchApple2};
     }
 #endif
 #if PONG || TETRIS || JUMPER || SNAKE || DICE || PAINT
