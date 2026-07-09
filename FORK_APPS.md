@@ -8,11 +8,13 @@ Secrets such as private endpoints, passwords, and signing keys belong in `src/de
 
 | App | Flag (`config.h`) | Where it appears | What it does |
 |---|---|---|---|
-| QR | `QR_APP` | Main menu | Shows QR codes from a filesystem-backed list |
-| RSS reader | `RSS_READER` | Main menu | Reads headlines from a private endpoint |
-| HA control | `HA_CONTROL` | Main menu | Sends MQTT commands to Home Assistant |
-| Stopwatch | `STOPWATCH` | Main menu | Stopwatch with lap tracking |
-| Moon / Sun | `MOON_SUN_APP` | Main menu | Compact lunar phase and solar times view |
+| QR | `QR_APP` | Utilities | Shows QR codes from a filesystem-backed list |
+| RSS reader | `RSS_READER` | Utilities | Reads headlines from a private endpoint |
+| HA control | `HA_CONTROL` | Utilities | Sends MQTT commands to Home Assistant |
+| Stopwatch | `STOPWATCH` | Utilities | Stopwatch with lap tracking |
+| Moon / Sun | `MOON_SUN_APP` | Utilities | Compact lunar phase and solar times view |
+| Subnet Pocket Calc | `SUBNET_CALC_APP` | Utilities | Offline IPv4 subnet calculator |
+| Apple jokes | `APPLE_JOKE` | Utilities | Eating apples and smashing apples joke apps |
 | Chess | `CHESS` | Games menu | Chess game against a small AI |
 | FS upload | `FS_UPLOAD` | Settings | HTTP server for uploading files to the watch |
 | Presence beacon | `PRESENCE_BEACON` | Settings | BLE iBeacon for Home Assistant presence detection |
@@ -63,6 +65,16 @@ Compact offline view for the current date, solar times, and lunar phase.
 - **Localization:** app labels use `MOON_SUN_*`; lunar phase labels use `MOON_PHASE_*`. Spanish has compact translated phase names; the other non-English languages currently use English fallbacks.
 - **Menu icon:** reuses the existing `weather` image key to avoid adding another filesystem image asset.
 
+## Subnet Pocket Calc - `SUBNET_CALC_APP`
+
+Offline IPv4 subnet calculator for quick network planning.
+
+- **Files:** `src/ui/places/subnetCalc/`
+- **Input:** four IPv4 octets and CIDR prefix. `MENU` moves between editable fields; `UP`/`DOWN` changes the selected value by 1; long `UP`/`DOWN` changes it by 10; `BACK` exits through the regular manager flow.
+- **Shown data:** netmask, network, broadcast, first host, last host, and usable host count.
+- **Assets:** reuses the existing `wifiIcon` menu image; no new bitmap assets.
+- **Notes:** uses integer-only calculations and keeps no background task running.
+
 ## Chess - `CHESS`
 
 Chess game against an AI, available from the games menu.
@@ -94,10 +106,17 @@ Emits a periodic BLE iBeacon so Home Assistant can detect presence.
 
 Additional watchfaces: `WATCHFACE_PULSEPRO`, `WATCHFACE_ANALOG_PULSEPRO`, and `WATCHFACE_BINWATCH` (binary watch). Their flags live in `config.h`.
 
+## Planned app ideas
+
+Ideas intentionally saved for later implementation:
+
+- **RTC Drift Lab:** combined RTC sanity check and drift estimator.
+- **ISS Passes:** upcoming ISS passes, preferably from a small endpoint or precomputed data.
+- **World Clock Tiles:** compact offline tiles for configured cities/timezones.
+- **Pinout Wallet:** black-and-white-friendly pinout cards with labels and connector orientation, not color-dependent wiring.
+- **Watchy Tamagotchi:** a small RTC-driven pet with minimal persistent state.
+
 ## Pending work / ideas
 
-- **Security:** validate the RSS reader TLS certificate instead of using `setInsecure`; auto-stop the FS upload server after inactivity.
-- **Battery:** audit that WiFi/BLE do not stay active between wake cycles.
 - **Host-side tests** for pure logic such as the `qrlist.txt` parser and RSS parsing.
 - **CI** that builds on every push to protect upstream merges.
-- **Candidate app:** offline TOTP/2FA authenticator, which fits well with the vault and RTC.
