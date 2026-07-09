@@ -52,3 +52,6 @@ components/rusty/include
 target/
 
 resources/personal/qrapp/qrlist.txt
+
+# Volcados de firmware (backups locales, no versionar)
+firmware-backup/
