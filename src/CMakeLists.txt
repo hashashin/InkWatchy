@@ -11,6 +11,7 @@ file(GLOB_RECURSE APP_SOURCES
     ${CMAKE_SOURCE_DIR}/src/*.cpp
     ${CMAKE_SOURCE_DIR}/src/*.c
 )
+list(FILTER APP_SOURCES EXCLUDE REGEX ".*/src/other/EvilAppleJuice-ESP32/.*\\.(cpp|c)$")
 
 message(STATUS "App sources: ${APP_SOURCES}")
 

