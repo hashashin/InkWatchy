@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 #include <algorithm>
 
 struct Move { uint8_t from,to,promo,flags; };
@@ -149,8 +150,10 @@ static int g_nodes = 0;
 static int g_nodeBudget = 0;
 static int g_ply = 0;
 
-// buffers per ply to avoid stack blowups
-static Move g_movesBuf[8][256];
+// Per-ply move buffers, kept off the stack to avoid blowups. Allocated on the
+// heap only while the AI is actually thinking (see chessAiBestMove), so they
+// cost 0 RAM when the chess app is not open / not searching.
+static Move (*g_movesBuf)[256] = nullptr;
 
 static inline void searchYield()
 {
@@ -313,6 +316,14 @@ Move chessAiBestMove(Position& p, int maxDepth, int nodeBudget)
 
     Move bestMove = root[0];
 
+    // Allocate the per-ply search buffers only for the duration of this search
+    // (freed before returning). If the allocation fails, fall back to the best
+    // move found by root ordering instead of crashing.
+    g_movesBuf = (Move (*)[256])malloc(8 * 256 * sizeof(Move));
+    if (g_movesBuf == nullptr) {
+        return bestMove;
+    }
+
     for (int depth=1; depth<=maxDepth; depth++){
         int bestScore = -1000000;
         Move localBest = bestMove;
@@ -338,6 +349,8 @@ Move chessAiBestMove(Position& p, int maxDepth, int nodeBudget)
         if (g_nodes >= g_nodeBudget) break;
     }
 
+    free(g_movesBuf);
+    g_movesBuf = nullptr;
     return bestMove;
 }
 

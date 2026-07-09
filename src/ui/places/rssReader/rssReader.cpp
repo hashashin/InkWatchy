@@ -136,17 +136,10 @@ static void saveToCache(const String& body)
     f.close();
 }
 
-static bool loadFromCache()
+// Fill the item list from an already-parsed document. Copies out the strings we
+// need so the (heavy) JSON document can be released right after.
+static bool populateFromDoc(JsonDocument& doc)
 {
-    if (!LittleFS.exists(kCachePath)) return false;
-    File f = LittleFS.open(kCachePath, "r");
-    if (!f) return false;
-
-    DynamicJsonDocument doc(8192);
-    DeserializationError err = deserializeJson(doc, f);
-    f.close();
-    if (err) return false;
-
     g_titles.clear();
     g_urls.clear();
     g_src.clear();
@@ -178,6 +171,22 @@ static bool loadFromCache()
 
     ensureBounds();
     return !g_titles.empty();
+}
+
+static bool loadFromCache()
+{
+    if (!LittleFS.exists(kCachePath)) return false;
+    File f = LittleFS.open(kCachePath, "r");
+    if (!f) return false;
+
+    // Stream-parse straight from the file so we never hold the whole body in
+    // RAM on top of the document.
+    DynamicJsonDocument doc(8192);
+    DeserializationError err = deserializeJson(doc, f);
+    f.close();
+    if (err) return false;
+
+    return populateFromDoc(doc);
 }
 
 // -----------------------------------------------------------------------------
@@ -381,25 +390,21 @@ static void wifiTaskFetchRss()
         return;
     }
 
+    // Parse once, straight from the downloaded body, and fill the list from it.
+    // (Previously this parsed to validate, threw the document away, wrote the
+    // cache and re-parsed it from flash: two 8 KB documents and two parses.)
     {
         DynamicJsonDocument doc(8192);
-        if (deserializeJson(doc, body)) {
+        if (deserializeJson(doc, body) || !populateFromDoc(doc)) {
             g_fetching = false;
             g_state = (g_titles.empty() ? FetchState::Fail : FetchState::Offline);
             g_dirty = true;
             return;
         }
-        if (doc["items"].isNull()) {
-            g_fetching = false;
-            g_state = (g_titles.empty() ? FetchState::Fail : FetchState::Offline);
-            g_dirty = true;
-            return;
-        }
-    }
+    } // release the document before writing the cache
 
     saveToCache(body);
-    loadFromCache();
-    g_state = (!g_titles.empty() ? FetchState::Ok : FetchState::Fail);
+    g_state = FetchState::Ok;
 
     g_fetching = false;
     g_dirty = true;
