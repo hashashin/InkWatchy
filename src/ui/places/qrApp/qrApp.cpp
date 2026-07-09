@@ -40,11 +40,33 @@ static void trimLine(std::string& s)
     if (i > 0) s.erase(0, i);
 }
 
+// Turns literal backslash escapes written on a single line into real control
+// characters, so a full multi-line vCard can live in one qrlist.txt entry.
+// Only \n (-> CRLF, required by vCard), \r and \t are consumed; any other
+// backslash sequence is left untouched so WIFI:/MECARD: own escaping (\\, \;,
+// \:, \,) survives intact.
+static void unescapePayload(std::string& s)
+{
+    std::string out;
+    out.reserve(s.size());
+    for (size_t i = 0; i < s.size(); i++) {
+        if (s[i] == '\\' && i + 1 < s.size()) {
+            char n = s[i + 1];
+            if (n == 'n') { out.push_back('\r'); out.push_back('\n'); i++; continue; }
+            if (n == 'r') { i++; continue; } // fold \r\n written literally into a single CRLF
+            if (n == 't') { out.push_back('\t'); i++; continue; }
+        }
+        out.push_back(s[i]);
+    }
+    s.swap(out);
+}
+
 static QrType detectType(const std::string& payload)
 {
     if (payload.rfind("WIFI:",0)==0) return QR_WIFI;
     if (payload.rfind("tel:",0)==0) return QR_TEL;
     if (payload.rfind("BEGIN:VCARD",0)==0) return QR_CONTACT;
+    if (payload.rfind("MECARD:",0)==0) return QR_CONTACT;
     if (payload.rfind("http",0)==0) return QR_WEB;
     return QR_TEXT;
 }
@@ -73,6 +95,8 @@ static void pushEntryFromLine(const std::string& lineIn)
         if (title.empty()) title = payload;
         if (payload.empty()) payload = title;
     }
+
+    unescapePayload(payload);
 
     g_titles.push_back(title);
     g_payloads.push_back(payload);
