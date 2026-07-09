@@ -483,3 +483,31 @@
 #define STOPWATCH_HINT_PAUSE "Pausa"
 #define STOPWATCH_HINT_RESET "Reiniciar"
 #define STOPWATCH_HINT_LAP "Vuelta"
+
+// Claves anadidas tras merge con upstream
+#define VAULT_TITLE "Boveda"
+
+#define MENU_DICE "Dados"
+
+#define JUMPER_LOST "Perdiste! Puntos: "
+
+// Notes
+#define NOTES_TITLE "Notas"
+#define NOTES_NEW "Nueva nota"
+#define NOTES_DELETE "Borrar nota"
+#define NOTES_CONNECT_KBD "Conectar teclado"
+#define NOTES_CONNECTED "Conectado: "
+
+// BLE scanner
+#define BLE_SCANNER_TITLE "Escaner BLE"
+#define BLE_SCANNER_CHOOSE "Elegir dispositivo"
+#define BLE_SCANNER_SCANNING "Escaneando..."
+#define BLE_SCANNER_NONE "No hay dispositivos"
+#define BLE_SCANNER_CONNECT "Conectando a "
+#define BLE_SCANNER_CONNECTED "Conectado a "
+#define BLE_SCANNER_FAILED "Fallo al conectar a "
+
+// Debug clock
+#define DEBUG_CLOCK_TIMEZONE "Zona horaria:"
+#define DEBUG_CLOCK_OLSON "Zona horaria Olson: "
+#define DEBUG_CLOCK_DRIFT_VALUES "Valores de deriva:"
