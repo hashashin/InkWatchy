@@ -15,8 +15,9 @@ static uint32_t g_accumMs = 0;
 static uint32_t g_lastUiMs = 0;
 static uint32_t g_lastDrawMs = 0;
 
-static std::vector<uint32_t> g_laps;
 static const size_t kMaxLaps = 16;
+static uint32_t g_laps[kMaxLaps] = {};
+static size_t g_lapCount = 0;
 
 // Simple caches to avoid redrawing unchanged text
 static String g_lastTime;
@@ -122,7 +123,7 @@ static void drawLaps(bool force)
 
     for (int i = 0; i < 4; i++) {
         String line = "";
-        int idx = (int)g_laps.size() - 1 - i;
+        int idx = (int)g_lapCount - 1 - i;
 
         if (idx >= 0) {
             char tb[24];
@@ -175,9 +176,9 @@ static void onStartPause()
 static void onLap()
 {
     if (!g_running) return;
-    if (g_laps.size() >= kMaxLaps) return;
+    if (g_lapCount >= kMaxLaps) return;
 
-    g_laps.push_back(elapsedMs());
+    g_laps[g_lapCount++] = elapsedMs();
     invalidateLaps();
 }
 
@@ -187,7 +188,7 @@ static void onReset()
 
     g_accumMs = 0;
     g_startMs = millis();
-    g_laps.clear();
+    g_lapCount = 0;
 
     invalidateAll();
 }
@@ -200,7 +201,7 @@ void initStopwatch()
     g_lastUiMs = millis();
     g_lastDrawMs = 0;
 
-    g_laps.clear();
+    g_lapCount = 0;
 
     g_lastTime = "";
     g_lastInfo = "";
