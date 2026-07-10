@@ -1,0 +1,91 @@
+name: Build firmware
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firmware-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PLATFORMIO_CORE_DIR: ${{ github.workspace }}/.root/.platformio
+
+jobs:
+  watchy-2:
+    name: Watchy 2 fork apps
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Restore PlatformIO and Rust toolchains
+        uses: actions/cache@v5
+        with:
+          path: |
+            .root/.platformio
+            ~/.cargo
+            ~/.rustup
+            ~/.espup
+          key: ${{ runner.os }}-watchy-2-toolchains-v1-${{ hashFiles('platformio.ini', 'resources/tools/other/setup/packages.sh', 'resources/tools/other/setup/installRust.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-watchy-2-toolchains-v1-
+
+      - name: Install host dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            automake \
+            build-essential \
+            ccache \
+            clang \
+            cmake \
+            curl \
+            ffmpeg \
+            flex \
+            fuse \
+            gperf \
+            imagemagick \
+            jq \
+            libffi-dev \
+            libfreetype6-dev \
+            libfuse2 \
+            libltdl-dev \
+            libssl-dev \
+            libudev-dev \
+            make \
+            mupdf-tools \
+            ninja-build \
+            pkg-config \
+            python3-unidecode \
+            unzip \
+            wget \
+            xxd
+
+      - name: Install PlatformIO Core
+        run: python -m pip install --disable-pip-version-check platformio==6.1.18
+
+      - name: Create CI configuration and generated resources
+        run: |
+          ./resources/tools/other/setup/generateConfig.sh
+          cp resources/tools/ci/fork-apps-config.h src/defines/config.h
+          platformio pkg install --environment Watchy_2
+          cd resources/tools
+          ./other/setup/packages.sh
+          ./generate_fast.sh
+
+      - name: Build Watchy 2 firmware
+        run: platformio run --environment Watchy_2

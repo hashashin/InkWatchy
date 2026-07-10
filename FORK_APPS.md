@@ -166,7 +166,14 @@ Emits a periodic BLE iBeacon so Home Assistant can detect presence.
 
 Additional watchfaces: `WATCHFACE_PULSEPRO`, `WATCHFACE_ANALOG_PULSEPRO`, and `WATCHFACE_BINWATCH` (binary watch). Their flags live in `config.h`.
 
+## Build CI
+
+GitHub Actions builds the `Watchy_2` environment on every push and pull request using `.github/workflows/firmware.yml`.
+
+- **Config:** `resources/tools/ci/fork-apps-config.h` is a public build profile based on the standard template. It enables the fork apps without copying personal WiFi, location, endpoint, or password settings.
+- **Resources:** the workflow runs the existing configuration and resource generation scripts before compiling, so the build starts from a clean checkout.
+- **Cache:** PlatformIO and the Rust/ESP toolchains are cached; firmware build output is always regenerated.
+
 ## Pending work / ideas
 
 - **Host-side tests** for pure logic such as the `qrlist.txt` parser and RSS parsing.
-- **CI** that builds on every push to protect upstream merges.
