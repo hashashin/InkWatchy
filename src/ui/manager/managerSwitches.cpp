@@ -343,6 +343,13 @@ void switchPinoutWallet()
 }
 #endif
 
+#if RTC_DRIFT_LAB_APP
+void switchRtcDriftLab()
+{
+    generalSwitch(rtcDriftLab);
+}
+#endif
+
 #if HA_CONTROL
 void switchHaControl()
 {

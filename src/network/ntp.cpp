@@ -1,5 +1,8 @@
 #include "ntp.h"
 #include "rtcMem.h"
+#if RTC_DRIFT_LAB_APP
+#include "../ui/places/rtcDriftLab/rtcDriftLab.h"
+#endif
 
 bool firstNTPSync = true;
 time_t initialRTCTime = 0;
@@ -53,10 +56,14 @@ void syncNtp(bool doDriftThings)
 
         I haven't looked at your code, but the make and break Time functions outside of SmallRTC don't follow time.h for values, so the day and month will increase.
         */
-#if DEBUG_MENUS
-        // Maybe this adds to much of a delay?
+#if DEBUG_MENUS || RTC_DRIFT_LAB_APP
         readRTC();
+#endif
+#if DEBUG_MENUS
         tmElements_t secondsDriftTmp = timeRTCUTC0;
+#endif
+#if RTC_DRIFT_LAB_APP
+        rtcDriftLabRecordSync((int64_t)getUnixTime(timeRTCUTC0), (int64_t)epochTime);
 #endif
 
         rM.SRTC.doBreakTime(epochTime, timeRTCUTC0);

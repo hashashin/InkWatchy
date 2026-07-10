@@ -16,6 +16,7 @@ Secrets such as private endpoints, passwords, and signing keys belong in `src/de
 | Subnet Pocket Calc | `SUBNET_CALC_APP` | Utilities | Offline IPv4 subnet calculator |
 | World Clock Tiles | `WORLD_CLOCK_APP` | Utilities | Offline city/timezone tiles |
 | Pinout Wallet | `PINOUT_WALLET_APP` | Utilities | Offline black-and-white pinout cards |
+| RTC Drift Lab | `RTC_DRIFT_LAB_APP` | Utilities | Measures RTC error against NTP over time |
 | Apple jokes | `APPLE_JOKE` | Utilities | Eating apples and smashing apples joke apps |
 | Chess | `CHESS` | Games menu | Chess game against a small AI |
 | FS upload | `FS_UPLOAD` | Settings | HTTP server for uploading files to the watch |
@@ -97,6 +98,17 @@ Offline black-and-white pinout cards for common connectors and boards.
 - **Assets:** draws connector outlines and pin labels with display primitives; no bitmap assets.
 - **Notes:** designed for quick reference, not exhaustive board documentation.
 
+## RTC Drift Lab - `RTC_DRIFT_LAB_APP`
+
+Measures the RTC against NTP before each time correction and estimates its long-term drift.
+
+- **Files:** `src/ui/places/rtcDriftLab/` plus a small capture hook in `src/network/ntp.cpp`.
+- **Input:** `MENU` starts an NTP-only sync; `UP` clears the saved measurement and starts over.
+- **Shown data:** current RTC UTC time, baseline date, latest absolute error, accumulated drift, elapsed time, seconds per day, ppm, and sample count.
+- **Persistence:** the baseline and latest sample are stored in `/conf/rtc_drift_lab` and survive restarts.
+- **Config:** `RTC_DRIFT_LAB_MIN_HOURS` controls when a result changes from measuring to ready; the default is 24 hours. `RTC_DRIFT_LAB_SAMPLE_MINUTES` limits automatic samples to one per hour by default.
+- **Notes:** the first successful NTP sync saves the baseline. Later NTP syncs update the estimate before correcting the RTC; syncs started from the app always capture a sample, while background syncs are rate-limited to reduce filesystem writes.
+
 ## Chess - `CHESS`
 
 Chess game against an AI, available from the games menu.
@@ -132,7 +144,6 @@ Additional watchfaces: `WATCHFACE_PULSEPRO`, `WATCHFACE_ANALOG_PULSEPRO`, and `W
 
 Ideas intentionally saved for later implementation:
 
-- **RTC Drift Lab:** combined RTC sanity check and drift estimator.
 - **ISS Passes:** upcoming ISS passes, preferably from a small endpoint or precomputed data.
 - **Watchy Tamagotchi:** a small RTC-driven pet with minimal persistent state.
 

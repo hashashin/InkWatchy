@@ -637,6 +637,13 @@ case rssReader:
 #endif
         break;
     }
+    case rtcDriftLab:
+    {
+#if RTC_DRIFT_LAB_APP
+        managerLaunchFunc(rtcDriftLab, initRtcDriftLab, loopRtcDriftLab, exitRtcDriftLab);
+#endif
+        break;
+    }
     case baikyApp:
     {
 #if BAIKY

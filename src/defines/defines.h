@@ -246,6 +246,9 @@ extern uint16_t SCWhite;
 #if PINOUT_WALLET_APP
 #include "../ui/places/pinoutWallet/pinoutWallet.h"
 #endif
+#if RTC_DRIFT_LAB_APP
+#include "../ui/places/rtcDriftLab/rtcDriftLab.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif
