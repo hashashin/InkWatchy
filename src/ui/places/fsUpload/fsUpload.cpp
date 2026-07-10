@@ -38,117 +38,9 @@ static httpd_handle_t g_server = nullptr;
 #define FS_UPLOAD_HTTP_PASS "inkwatchy"
 #endif
 
-#ifndef FS_UPLOAD_SIGN_KEY
-#define FS_UPLOAD_SIGN_KEY "change-me"
-#endif
-
 #ifndef FS_UPLOAD_MAX_UPLOAD_BYTES
 #define FS_UPLOAD_MAX_UPLOAD_BYTES (6 * 1024 * 1024)
 #endif
-
-static const int kTsSkewSec = 90;
-static const int kNonceTtlSec = 120;
-
-// -----------------------------------------------------------------------------
-// Replay protection (tiny ring)
-// -----------------------------------------------------------------------------
-struct NonceEntry
-{
-    uint32_t nonceHi;
-    uint32_t nonceLo;
-    int64_t ts;
-};
-
-static constexpr int kNonceRing = 24;
-static NonceEntry g_nonces[kNonceRing]{};
-static int g_noncePos = 0;
-
-static bool parseNonceHex(const char *s, uint32_t &hi, uint32_t &lo)
-{
-    if (!s)
-        return false;
-    size_t n = strlen(s);
-    if (n < 16)
-        return false;
-
-    const char *p = s + (n - 16);
-    uint64_t v = 0;
-    for (int i = 0; i < 16; i++)
-    {
-        char c = p[i];
-        uint8_t d;
-        if (c >= '0' && c <= '9')
-            d = (uint8_t)(c - '0');
-        else if (c >= 'a' && c <= 'f')
-            d = (uint8_t)(c - 'a' + 10);
-        else if (c >= 'A' && c <= 'F')
-            d = (uint8_t)(c - 'A' + 10);
-        else
-            return false;
-        v = (v << 4) | d;
-    }
-    hi = (uint32_t)(v >> 32);
-    lo = (uint32_t)(v & 0xFFFFFFFFu);
-    return true;
-}
-
-static bool nonceSeenAndStore(uint32_t hi, uint32_t lo, int64_t now)
-{
-    for (int i = 0; i < kNonceRing; i++)
-    {
-        if ((now - g_nonces[i].ts) > (int64_t)kNonceTtlSec)
-            continue;
-        if (g_nonces[i].nonceHi == hi && g_nonces[i].nonceLo == lo)
-        {
-            return true;
-        }
-    }
-    g_nonces[g_noncePos] = NonceEntry{hi, lo, now};
-    g_noncePos = (g_noncePos + 1) % kNonceRing;
-    return false;
-}
-
-// -----------------------------------------------------------------------------
-// Helpers: base64url, HMAC-SHA256
-// -----------------------------------------------------------------------------
-static String b64urlFromBytes(const uint8_t *in, size_t inLen)
-{
-    size_t outLen = 0;
-    size_t cap = 4 * ((inLen + 2) / 3) + 4;
-    std::unique_ptr<uint8_t[]> out(new uint8_t[cap]);
-
-    if (mbedtls_base64_encode(out.get(), cap, &outLen, in, inLen) != 0)
-    {
-        return String();
-    }
-
-    String s((const char *)out.get());
-    s.trim();
-
-    s.replace("+", "-");
-    s.replace("/", "_");
-    while (s.endsWith("="))
-        s.remove(s.length() - 1);
-    return s;
-}
-
-static bool hmacSha256(const uint8_t *key, size_t keyLen,
-                       const uint8_t *msg, size_t msgLen,
-                       uint8_t out32[32])
-{
-    const mbedtls_md_info_t *md = mbedtls_md_info_from_type(MBEDTLS_MD_SHA256);
-    if (!md)
-        return false;
-    if (mbedtls_md_hmac(md, key, keyLen, msg, msgLen, out32) != 0)
-        return false;
-    return true;
-}
-
-static int64_t nowUnix()
-{
-    time_t t = time(nullptr);
-    return (int64_t)t;
-}
 
 // -----------------------------------------------------------------------------
 // BasicAuth
@@ -206,9 +98,6 @@ static void sendAuthChallenge(httpd_req_t *req)
     httpd_resp_send(req, "Auth required", HTTPD_RESP_USE_STRLEN);
 }
 
-// -----------------------------------------------------------------------------
-// Signed request verification
-// -----------------------------------------------------------------------------
 static uint8_t hexNibble(char c)
 {
     if (c >= '0' && c <= '9')
@@ -287,74 +176,6 @@ static bool pathLooksSafe(const String &p)
     return true;
 }
 
-static bool verifySigned(httpd_req_t *req)
-{
-    if (!checkBasicAuth(req))
-        return false;
-
-    String tsStr, nonceStr, signStr;
-    if (!getHeader(req, "X-TS", tsStr))
-        return false;
-    if (!getHeader(req, "X-Nonce", nonceStr))
-        return false;
-    if (!getHeader(req, "X-Sign", signStr))
-        return false;
-
-    int64_t ts = (int64_t)tsStr.toInt();
-    int64_t now = nowUnix();
-    if (ts < 100000)
-        return false;
-    if (llabs(now - ts) > (int64_t)kTsSkewSec)
-        return false;
-
-    uint32_t nhi = 0, nlo = 0;
-    if (!parseNonceHex(nonceStr.c_str(), nhi, nlo))
-        return false;
-    if (nonceSeenAndStore(nhi, nlo, now))
-        return false;
-
-    String path;
-    if (!getQueryParam(req, "path", path))
-        path = "";
-    if (path.length() == 0)
-        return false;
-    if (!pathLooksSafe(path))
-        return false;
-
-    String method = (req->method == HTTP_GET) ? "GET"
-                   : (req->method == HTTP_POST) ? "POST"
-                   : (req->method == HTTP_PUT) ? "PUT"
-                   : (req->method == HTTP_DELETE) ? "DELETE"
-                   : "X";
-
-    String payload;
-    payload.reserve(256 + path.length());
-    payload += method;
-    payload += "\n";
-    payload += String(req->uri);
-    payload += "\n";
-    payload += tsStr;
-    payload += "\n";
-    payload += nonceStr;
-    payload += "\n";
-    payload += String((int)req->content_len);
-    payload += "\n";
-    payload += path;
-
-    uint8_t mac[32];
-    const char *key = FS_UPLOAD_SIGN_KEY;
-    if (!hmacSha256((const uint8_t *)key, strlen(key),
-                    (const uint8_t *)payload.c_str(), payload.length(),
-                    mac))
-    {
-        return false;
-    }
-
-    String expect = b64urlFromBytes(mac, 32);
-    signStr.trim();
-    return (signStr == expect);
-}
-
 // -----------------------------------------------------------------------------
 // HTML UI (embedded)
 // -----------------------------------------------------------------------------
@@ -371,7 +192,7 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif; marg
 h2{margin:0 0 10px 0;}
 small{color:#666;}
 .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
-input[type="text"], input[type="password"]{padding:8px; border-radius:10px; border:1px solid #ccc; width:260px;}
+input[type="text"]{padding:8px; border-radius:10px; border:1px solid #ccc; width:260px;}
 button{padding:9px 12px; border-radius:10px; border:1px solid #aaa; background:#f7f7f7; cursor:pointer;}
 button:active{transform:translateY(1px);}
 #drop{border:2px dashed #aaa; border-radius:12px; padding:18px; text-align:center; color:#444;}
@@ -385,14 +206,10 @@ td,th{border-bottom:1px solid #eee; padding:8px; text-align:left;}
 </head>
 <body>
 <h2>InkWatchy LittleFS</h2>
-<small>BasicAuth required. Mutating endpoints also require HMAC-SHA256 signature.</small>
+<small>BasicAuth required.</small>
 
 <div class="card">
   <div class="row">
-    <div>
-      <div class="mono">Signing key</div>
-      <input id="key" type="password" placeholder="FS_UPLOAD_SIGN_KEY"/>
-    </div>
     <div>
       <div class="mono">Target dir</div>
       <input id="dir" type="text" value="/" />
@@ -424,6 +241,7 @@ td,th{border-bottom:1px solid #eee; padding:8px; text-align:left;}
 <script>
 const $ = (id)=>document.getElementById(id);
 
+localStorage.removeItem('ink_key');
 let currentDir = localStorage.getItem('ink_curdir') || '/';
 
 function setDir(d){
@@ -446,51 +264,18 @@ function joinDir(base, name){
   return base + '/' + name;
 }
 
-function b64url(buf){
-  let s = btoa(String.fromCharCode(...new Uint8Array(buf)));
-  return s.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-}
-
-async function hmacSha256(keyStr, msg){
-  const enc = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    'raw', enc.encode(keyStr),
-    {name:'HMAC', hash:'SHA-256'},
-    false, ['sign']
-  );
-  const sig = await crypto.subtle.sign('HMAC', key, enc.encode(msg));
-  return b64url(sig);
-}
-
-function nonceHex(){
-  const a = new Uint8Array(8);
-  crypto.getRandomValues(a);
-  return [...a].map(x=>x.toString(16).padStart(2,'0')).join('');
-}
-
 function fmtSize(n){
   if (n < 1024) return n + ' B';
   if (n < 1024*1024) return (n/1024).toFixed(1) + ' KB';
   return (n/(1024*1024)).toFixed(2) + ' MB';
 }
 
-async function signedFetch(method, url, body, path){
-  const key = localStorage.getItem('ink_key') || '';
-  if (!key) throw new Error('Missing signing key');
-  const ts = Math.floor(Date.now()/1000).toString();
-  const nonce = nonceHex();
-  const len = body ? body.byteLength : 0;
-  const payload = method + "\n" + url + "\n" + ts + "\n" + nonce + "\n" + len + "\n" + path;
-  const sign = await hmacSha256(key, payload);
-
+async function authenticatedFetch(method, url, body){
   return fetch(url, {
     method,
     body,
     credentials: 'include',
     headers: {
-      'X-TS': ts,
-      'X-Nonce': nonce,
-      'X-Sign': sign,
       'Content-Type': 'application/octet-stream'
     }
   });
@@ -518,13 +303,11 @@ async function uploadFile(f){
   const job = addJob(path);
 
   const buf = await f.arrayBuffer();
-  job.setStatus('signing...');
-
   const url = '/upload?path=' + encodeURIComponent(path);
   job.setStatus('uploading...');
   job.setPct(5);
 
-  const res = await signedFetch('POST', url, buf, path);
+  const res = await authenticatedFetch('POST', url, buf);
 
   if (!res.ok) {
     const t = await res.text();
@@ -538,10 +321,17 @@ async function uploadFile(f){
 
 async function delFile(path){
   if (!confirm('Delete ' + path + '?')) return;
-  const url = '/delete?path=' + encodeURIComponent(path);
-  const res = await signedFetch('POST', url, null, path);
-  if (!res.ok) alert('Delete failed: ' + res.status + ' ' + await res.text());
-  await refreshList();
+  try {
+    const url = '/delete?path=' + encodeURIComponent(path);
+    const res = await authenticatedFetch('POST', url, null);
+    if (!res.ok) {
+      alert('Delete failed: ' + res.status + ' ' + await res.text());
+      return;
+    }
+    await refreshList();
+  } catch(err) {
+    alert('Delete failed: ' + err);
+  }
 }
 
 async function refreshList(){
@@ -599,7 +389,6 @@ async function refreshList(){
 }
 
 $('save').onclick = ()=>{
-  localStorage.setItem('ink_key', $('key').value);
   localStorage.setItem('ink_dir', $('dir').value);
   localStorage.setItem('ink_curdir', $('dir').value);
   setDir($('dir').value);
@@ -607,7 +396,6 @@ $('save').onclick = ()=>{
 };
 $('refresh').onclick = refreshList;
 
-$('key').value = localStorage.getItem('ink_key') || '';
 $('dir').value = localStorage.getItem('ink_dir') || '/';
 setDir($('dir').value);
 
@@ -720,16 +508,17 @@ static esp_err_t handle_root(httpd_req_t *req)
         return ESP_OK;
     }
     httpd_resp_set_type(req, "text/html; charset=utf-8");
+    httpd_resp_set_hdr(req, "Cache-Control", "no-store");
     httpd_resp_send(req, kIndexHtml, HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 }
 
 // -----------------------------------------------------------------------------
-// /upload (signed)
+// /upload
 // -----------------------------------------------------------------------------
 static esp_err_t handle_upload(httpd_req_t *req)
 {
-    if (!verifySigned(req))
+    if (!checkBasicAuth(req))
     {
         sendAuthChallenge(req);
         return ESP_OK;
@@ -798,11 +587,11 @@ static esp_err_t handle_upload(httpd_req_t *req)
 }
 
 // -----------------------------------------------------------------------------
-// /delete (signed)
+// /delete
 // -----------------------------------------------------------------------------
 static esp_err_t handle_delete(httpd_req_t *req)
 {
-    if (!verifySigned(req))
+    if (!checkBasicAuth(req))
     {
         sendAuthChallenge(req);
         return ESP_OK;

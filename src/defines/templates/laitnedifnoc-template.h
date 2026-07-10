@@ -62,6 +62,3 @@ inline constexpr const char* HA_MQTT_SECRET = "SAME_SECRET_AS_IN_HA_AUTOMATION";
 // BasicAuth should be changed
 #define FS_UPLOAD_HTTP_USER "admin"
 #define FS_UPLOAD_HTTP_PASS "inkwatchy"
-
-// HMAC sign
-#define FS_UPLOAD_SIGN_KEY "CHANGE_ME_YOU_LAZY_SCUM"
