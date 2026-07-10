@@ -68,6 +68,7 @@ typedef enum
     stopwatch,
     moonSun,
     subnetCalc,
+    worldClock,
     baikyApp,
     notesManager,
     notesApp,
@@ -177,6 +178,9 @@ void switchDailyStepsChartMenu();
 void switchWeatherMenu();
 void switchMoonSun();
 void switchSubnetCalc();
+#if WORLD_CLOCK_APP
+void switchWorldClock();
+#endif
 void switchWeatherDateMenu();
 void switchWeatherConditionMenu();
 void switchAirQualityDateMenu();

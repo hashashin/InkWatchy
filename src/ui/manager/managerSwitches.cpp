@@ -329,6 +329,13 @@ void switchSubnetCalc()
 }
 #endif
 
+#if WORLD_CLOCK_APP
+void switchWorldClock()
+{
+    generalSwitch(worldClock);
+}
+#endif
+
 #if HA_CONTROL
 void switchHaControl()
 {

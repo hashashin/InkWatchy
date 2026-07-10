@@ -50,7 +50,7 @@ void initMainMenu()
         buttons[count] = {MENU_HEALTH, "healthIcon", switchHealthMenu};
     }
 #endif
-#if QR_APP || RSS_READER || HA_CONTROL || STOPWATCH || MOON_SUN_APP || SUBNET_CALC_APP || APPLE_JOKE
+#if QR_APP || RSS_READER || HA_CONTROL || STOPWATCH || MOON_SUN_APP || SUBNET_CALC_APP || WORLD_CLOCK_APP || APPLE_JOKE
     {
         count = count + 1;
         buttons[count] = {MENU_UTILITIES, "settings", switchUtilitiesMenu};
@@ -198,7 +198,7 @@ void initSettingsMenu()
 void initUtilitiesMenu()
 {
     int count = -1;
-    entryMenu buttons[8];
+    entryMenu buttons[9];
 #if QR_APP
     {
         count = count + 1;
@@ -233,6 +233,12 @@ void initUtilitiesMenu()
     {
         count = count + 1;
         buttons[count] = {MENU_SUBNET_CALC, "wifiIcon", switchSubnetCalc};
+    }
+#endif
+#if WORLD_CLOCK_APP
+    {
+        count = count + 1;
+        buttons[count] = {MENU_WORLD_CLOCK, "watchfaceIcon", switchWorldClock};
     }
 #endif
 #if APPLE_JOKE

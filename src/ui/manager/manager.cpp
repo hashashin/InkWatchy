@@ -623,6 +623,13 @@ case rssReader:
 #endif
         break;
     }
+    case worldClock:
+    {
+#if WORLD_CLOCK_APP
+        managerLaunchFunc(worldClock, initWorldClock, loopWorldClock, exitWorldClock);
+#endif
+        break;
+    }
     case baikyApp:
     {
 #if BAIKY

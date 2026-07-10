@@ -365,6 +365,17 @@ The default is this:
 
 #define SUBNET_CALC_APP 0
 
+#define WORLD_CLOCK_APP 0
+#define WORLD_CLOCK_TILES(X) \
+    X("UTC", 0)              \
+    X("LON", 60)             \
+    X("NYC", -240)           \
+    X("LAX", -420)           \
+    X("MEX", -360)           \
+    X("DXB", 240)            \
+    X("TOK", 540)            \
+    X("SYD", 600)
+
 // BLE things
 // BLE is heavy, if you enable it and the watch doesn't boot up, it means you exceeded the flash size. Disable other features to reduce flash usage
 // It's really heavy on memory too. DO NOT ENABLE BLE until you know what you want.

@@ -240,6 +240,9 @@ extern uint16_t SCWhite;
 #if SUBNET_CALC_APP
 #include "../ui/places/subnetCalc/subnetCalc.h"
 #endif
+#if WORLD_CLOCK_APP
+#include "../ui/places/worldClock/worldClock.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif

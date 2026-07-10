@@ -520,3 +520,8 @@
 #define SUBNET_LABEL_HOSTS "H:"
 #define SUBNET_LABEL_EDIT "E:"
 #define SUBNET_HINT "M next U/D"
+
+#define MENU_WORLD_CLOCK "World Clock"
+#define WORLD_CLOCK_TITLE "WORLD CLOCK"
+#define WORLD_CLOCK_HINT "UP/DOWN pages"
+#define WORLD_CLOCK_EMPTY "No clocks"

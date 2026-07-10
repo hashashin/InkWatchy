@@ -14,6 +14,7 @@ Secrets such as private endpoints, passwords, and signing keys belong in `src/de
 | Stopwatch | `STOPWATCH` | Utilities | Stopwatch with lap tracking |
 | Moon / Sun | `MOON_SUN_APP` | Utilities | Compact lunar phase and solar times view |
 | Subnet Pocket Calc | `SUBNET_CALC_APP` | Utilities | Offline IPv4 subnet calculator |
+| World Clock Tiles | `WORLD_CLOCK_APP` | Utilities | Offline city/timezone tiles |
 | Apple jokes | `APPLE_JOKE` | Utilities | Eating apples and smashing apples joke apps |
 | Chess | `CHESS` | Games menu | Chess game against a small AI |
 | FS upload | `FS_UPLOAD` | Settings | HTTP server for uploading files to the watch |
@@ -75,6 +76,16 @@ Offline IPv4 subnet calculator for quick network planning.
 - **Assets:** reuses the existing `wifiIcon` menu image; no new bitmap assets.
 - **Notes:** uses integer-only calculations and keeps no background task running.
 
+## World Clock Tiles - `WORLD_CLOCK_APP`
+
+Compact offline tiles for configured cities/timezones.
+
+- **Files:** `src/ui/places/worldClock/`
+- **Config:** `WORLD_CLOCK_TILES(X)` in `config.h`, one entry per `X("LABEL", offset_minutes)`.
+- **Input:** `UP`/`DOWN` changes page when more than four tiles are configured.
+- **Shown data:** city label, fixed UTC offset, local time, and compact local date.
+- **Notes:** offsets are fixed minutes from UTC; daylight saving time is intentionally not calculated.
+
 ## Chess - `CHESS`
 
 Chess game against an AI, available from the games menu.
@@ -112,7 +123,6 @@ Ideas intentionally saved for later implementation:
 
 - **RTC Drift Lab:** combined RTC sanity check and drift estimator.
 - **ISS Passes:** upcoming ISS passes, preferably from a small endpoint or precomputed data.
-- **World Clock Tiles:** compact offline tiles for configured cities/timezones.
 - **Pinout Wallet:** black-and-white-friendly pinout cards with labels and connector orientation, not color-dependent wiring.
 - **Watchy Tamagotchi:** a small RTC-driven pet with minimal persistent state.
 

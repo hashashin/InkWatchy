@@ -517,6 +517,11 @@
 #define SUBNET_LABEL_EDIT "E:"
 #define SUBNET_HINT "M sig U/D"
 
+#define MENU_WORLD_CLOCK "Reloj mundial"
+#define WORLD_CLOCK_TITLE "RELOJ MUNDIAL"
+#define WORLD_CLOCK_HINT "ARR/AB paginas"
+#define WORLD_CLOCK_EMPTY "Sin relojes"
+
 // Claves anadidas tras merge con upstream
 #define VAULT_TITLE "Boveda"
 
