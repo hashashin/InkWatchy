@@ -25,9 +25,11 @@ check_features() {
         local upper_feature=$(echo "$feature" | tr '[:lower:]' '[:upper:]')
         local lower_feature=$(echo "$feature" | tr '[:upper:]' '[:lower:]')
         
-        # Search for uppercase define in config
-        local value=$(grep -E "^\s*#define\s+($upper_feature|$lower_feature)\s+" "$config_path" | 
-                      awk '{print $3}' | tr -d '"' | head -1)
+        local value=$(get_define_value "$upper_feature" "$config_path")
+        if [[ -z "$value" ]]; then
+            value=$(get_define_value "$lower_feature" "$config_path")
+        fi
+        value=${value//\"/}
         
         if [ "$value" = "1" ]; then
             base_features="$base_features,$feature"

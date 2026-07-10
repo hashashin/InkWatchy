@@ -161,6 +161,18 @@ extract_monitor_speed() {
     fi
 }
 
+get_define_value() {
+    local define="$1"
+    local file_path="$2"
+
+    if [[ ! -f "$file_path" ]]; then
+        return 0
+    fi
+
+    cpp -dM -I "$(dirname "$file_path")" "$file_path" 2>/dev/null |
+        awk -v define="$define" '$1 == "#define" && $2 == define { print $3; exit }'
+}
+
 check_define() {
     local define="$1"
     local file_path="$2"
@@ -170,8 +182,7 @@ check_define() {
         return 0
     fi
 
-    # Check if the define is turned on
-    if grep -q "#define $define 1" "$file_path"; then
+    if [[ "$(get_define_value "$define" "$file_path")" == "1" ]]; then
         return 1  # Define is turned on
     else
         return 0  # Define is not turned on
