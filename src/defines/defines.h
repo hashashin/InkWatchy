@@ -184,6 +184,9 @@ extern uint16_t SCWhite;
 #if PONG
 #include "../ui/places/pong/pong.h"
 #endif
+#if GOTCHI
+#include "../ui/places/gotchi/gotchiPlace.h"
+#endif
 #if PAINT
 #include "../ui/places/paint/paint.h"
 #endif

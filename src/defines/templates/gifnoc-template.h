@@ -317,6 +317,14 @@ The default is this:
 // Pong
 #define PONG 1
 
+// TamaLIB-based Tamagotchi P1 emulator. ROM is not included.
+#define GOTCHI 0
+#define GOTCHI_ROM_FILE "tama.b"
+#define GOTCHI_TASK_STACK_SIZE 6144
+#define GOTCHI_MOTOR 0
+#define GOTCHI_MOTOR_MS 30
+#define GOTCHI_MOTOR_DELAY_MS 250
+
 // Tetris
 #define TETRIS 1
 

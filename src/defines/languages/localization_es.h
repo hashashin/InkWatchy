@@ -544,6 +544,18 @@
 #define RTC_DRIFT_LABEL_PPM "PPM     "
 #define RTC_DRIFT_HINT "M sinc ARR reset"
 
+#define MENU_GOTCHI "Gotchi"
+#define GOTCHI_TITLE "WATCHY GOTCHI"
+#define GOTCHI_ROM_MISSING "Falta la ROM o no es valida"
+#define GOTCHI_ROM_COPY "Prepara ROM 9216/12288:"
+#define GOTCHI_BACK_HINT "ATRAS sale"
+#define GOTCHI_HELP_TITLE "CONTROLES"
+#define GOTCHI_HELP_DOWN "ABAJO = A"
+#define GOTCHI_HELP_MENU "MENU  = B"
+#define GOTCHI_HELP_UP "ARRIBA = C"
+#define GOTCHI_HELP_BACK "ATRAS = SALIR"
+#define GOTCHI_HELP_CLOSE "MANTEN MENU CIERRA"
+
 // Claves anadidas tras merge con upstream
 #define VAULT_TITLE "Boveda"
 

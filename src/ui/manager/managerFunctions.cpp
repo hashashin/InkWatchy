@@ -273,7 +273,7 @@ void initUtilitiesMenu()
 void initGamesMenu()
 {
     int count = -1;
-    entryMenu buttons[12];
+    entryMenu buttons[13];
 #if TETRIS
     {
         debugLog("Adding Tetris");
@@ -321,6 +321,13 @@ void initGamesMenu()
         debugLog("Adding pong");
         count = count + 1;
         buttons[count] = {MENU_PONG, "pong", switchPong};
+    }
+#endif
+#if GOTCHI
+    {
+        debugLog("Adding Gotchi");
+        count = count + 1;
+        buttons[count] = {MENU_GOTCHI, "games", switchGotchi};
     }
 #endif
 #if BLE_PERIPHERAL

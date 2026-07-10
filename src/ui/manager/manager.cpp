@@ -471,6 +471,13 @@ void loopManager()
 #endif
         break;
     }
+    case gotchi:
+    {
+#if GOTCHI
+        managerLaunchFunc(gotchi, initGotchi, loopGotchi, exitGotchi);
+#endif
+        break;
+    }
     case paint:
     {
 #if PAINT

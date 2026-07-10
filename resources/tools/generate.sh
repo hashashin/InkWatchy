@@ -60,3 +60,7 @@ QR_PID=$!
 popd >/dev/null
 
 wait $QR_PID
+
+echo -e ''
+echo "Processing Gotchi ROM"
+./gotchi/stageRom.sh

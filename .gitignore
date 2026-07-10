@@ -52,6 +52,7 @@ components/rusty/include
 target/
 
 resources/personal/qrapp/qrlist.txt
+resources/personal/gotchi/tama.b
 
 # Volcados de firmware (backups locales, no versionar)
 firmware-backup/

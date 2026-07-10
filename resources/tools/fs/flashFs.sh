@@ -9,6 +9,7 @@ offset=$(<in/offset.txt tr -d '\n')
 # Fuck
 
 source ../globalFunctions.sh
+../gotchi/stageRom.sh
 serial_port=$(extract_serial_port "../other/in/esptool")
 if [[ $? -ne 0 || -z "$serial_port" ]]; then
     echo "Failed to detect a valid serial port" >&2

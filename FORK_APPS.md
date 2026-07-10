@@ -17,6 +17,7 @@ Secrets such as private endpoints, passwords, and signing keys belong in `src/de
 | World Clock Tiles | `WORLD_CLOCK_APP` | Utilities | Offline city/timezone tiles |
 | Pinout Wallet | `PINOUT_WALLET_APP` | Utilities | Offline black-and-white pinout cards |
 | RTC Drift Lab | `RTC_DRIFT_LAB_APP` | Utilities | Measures RTC error against NTP over time |
+| Watchy Gotchi | `GOTCHI` | Games menu | Tamagotchi P1 emulator powered by TamaLIB |
 | Apple jokes | `APPLE_JOKE` | Utilities | Eating apples and smashing apples joke apps |
 | Chess | `CHESS` | Games menu | Chess game against a small AI |
 | FS upload | `FS_UPLOAD` | Settings | HTTP server for uploading files to the watch |
@@ -109,6 +110,18 @@ Measures the RTC against NTP before each time correction and estimates its long-
 - **Config:** `RTC_DRIFT_LAB_MIN_HOURS` controls when a result changes from measuring to ready; the default is 24 hours. `RTC_DRIFT_LAB_SAMPLE_MINUTES` limits automatic samples to one per hour by default.
 - **Notes:** the first successful NTP sync saves the baseline. Later NTP syncs update the estimate before correcting the RTC; syncs started from the app always capture a sample, while background syncs are rate-limited to reduce filesystem writes.
 
+## Watchy Gotchi - `GOTCHI`
+
+Runs a Tamagotchi P1 ROM through the GPL-licensed TamaLIB emulator port from the historical `upstream/gotchi` branch.
+
+- **Files:** `src/ui/places/gotchi/`.
+- **ROM:** not included. Put `tama.b` at `resources/personal/gotchi/tama.b`. It may be either a packed 12-bit ROM (9216 bytes) or a 16-bit big-endian ROM (12288 bytes); the resource scripts validate and convert it to `/other/tama.b` only when `GOTCHI=1`.
+- **Input:** `DOWN` is button A, `MENU` is button B, `UP` is button C, and `BACK` exits. Hold `MENU` to show or hide the controls help.
+- **Persistence:** CPU and RAM state are stored in the versioned `/conf/gotchi_state_v1` file when leaving the app.
+- **Timing:** the emulator runs at the original 32,768 Hz rate while the app is open. The emulated pet is paused while the app is closed; keeping a background emulator alive would be too expensive for Watchy's battery.
+- **Config:** `GOTCHI_ROM_FILE`, `GOTCHI_TASK_STACK_SIZE`, and optional motor feedback settings can be changed in `config.h`.
+- **Memory:** uses one 5 KB canvas, the 9 KB ROM buffer, the configured task stack, and a small emulator state block while open.
+
 ## Chess - `CHESS`
 
 Chess game against an AI, available from the games menu.
@@ -145,7 +158,6 @@ Additional watchfaces: `WATCHFACE_PULSEPRO`, `WATCHFACE_ANALOG_PULSEPRO`, and `W
 Ideas intentionally saved for later implementation:
 
 - **ISS Passes:** upcoming ISS passes, preferably from a small endpoint or precomputed data.
-- **Watchy Tamagotchi:** a small RTC-driven pet with minimal persistent state.
 
 ## Pending work / ideas
 
