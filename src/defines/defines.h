@@ -252,6 +252,9 @@ extern uint16_t SCWhite;
 #if RTC_DRIFT_LAB_APP
 #include "../ui/places/rtcDriftLab/rtcDriftLab.h"
 #endif
+#if ISS_PASSES_APP
+#include "../ui/places/issPasses/issPasses.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif

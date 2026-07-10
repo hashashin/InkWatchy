@@ -357,6 +357,13 @@ void switchRtcDriftLab()
 }
 #endif
 
+#if ISS_PASSES_APP
+void switchIssPasses()
+{
+    generalSwitch(issPasses);
+}
+#endif
+
 #if HA_CONTROL
 void switchHaControl()
 {

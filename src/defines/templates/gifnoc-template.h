@@ -390,6 +390,14 @@ The default is this:
 #define RTC_DRIFT_LAB_MIN_HOURS 24
 #define RTC_DRIFT_LAB_SAMPLE_MINUTES 60
 
+#define ISS_PASSES_APP 0
+#define ISS_PASSES_ENDPOINT "https://iss-api.polluxlabs.io/iss-pass"
+#define ISS_PASSES_COUNT 5
+#define ISS_PASSES_DAYS_AHEAD 14
+#define ISS_PASSES_MIN_ELEVATION 10
+#define ISS_PASSES_VISIBLE_ONLY 1
+#define ISS_PASSES_CACHE_FILE "iss_passes_v1"
+
 // BLE things
 // BLE is heavy, if you enable it and the watch doesn't boot up, it means you exceeded the flash size. Disable other features to reduce flash usage
 // It's really heavy on memory too. DO NOT ENABLE BLE until you know what you want.

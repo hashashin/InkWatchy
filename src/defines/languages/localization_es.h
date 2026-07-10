@@ -556,6 +556,23 @@
 #define GOTCHI_HELP_BACK "ATRAS = SALIR"
 #define GOTCHI_HELP_CLOSE "MANTEN MENU CIERRA"
 
+#define MENU_ISS_PASSES "Pases ISS"
+#define ISS_PASSES_TITLE "PASES ISS"
+#define ISS_PASSES_CACHED "CACHE"
+#define ISS_PASSES_SYNCING "SINC"
+#define ISS_PASSES_ONLINE "OK"
+#define ISS_PASSES_FAILED "FALLO"
+#define ISS_PASSES_BUSY "OCUP"
+#define ISS_PASSES_NO_LOCATION "Configura ubicacion meteo"
+#define ISS_PASSES_EMPTY "Sin pases visibles"
+#define ISS_PASSES_REFRESH "MENU actualiza"
+#define ISS_PASSES_PASS "PASE "
+#define ISS_PASSES_MAX "MAX "
+#define ISS_PASSES_DURATION "VISIBLE "
+#define ISS_PASSES_IN "EN "
+#define ISS_PASSES_NOW "AHORA"
+#define ISS_PASSES_HINT "M sinc ARR/AB"
+
 // Claves anadidas tras merge con upstream
 #define VAULT_TITLE "Boveda"
 

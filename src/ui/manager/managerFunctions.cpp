@@ -198,7 +198,7 @@ void initSettingsMenu()
 void initUtilitiesMenu()
 {
     int count = -1;
-    entryMenu buttons[11];
+    entryMenu buttons[12];
 #if QR_APP
     {
         count = count + 1;
@@ -251,6 +251,12 @@ void initUtilitiesMenu()
     {
         count = count + 1;
         buttons[count] = {MENU_RTC_DRIFT_LAB, "watchfaceIcon", switchRtcDriftLab};
+    }
+#endif
+#if ISS_PASSES_APP
+    {
+        count = count + 1;
+        buttons[count] = {MENU_ISS_PASSES, "weather", switchIssPasses};
     }
 #endif
 #if APPLE_JOKE

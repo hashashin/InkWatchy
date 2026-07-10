@@ -72,6 +72,7 @@ typedef enum
     worldClock,
     pinoutWallet,
     rtcDriftLab,
+    issPasses,
     baikyApp,
     notesManager,
     notesApp,
@@ -189,6 +190,9 @@ void switchPinoutWallet();
 #endif
 #if RTC_DRIFT_LAB_APP
 void switchRtcDriftLab();
+#endif
+#if ISS_PASSES_APP
+void switchIssPasses();
 #endif
 void switchWeatherDateMenu();
 void switchWeatherConditionMenu();

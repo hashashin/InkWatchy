@@ -17,6 +17,7 @@ Secrets such as private endpoints, passwords, and signing keys belong in `src/de
 | World Clock Tiles | `WORLD_CLOCK_APP` | Utilities | Offline city/timezone tiles |
 | Pinout Wallet | `PINOUT_WALLET_APP` | Utilities | Offline black-and-white pinout cards |
 | RTC Drift Lab | `RTC_DRIFT_LAB_APP` | Utilities | Measures RTC error against NTP over time |
+| ISS Passes | `ISS_PASSES_APP` | Utilities | Cached visible ISS flyover predictions |
 | Watchy Gotchi | `GOTCHI` | Games menu | Tamagotchi P1 emulator powered by TamaLIB |
 | Apple jokes | `APPLE_JOKE` | Utilities | Eating apples and smashing apples joke apps |
 | Chess | `CHESS` | Games menu | Chess game against a small AI |
@@ -110,6 +111,18 @@ Measures the RTC against NTP before each time correction and estimates its long-
 - **Config:** `RTC_DRIFT_LAB_MIN_HOURS` controls when a result changes from measuring to ready; the default is 24 hours. `RTC_DRIFT_LAB_SAMPLE_MINUTES` limits automatic samples to one per hour by default.
 - **Notes:** the first successful NTP sync saves the baseline. Later NTP syncs update the estimate before correcting the RTC; syncs started from the app always capture a sample, while background syncs are rate-limited to reduce filesystem writes.
 
+## ISS Passes - `ISS_PASSES_APP`
+
+Lists upcoming visible International Space Station passes from the [Pollux Labs ISS Pass API](https://iss-api.polluxlabs.io/).
+
+- **Files:** `src/ui/places/issPasses/`.
+- **Location:** reuses `WEATHER_LATIT` and `WEATHER_LONGTIT` from `confidential.h`.
+- **Input:** `MENU` refreshes the prediction, while `UP` and `DOWN` select an upcoming pass.
+- **Shown data:** local rise date/time, rise and set compass directions, peak elevation, visible duration, and time remaining.
+- **Cache:** stores the parsed response as a small versioned binary blob at `/conf/iss_passes_v1`. Cached data stays available offline and expired passes are hidden.
+- **Config:** `ISS_PASSES_COUNT`, `ISS_PASSES_DAYS_AHEAD`, `ISS_PASSES_MIN_ELEVATION`, and `ISS_PASSES_VISIBLE_ONLY` control the request. Defaults request five visible passes over 14 days with a 10 degree minimum elevation.
+- **Network:** downloads only when no cache exists or when manually refreshed. HTTPS certificate validation is currently disabled to match the existing RSS reader pattern.
+
 ## Watchy Gotchi - `GOTCHI`
 
 Runs a Tamagotchi P1 ROM through the GPL-licensed TamaLIB emulator port from the historical `upstream/gotchi` branch.
@@ -152,12 +165,6 @@ Emits a periodic BLE iBeacon so Home Assistant can detect presence.
 ## Fork-specific watchfaces
 
 Additional watchfaces: `WATCHFACE_PULSEPRO`, `WATCHFACE_ANALOG_PULSEPRO`, and `WATCHFACE_BINWATCH` (binary watch). Their flags live in `config.h`.
-
-## Planned app ideas
-
-Ideas intentionally saved for later implementation:
-
-- **ISS Passes:** upcoming ISS passes, preferably from a small endpoint or precomputed data.
 
 ## Pending work / ideas
 

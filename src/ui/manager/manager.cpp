@@ -651,6 +651,13 @@ case rssReader:
 #endif
         break;
     }
+    case issPasses:
+    {
+#if ISS_PASSES_APP
+        managerLaunchFunc(issPasses, initIssPasses, loopIssPasses, exitIssPasses);
+#endif
+        break;
+    }
     case baikyApp:
     {
 #if BAIKY
