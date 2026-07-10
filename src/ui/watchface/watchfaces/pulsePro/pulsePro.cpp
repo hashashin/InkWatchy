@@ -8,7 +8,6 @@
 // Fonts
 // -------------------------
 #define PP_TIME_FONT  getFont("inkfield/JackInput40")
-#define PP_SMALL_FONT getFont("dogicapixel4")
 #define PP_DATE_FONT  getFont("JackInput17")
 #define PP_DAY_FONT   getFont("JackInput17")
 #define PP_BAT_FONT   getFont("DisposableDroidBB9")
@@ -51,6 +50,12 @@ static constexpr int16_t PP_MODULE_H = 40;
 // -------------------------
 static int g_lastWeatherCode = -9999;
 static int g_lastMoonDay = -1;
+static int g_lastWifiStatus = -1;
+static int16_t g_lastWifiX = -1;
+static int16_t g_lastBatteryX = -1;
+static int16_t g_lastBatteryW = 0;
+static int16_t g_lastTimeX = -1;
+static int16_t g_lastTimeW = 0;
 static String g_lastTimeDrawn = "";
 
 // -------------------------
@@ -72,7 +77,7 @@ static void clearRect(int16_t x,int16_t y,int16_t w,int16_t h)
 static void clearTimeArea(){clearRect(0,PP_BAND_TIME_Y0,200,PP_BAND_TIME_Y1-PP_BAND_TIME_Y0);}
 static void clearDayArea(){clearRect(0,PP_BAND_DAY_Y0,200,PP_BAND_DAY_Y1-PP_BAND_DAY_Y0);}
 static void clearTopInfoArea(){clearRect(0,PP_BAND_TOP_Y0,200,PP_BAND_TOP_Y1-PP_BAND_TOP_Y0);}
-static void clearTempArea(){clearRect(0,PP_BAND_WEATH_Y0,200,PP_BAND_WEATH_Y1-PP_BAND_WEATH_Y0);}
+static void clearWeatherArea(){clearRect(PP_WEATHER_ICON_X,PP_BAND_WEATH_Y0,200-PP_WEATHER_ICON_X,PP_BAND_WEATH_Y1-PP_BAND_WEATH_Y0);}
 
 // -------------------------
 static String timeStr(tmElements_t t)
@@ -172,16 +177,39 @@ static void drawMoonIcon(int16_t x,int16_t y)
 }
 
 // -------------------------
-static void drawWifiIcon(int16_t x,int16_t y)
+static int16_t getWifiX(int16_t battX)
+{
+    const int16_t wifiW=20;
+    const int16_t gap=6;
+    int16_t wifiX=battX-wifiW-gap;
+    if(wifiX<110)wifiX=110;
+    return wifiX;
+}
+
+static void drawWifiIcon(int16_t x,int16_t y,bool clearPrevious)
 {
     wifiStatusSimple st=wifiStatusWrap();
+
+    if(clearPrevious&&g_lastWifiX>=0&&g_lastWifiX!=x)
+        clearRect(g_lastWifiX,y,22,22);
+
     clearRect(x,y,22,22);
 
     if(st==WifiOff)writeImageN(x,y,getImg("wifiOff"));
     else if(st==WifiOn)writeImageN(x,y,getImg("wifiOn"));
     else writeImageN(x,y,getImg("wifiConnected"));
 
+    g_lastWifiX=x;
+    g_lastWifiStatus=(int)st;
     dUChange=true;
+}
+
+static void updateWifiIconIfNeeded()
+{
+    if(g_lastWifiX<0)return;
+
+    if(g_lastWifiStatus!=(int)wifiStatusWrap())
+        drawWifiIcon(g_lastWifiX,PP_WIFI_Y,false);
 }
 
 // -------------------------
@@ -200,8 +228,23 @@ static int16_t drawBatteryPercent()
     const int16_t rightMargin=6;
     int16_t x=200-(int16_t)w-rightMargin;
 
-    clearRect(x-2,PP_BAND_TOP_Y0,w+6,PP_BAND_TOP_Y1-PP_BAND_TOP_Y0);
+    int16_t clearX=x;
+    int16_t clearRight=x+(int16_t)w;
+    if(g_lastBatteryX>=0){
+        if(g_lastBatteryX<clearX)clearX=g_lastBatteryX;
+        int16_t previousRight=g_lastBatteryX+g_lastBatteryW;
+        if(previousRight>clearRight)clearRight=previousRight;
+    }
+    if(clearX>2)clearX-=2;
+    else clearX=0;
+    if(clearRight<198)clearRight+=2;
+    else clearRight=200;
+
+    clearRect(clearX,PP_BAND_TOP_Y0,clearRight-clearX,PP_BAND_TOP_Y1-PP_BAND_TOP_Y0);
     writeTextReplaceBack(s,x,PP_BATT_Y,SCBlack,SCWhite);
+
+    g_lastBatteryX=x;
+    g_lastBatteryW=(int16_t)w;
     dUChange=true;
 
     return x;
@@ -230,6 +273,23 @@ static int16_t centeredXForTime(const String& t)
     return x;
 }
 
+static void writeTime(const String& t,int16_t x,int16_t w)
+{
+    setTextSize(1);
+    setFont(PP_TIME_FONT);
+    writeTextReplaceBack(t,x,PP_TIME_Y,SCBlack,SCWhite);
+
+    g_lastTimeDrawn=t;
+    g_lastTimeX=x;
+    g_lastTimeW=w;
+}
+
+static void drawTime(const String& t)
+{
+    int16_t w=measureTimeTextW(t);
+    writeTime(t,centeredXForTime(t),w);
+}
+
 // -------------------------
 static void drawTimeBeforeApply()
 {
@@ -238,10 +298,7 @@ static void drawTimeBeforeApply()
     if(g_lastTimeDrawn=="")
     {
         clearTimeArea();
-        setTextSize(1);
-        setFont(PP_TIME_FONT);
-        writeTextReplaceBack(newT,centeredXForTime(newT),PP_TIME_Y,SCBlack,SCWhite);
-        g_lastTimeDrawn=newT;
+        drawTime(newT);
         return;
     }
 
@@ -250,21 +307,29 @@ static void drawTimeBeforeApply()
     if(newT.substring(0,2)!=g_lastTimeDrawn.substring(0,2))
     {
         clearTimeArea();
-        setTextSize(1);
-        setFont(PP_TIME_FONT);
-        writeTextReplaceBack(newT,centeredXForTime(newT),PP_TIME_Y,SCBlack,SCWhite);
-        g_lastTimeDrawn=newT;
+        drawTime(newT);
         return;
     }
 
-    setTextSize(1);
-    setFont(PP_TIME_FONT);
+    int16_t newW=measureTimeTextW(newT);
+    int16_t newX=centeredXForTime(newT);
+    if(g_lastTimeX<0){
+        clearTimeArea();
+    }else{
+        int16_t clearX=(g_lastTimeX<newX)?g_lastTimeX:newX;
+        int16_t clearRight=g_lastTimeX+g_lastTimeW;
+        int16_t newRight=newX+newW;
+        if(newRight>clearRight)clearRight=newRight;
 
-    int16_t x=centeredXForTime(newT);
-    clearRect(x+60,PP_BAND_TIME_Y0,100,PP_BAND_TIME_Y1);
-    writeTextReplaceBack(newT,x,PP_TIME_Y,SCBlack,SCWhite);
+        if(clearX>2)clearX-=2;
+        else clearX=0;
+        if(clearRight<198)clearRight+=2;
+        else clearRight=200;
 
-    g_lastTimeDrawn=newT;
+        clearRect(clearX,PP_BAND_TIME_Y0,clearRight-clearX,PP_BAND_TIME_Y1-PP_BAND_TIME_Y0);
+    }
+
+    writeTime(newT,newX,newW);
 }
 
 // -------------------------
@@ -291,38 +356,42 @@ static void drawMonth()
 
     int16_t battX=drawBatteryPercent();
 
-    const int16_t wifiW=20;
-    const int16_t gap=6;
-    int16_t wifiX=battX-wifiW-gap;
-    if(wifiX<110)wifiX=110;
-
-    drawWifiIcon(wifiX,PP_WIFI_Y);
+    drawWifiIcon(getWifiX(battX),PP_WIFI_Y,false);
 }
 
-static void drawBattery(){(void)drawBatteryPercent();}
+static void drawBattery()
+{
+    int16_t battX=drawBatteryPercent();
+    int16_t wifiX=getWifiX(battX);
+    if(wifiX!=g_lastWifiX)drawWifiIcon(wifiX,PP_WIFI_Y,true);
+}
 
 // -------------------------
 static void drawTimeAfterApply(bool forceDraw)
 {
+    updateWifiIconIfNeeded();
+
 #if WEATHER_INFO
     OM_OneHourWeather w=weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
 
     int today=(int)timeRTCLocal.Day;
     int wcode=(int)w.weather_code;
 
-    bool need=
+    bool needMoon=forceDraw||(g_lastMoonDay!=today);
+    bool needWeather=
         forceDraw||
         (w.fine&&rM.pulsepro.lastTemp!=(int)round(w.temp))||
         (w.fine&&g_lastWeatherCode!=wcode)||
-        (g_lastMoonDay!=today)||
         (!w.fine&&g_lastWeatherCode!=-9999);
 
-    if(!need)return;
+    if(needMoon){
+        drawMoonIcon(PP_MOON_X,PP_MOON_Y);
+        g_lastMoonDay=today;
+    }
 
-    clearTempArea();
+    if(!needWeather)return;
 
-    drawMoonIcon(PP_MOON_X,PP_MOON_Y);
-    g_lastMoonDay=today;
+    clearWeatherArea();
 
     if(w.fine){
         writeImageN(PP_WEATHER_ICON_X,PP_WEATHER_ICON_Y,getImg(getInkfieldWeatherIcon(w.weather_code)));
@@ -357,7 +426,7 @@ static void showTimeFull()
     setTextSize(1);
     setFont(PP_TIME_FONT);
     String t=timeStr(timeRTCLocal);
-    writeTextReplaceBack(t,centeredXForTime(t),PP_TIME_Y,SCBlack,SCWhite);
+    drawTime(t);
 
     drawDay();
     drawMonth();
@@ -370,6 +439,12 @@ static void initWatchface()
     rM.pulsepro.lastTemp=-9999;
     g_lastWeatherCode=-9999;
     g_lastMoonDay=-1;
+    g_lastWifiStatus=-1;
+    g_lastWifiX=-1;
+    g_lastBatteryX=-1;
+    g_lastBatteryW=0;
+    g_lastTimeX=-1;
+    g_lastTimeW=0;
     g_lastTimeDrawn="";
 }
 
