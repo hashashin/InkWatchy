@@ -336,6 +336,13 @@ void switchWorldClock()
 }
 #endif
 
+#if PINOUT_WALLET_APP
+void switchPinoutWallet()
+{
+    generalSwitch(pinoutWallet);
+}
+#endif
+
 #if HA_CONTROL
 void switchHaControl()
 {

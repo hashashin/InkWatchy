@@ -522,6 +522,9 @@
 #define WORLD_CLOCK_HINT "ARR/AB paginas"
 #define WORLD_CLOCK_EMPTY "Sin relojes"
 
+#define MENU_PINOUT_WALLET "Pinouts"
+#define PINOUT_WALLET_HINT "M grupo U/D tarj"
+
 // Claves anadidas tras merge con upstream
 #define VAULT_TITLE "Boveda"
 

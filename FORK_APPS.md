@@ -15,6 +15,7 @@ Secrets such as private endpoints, passwords, and signing keys belong in `src/de
 | Moon / Sun | `MOON_SUN_APP` | Utilities | Compact lunar phase and solar times view |
 | Subnet Pocket Calc | `SUBNET_CALC_APP` | Utilities | Offline IPv4 subnet calculator |
 | World Clock Tiles | `WORLD_CLOCK_APP` | Utilities | Offline city/timezone tiles |
+| Pinout Wallet | `PINOUT_WALLET_APP` | Utilities | Offline black-and-white pinout cards |
 | Apple jokes | `APPLE_JOKE` | Utilities | Eating apples and smashing apples joke apps |
 | Chess | `CHESS` | Games menu | Chess game against a small AI |
 | FS upload | `FS_UPLOAD` | Settings | HTTP server for uploading files to the watch |
@@ -86,6 +87,16 @@ Compact offline tiles for configured cities/timezones.
 - **Shown data:** city label, fixed UTC offset, local time, and compact local date.
 - **Notes:** offsets are fixed minutes from UTC; daylight saving time is intentionally not calculated.
 
+## Pinout Wallet - `PINOUT_WALLET_APP`
+
+Offline black-and-white pinout cards for common connectors and boards.
+
+- **Files:** `src/ui/places/pinoutWallet/`
+- **Cards:** Watchy buttons, ESP32 DevKit 30-pin basics, common AliExpress ESP32-C3/S3 SuperMini clones, I2C 4-pin, UART 4-pin, SPI 6-pin, and JST battery 2-pin.
+- **Input:** `UP`/`DOWN` changes card; `MENU` cycles through groups such as power, I2C, SPI, UART, ADC, and GPIO.
+- **Assets:** draws connector outlines and pin labels with display primitives; no bitmap assets.
+- **Notes:** designed for quick reference, not exhaustive board documentation.
+
 ## Chess - `CHESS`
 
 Chess game against an AI, available from the games menu.
@@ -123,7 +134,6 @@ Ideas intentionally saved for later implementation:
 
 - **RTC Drift Lab:** combined RTC sanity check and drift estimator.
 - **ISS Passes:** upcoming ISS passes, preferably from a small endpoint or precomputed data.
-- **Pinout Wallet:** black-and-white-friendly pinout cards with labels and connector orientation, not color-dependent wiring.
 - **Watchy Tamagotchi:** a small RTC-driven pet with minimal persistent state.
 
 ## Pending work / ideas

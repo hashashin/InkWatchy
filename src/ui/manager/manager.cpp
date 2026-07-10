@@ -630,6 +630,13 @@ case rssReader:
 #endif
         break;
     }
+    case pinoutWallet:
+    {
+#if PINOUT_WALLET_APP
+        managerLaunchFunc(pinoutWallet, initPinoutWallet, loopPinoutWallet, exitPinoutWallet);
+#endif
+        break;
+    }
     case baikyApp:
     {
 #if BAIKY

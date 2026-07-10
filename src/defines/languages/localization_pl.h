@@ -518,3 +518,6 @@
 #define WORLD_CLOCK_TITLE "WORLD CLOCK"
 #define WORLD_CLOCK_HINT "UP/DOWN pages"
 #define WORLD_CLOCK_EMPTY "No clocks"
+
+#define MENU_PINOUT_WALLET "Pinout Wallet"
+#define PINOUT_WALLET_HINT "M group U/D card"

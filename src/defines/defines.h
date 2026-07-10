@@ -243,6 +243,9 @@ extern uint16_t SCWhite;
 #if WORLD_CLOCK_APP
 #include "../ui/places/worldClock/worldClock.h"
 #endif
+#if PINOUT_WALLET_APP
+#include "../ui/places/pinoutWallet/pinoutWallet.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif

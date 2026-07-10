@@ -69,6 +69,7 @@ typedef enum
     moonSun,
     subnetCalc,
     worldClock,
+    pinoutWallet,
     baikyApp,
     notesManager,
     notesApp,
@@ -180,6 +181,9 @@ void switchMoonSun();
 void switchSubnetCalc();
 #if WORLD_CLOCK_APP
 void switchWorldClock();
+#endif
+#if PINOUT_WALLET_APP
+void switchPinoutWallet();
 #endif
 void switchWeatherDateMenu();
 void switchWeatherConditionMenu();
