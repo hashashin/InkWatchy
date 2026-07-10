@@ -138,7 +138,7 @@ Starts an HTTP server on the watch to upload files to the filesystem over WiFi.
 
 - **Files:** `src/ui/places/fsUpload/`
 - **Config:** `FS_UPLOAD_DEFAULT_DIR`, `FS_UPLOAD_PORT`, `FS_UPLOAD_MAX_UPLOAD_BYTES`.
-- **Secrets (`confidential.h`):** `FS_UPLOAD_HTTP_USER`, `FS_UPLOAD_HTTP_PASS`, `FS_UPLOAD_SIGN_KEY`.
+- **Secrets (`confidential.h`):** `FS_UPLOAD_HTTP_USER` and `FS_UPLOAD_HTTP_PASS` provide Basic Auth for every endpoint.
 
 ## Presence beacon - `PRESENCE_BEACON`
 
