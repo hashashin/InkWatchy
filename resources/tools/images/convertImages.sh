@@ -74,21 +74,27 @@ do
 done
 
 # Generate module images
-mkdir out/watchfaceImages
-for f in ../../personal/moduleImages/*
-do
-    if [[ $f == *".gitkeep"* ]]; then
-        continue
-    fi
+check_define "IMAGE_MODULE" "../../../src/defines/config.h"
+image_module_enabled=$?
+if [ $image_module_enabled -eq 1 ]; then
+    echo "The define IMAGE_MODULE is turned on"
+    mkdir -p out/watchfaceImages
+    for f in ../../personal/moduleImages/*
+    do
+        if [[ $f == *".gitkeep"* ]]; then
+            continue
+        fi
 
-    if [ ! -f "$f" ]; then
-        continue
-    fi
+        if [ ! -f "$f" ]; then
+            continue
+        fi
 
-    echo "Processing $f"
-
-    generate_img $f "out/watchfaceImages"
-done
+        echo "Processing $f"
+        generate_img $f "out/watchfaceImages"
+    done
+else
+    echo "The define IMAGE_MODULE is turned off"
+fi
 
 rm -rf ../fs/littlefs/img/ 1>/dev/null 2>/dev/null
 mv out ../fs/littlefs/img/
