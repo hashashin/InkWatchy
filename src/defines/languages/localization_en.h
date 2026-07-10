@@ -452,6 +452,8 @@
 #define TIME_UNIT_HOURS "hours"
 #define TIME_UNIT_DAY "day"
 #define TIME_UNIT_DAYS "days"
+#define TIME_UNIT_DAY_B "DAY"
+#define TIME_UNIT_MONTH "MON"
 #define TIME_UNIT_AND "and"
 
 // ---- HA CONTROL ----

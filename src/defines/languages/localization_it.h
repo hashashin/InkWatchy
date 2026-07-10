@@ -451,6 +451,8 @@
 #define TIME_UNIT_HOURS "ore"
 #define TIME_UNIT_DAY "giorno"
 #define TIME_UNIT_DAYS "giorni"
+#define TIME_UNIT_DAY_B "GIO"
+#define TIME_UNIT_MONTH "MES"
 #define TIME_UNIT_AND "e"
 
 // ---- HA CONTROL ----

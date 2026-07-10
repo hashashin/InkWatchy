@@ -451,6 +451,8 @@
 #define TIME_UNIT_HOURS "Stunden"
 #define TIME_UNIT_DAY "Tag"
 #define TIME_UNIT_DAYS "Tage"
+#define TIME_UNIT_DAY_B "TAG"
+#define TIME_UNIT_MONTH "MON"
 #define TIME_UNIT_AND "und"
 
 // ---- HA CONTROL ----

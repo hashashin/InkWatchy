@@ -454,6 +454,8 @@
 #define TIME_UNIT_DAY "dzien"
 #define TIME_UNIT_DAYS "dni"
 #define TIME_UNIT_DAYS_2_4 "dni" // Same as TIME_UNIT_DAYS in Polish
+#define TIME_UNIT_DAY_B "DZI"
+#define TIME_UNIT_MONTH "MIE"
 #define TIME_UNIT_AND "i"
 
 // ---- HA CONTROL ----

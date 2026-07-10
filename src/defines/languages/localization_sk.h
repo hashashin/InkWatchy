@@ -452,6 +452,8 @@
 #define TIME_UNIT_HOURS "hodiny"
 #define TIME_UNIT_DAY "den"
 #define TIME_UNIT_DAYS "dni"
+#define TIME_UNIT_DAY_B "DEN"
+#define TIME_UNIT_MONTH "MES"
 #define TIME_UNIT_AND "a"
 
 // ---- HA CONTROL ----
