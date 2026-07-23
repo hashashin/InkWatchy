@@ -1,12 +1,12 @@
 #pragma once
 
-#define INKWATCHY_LANG EN // EN, PL, DE and SK | Supported watchfaces: InkField, Slate and Taychron
+#define INKWATCHY_LANG EN // EN, PL, DE, SK, IT or ES | Pip-Boy localizes dates and the steps label
 
 // Watchfaces!
 // https://github.com/Szybet/InkWatchy/wiki/Watchfaces
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
-#define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate, Taychron, Terrain
-#define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
+#define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate, Taychron, Terrain, Pip-Boy
+#define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate, Taychron, Pip-Boy
 // InkField
 #define WATCHFACE_INKFIELD_SZYBET 1
 // Taychron
@@ -33,6 +33,9 @@
 #define WATCHFACE_BINWATCH 0
 
 #define WATCHFACE_ANALOG_PULSEPRO 0
+
+// SQFMI Pip-Boy watchface
+#define WATCHFACE_PIPBOY 0
 
 // GSR watchfaces
 // Because of the ways they are written (even in native watchyGSR) they will provide worse battery life than native inkwatchy watchfaces -

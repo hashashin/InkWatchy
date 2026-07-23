@@ -164,7 +164,9 @@ Emits a periodic BLE iBeacon so Home Assistant can detect presence.
 
 ## Fork-specific watchfaces
 
-Additional watchfaces: `WATCHFACE_PULSEPRO`, `WATCHFACE_ANALOG_PULSEPRO`, and `WATCHFACE_BINWATCH` (binary watch). Their flags live in `config.h`.
+Additional watchfaces: `WATCHFACE_PULSEPRO`, `WATCHFACE_ANALOG_PULSEPRO`, `WATCHFACE_BINWATCH` (binary watch), and `WATCHFACE_PIPBOY` (an InkWatchy-native port of [SQFMI's MIT-licensed Pip-Boy watchface](https://github.com/sqfmi/watchy-pipboy)). Their flags live in `config.h`.
+
+The Pip-Boy port uses InkWatchy's native LittleFS font and image loaders. It reads weather from the existing Open-Meteo cache, respects the global language, 12/24-hour and temperature-unit settings, uses the shared daily step counter, and shows the original Wi-Fi configured/off indicator. On this watchface, press Up for light mode or Down for dark mode; the choice survives deep sleep and does not affect other watchfaces.
 
 ## Build CI
 

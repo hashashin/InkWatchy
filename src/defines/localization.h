@@ -39,6 +39,10 @@
     WF_S_DAY_SUN, WF_S_DAY_MON, WF_S_DAY_TUE, WF_S_DAY_WED, \
     WF_S_DAY_THU, WF_S_DAY_FRI, WF_S_DAY_SAT}
 
+#define LANGUAGE_FULL_DAY_NAMES {                                               \
+    ALARM_DAY_SUNDAY, ALARM_DAY_MONDAY, ALARM_DAY_TUESDAY, ALARM_DAY_WEDNESDAY, \
+    ALARM_DAY_THURSDAY, ALARM_DAY_FRIDAY, ALARM_DAY_SATURDAY}
+
 // Helper function to get localized month name
 inline String getLocalizedMonthName(int month)
 {

@@ -49,6 +49,7 @@
 // Time format
 #define WF_TIME_AM "AM"
 #define WF_TIME_PM "PM"
+#define WF_PIPBOY_STEPS "PASSI"
 
 // Weather/Air Quality Selection items
 #define WEATHER_AQ_MENU_TITLE "Tipo di dati"

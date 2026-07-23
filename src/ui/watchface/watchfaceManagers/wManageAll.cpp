@@ -115,6 +115,14 @@ const watchfaceDef analogPulseProWatchface = {
 };
 #endif
 
+#if WATCHFACE_PIPBOY
+const watchfaceDef pipboyWatchface = {
+    .manager = wfmOne,
+    .name = "SQFMI Pip-Boy",
+    .data = (genPointer)&pipboyDef,
+};
+#endif
+
 #if GSR_WATCHFACES && GSR_STARFIELD
 const watchfaceDef gsrStarfield = {
     .manager = wfmGSR,
@@ -208,6 +216,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_ANALOG_PULSEPRO
     &analogPulseProWatchface,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_PIPBOY
+    &pipboyWatchface,
 #else
     &noWatchFace,
 #endif
