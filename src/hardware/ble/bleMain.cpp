@@ -284,7 +284,12 @@ void hostBleInitClient()
     hostBleDeInitEverything();
     bleClientConnected = false;
     BLEDevice::init(BLE_NAME);
-    BLEDevice::setPower(getBlePower());
+    // BLEDevice::setPower(getBlePower());
+    
+    esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_SCAN, getBlePower());
+    esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, getBlePower());
+    esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_DEFAULT, getBlePower());
+
     pSecurity = new BLESecurity();
     pSecurity->setCapability(ESP_IO_CAP_NONE);
     pSecurity->setAuthenticationMode(true, false, true);
@@ -293,7 +298,7 @@ void hostBleInitClient()
 
     pBLEScan = BLEDevice::getScan();
     pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
-    pBLEScan->setActiveScan(true);
+    pBLEScan->setActiveScan(false);
     pBLEScan->setInterval(320);
     pBLEScan->setWindow(320);
     resetSleepDelay(SLEEP_EVERY_MS);
