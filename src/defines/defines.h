@@ -327,6 +327,9 @@ extern uint16_t SCWhite;
 #if WATCHFACE_PIPBOY
 #include "../ui/watchface/watchfaces/pipboy_sqfmi/pipboy.h"
 #endif
+#if WATCHFACE_CYBER
+#include "../ui/watchface/watchfaces/cyber/cyber.h"
+#endif
 #if GSR_WATCHFACES
 #include "../ui/watchface/watchfaceManagers/wManageGSR/wManageGSR.h"
 #endif
