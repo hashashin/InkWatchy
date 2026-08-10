@@ -4,7 +4,7 @@
 
 #include "defines.h"
 
-#define SCAN_INTERVAL_MS 10000
+#define SCAN_INTERVAL_MS 1000
 
 struct BleTagDevice
 {

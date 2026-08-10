@@ -299,8 +299,8 @@ void hostBleInitClient()
     pBLEScan = BLEDevice::getScan();
     pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
     pBLEScan->setActiveScan(false);
-    pBLEScan->setInterval(320);
-    pBLEScan->setWindow(320);
+    pBLEScan->setInterval(4);
+    pBLEScan->setWindow(4);
     resetSleepDelay(SLEEP_EVERY_MS);
 }
 
