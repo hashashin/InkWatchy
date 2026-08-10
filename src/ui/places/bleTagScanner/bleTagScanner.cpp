@@ -168,7 +168,7 @@ void initBleTagScanner()
     startBleScan();
     lastScanTime = millis();
 
-    resetSleepDelay(30 * 1000);
+    resetSleepDelay(60 * 1000);
 
     init_general_page(BLE_TAG_DEVICE_COUNT);
     general_page_set_title("BLE Tag Scanning...");
