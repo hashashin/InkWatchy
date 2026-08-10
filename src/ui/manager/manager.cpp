@@ -594,6 +594,13 @@ void loopManager()
 #endif
         break;
     }
+    case bleTagScanner:
+    {
+#if BLE_TAG_SCANNER
+        managerLaunchFunc(bleTagScanner, initBleTagScanner, loopBleTagScanner, exitBleTagScanner);
+#endif
+        break;
+    }
     case fontPreview:
     {
 #if FONT_MENU_ENABLED

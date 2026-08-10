@@ -4,11 +4,17 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[14];
+    entryMenu buttons[15];
 #if CALENDAR
     {
         count = count + 1;
         buttons[count] = {MENU_CALENDAR, "calendar", switchCalendarDateMenu};
+    }
+#endif
+#if BLE_TAG_SCANNER
+    {
+        count = count + 1;
+        buttons[count] = {"BLE Tag Scanner", "blePeripheral/BLEPIcon", switchBleTagScanner};
     }
 #endif
 #if BOOK

@@ -374,6 +374,13 @@ CONFIG_BT_BLE_ENABLED=y
 #define PERIPHERAL_TOWERFALL 0
 #define PERIPHERAL_BROFORCE 0
 
+// BLE Tag Scanner app, needs BLE_HOST_ENABLED
+#define BLE_TAG_SCANNER 0
+#define BLE_TAG_SCANNER_DEVICES(X) \
+    X("AA:BB:CC:DD:EE:01", "Tag 1") \
+    X("AA:BB:CC:DD:EE:02", "Tag 2")
+#define BLE_TAG_DEVICE_COUNT 2
+
 // Advanced
 #define BUTTON_TASK_DELAY 30 // In ms, lower means faster button detection but more cpu usage
 #define TIME_FOR_WATCHFACE_TO_SHOW_MS 2000

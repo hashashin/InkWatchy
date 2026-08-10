@@ -42,6 +42,7 @@ void loopWatchdogTask(void *parameter)
     delayTask(WATCHDOG_SMALL_DELAY);
     while (true)
     {
+        delayTask(WATCHDOG_SMALL_DELAY);
         // debugLog("Watchdog cycle");
         if (allButtonCheck() == true)
         {
@@ -63,7 +64,6 @@ void loopWatchdogTask(void *parameter)
             }
         }
 #endif
-        delayTask(WATCHDOG_SMALL_DELAY);
     }
 }
 

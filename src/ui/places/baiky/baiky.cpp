@@ -12,8 +12,10 @@
 uint64_t mapWriteMillis = 0;
 #endif
 
+#define MAP_MEMORY_SIZE 5000
+
 uint8_t *mapMemory = NULL;
-uint16_t mapMemoryIndex = 0;
+volatile size_t mapMemoryIndex = 0;
 
 class mapCallBack : public BLECharacteristicCallbacks
 {
@@ -29,18 +31,35 @@ class mapCallBack : public BLECharacteristicCallbacks
         // return;
         // debugLog("Map called");
         uint8_t *data = pCharacteristic->getData();
-        uint16_t len = pCharacteristic->getLength();
+        size_t len = pCharacteristic->getLength();
+
+        // Make sure...
+        if (mapMemory == NULL || data == NULL || len == 0 ||
+            mapMemoryIndex > MAP_MEMORY_SIZE ||
+            len > MAP_MEMORY_SIZE - mapMemoryIndex)
+        {
+            debugLog("Memory callback is wrong!");
+            mapMemoryIndex = 0;
+            return;
+        }
+
         memcpy(&mapMemory[mapMemoryIndex], data, len);
         mapMemoryIndex += len;
     }
 };
 
-bool isDone = false;
+volatile bool isDone = false;
 BLECharacteristic *pCharacteristicDone = NULL;
 class doneCallBack : public BLECharacteristicCallbacks
 {
     void onWrite(BLECharacteristic *pCharacteristic)
     {
+        if (pCharacteristic->getLength() == 0)
+        {
+            debugLog("doneCallBack bad length");
+            return;
+        }
+
 // debugLog("Is done called");
 #if DEBUG
         debugLog("Done called, map write took: " + String(float(millisBetter() - mapWriteMillis) / 1000.0));
@@ -59,6 +78,12 @@ class speedCallBack : public BLECharacteristicCallbacks
 {
     void onWrite(BLECharacteristic *pCharacteristic)
     {
+        if (pCharacteristic->getLength() < 2)
+        {
+            debugLog("speedCallBack bad length");
+            return;
+        }
+
         uint8_t *data = pCharacteristic->getData();
         float currentSpeed = ((data[0] << 8) | data[1]) / 10.0f;
         if (currentSpeed < 0.8)
@@ -138,8 +163,8 @@ void initBaiky()
     initBle();
     bleService = pServer->createService(GPS_SERVICE_UUID);
 
-    mapMemory = (uint8_t *)malloc(5000 * sizeof(uint8_t));
-    memset(mapMemory, 0, 5000 * sizeof(uint8_t));
+    mapMemory = (uint8_t *)malloc(MAP_MEMORY_SIZE);
+    memset(mapMemory, 0, MAP_MEMORY_SIZE);
 
     {
         BLECharacteristic *pCharacteristic = bleService->createCharacteristic(
