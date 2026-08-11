@@ -346,6 +346,9 @@ extern uint16_t SCWhite;
 #if BLE_PERIPHERAL
 #include "../ui/places/blePeripheral/blePeripheral.h"
 #endif
+#if BLE_TAG_SCANNER
+#include "../ui/places/bleTagScanner/bleTagScanner.h"
+#endif
 #include "../ui/places/errorScreen/errorScreen.h"
 #if SET_CLOCK_GUI
 #include "../ui/places/setClockGuis/setTimeWatch.h"

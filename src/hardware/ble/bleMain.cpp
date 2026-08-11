@@ -284,6 +284,12 @@ void hostBleInitClient()
     hostBleDeInitEverything();
     bleClientConnected = false;
     BLEDevice::init(BLE_NAME);
+    // BLEDevice::setPower(getBlePower());
+
+    esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_SCAN, getBlePower());
+    esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, getBlePower());
+    esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_DEFAULT, getBlePower());
+
     pSecurity = new BLESecurity();
     pSecurity->setCapability(ESP_IO_CAP_NONE);
     pSecurity->setAuthenticationMode(true, false, true);
@@ -292,9 +298,9 @@ void hostBleInitClient()
 
     pBLEScan = BLEDevice::getScan();
     pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
-    pBLEScan->setActiveScan(true);
-    pBLEScan->setInterval(100);
-    pBLEScan->setWindow(99);
+    pBLEScan->setActiveScan(false);
+    pBLEScan->setInterval(4);
+    pBLEScan->setWindow(4);
     resetSleepDelay(SLEEP_EVERY_MS);
 }
 
@@ -302,7 +308,16 @@ void hostBleStartScan(uint32_t durationSeconds)
 {
     debugLog("Start ble scan called");
     pScannedDevices = pBLEScan->start(durationSeconds, false);
-    debugLog("Start ble scan ended");
+}
+
+void hostBleStartScanAsync(uint32_t durationSeconds, void (*scanCompleteCB)(BLEScanResults))
+{
+    debugLog("Start ble scan async called");
+#if defined(SOC_BLE_50_SUPPORTED)
+    pBLEScan->startExtScan(durationSeconds * 100, 0); // Because of units of 10ms
+#else
+    pBLEScan->start(durationSeconds, scanCompleteCB, false);
+#endif
 }
 
 int hostBleGetScannedDevicesCount()

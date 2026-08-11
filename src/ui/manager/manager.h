@@ -79,6 +79,7 @@ typedef enum
     bluetoothHostScanner,
     blePeripheral,
     blePeripheralMenu,
+    bleTagScanner,
     fontPreview,
     fontPreviewMenu,
     watchfaceSelector,
@@ -276,6 +277,9 @@ void switchBluetoothHostScanner();
 #if BLE_PERIPHERAL
 void switchBlePeripheral();
 void switchBlePeripheralMenu();
+#endif
+#if BLE_TAG_SCANNER
+void switchBleTagScanner();
 #endif
 #if FONT_MENU_ENABLED
 void switchFontsPreview();

@@ -437,6 +437,13 @@ void switchBlePeripheralMenu()
 }
 #endif
 
+#if BLE_TAG_SCANNER
+void switchBleTagScanner()
+{
+    generalSwitch(bleTagScanner);
+}
+#endif
+
 #if FONT_MENU_ENABLED
 void switchFontsPreview()
 {

@@ -11,6 +11,12 @@ void initMainMenu()
         buttons[count] = {MENU_CALENDAR, "calendar", switchCalendarDateMenu};
     }
 #endif
+#if BLE_TAG_SCANNER
+    {
+        count = count + 1;
+        buttons[count] = {"BLE Tag Scanner", "blePeripheral/BLEPIcon", switchBleTagScanner};
+    }
+#endif
 #if BOOK
     debugLog("Getting book here");
     String book = getCurrentBook();

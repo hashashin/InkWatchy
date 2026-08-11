@@ -21,9 +21,11 @@ void cleanupBleDevice(); // For use with other ble implementation that don't use
 
 #if BLE_HOST_ENABLED
 // Client (Host) functions (Inkwatchy chooses to connect to X)
+extern BLEScan *pBLEScan;
 void hostBleDeInitEverything();
 void hostBleInitClient();
 void hostBleStartScan(uint32_t durationSeconds);
+void hostBleStartScanAsync(uint32_t durationSeconds, void (*scanCompleteCB)(BLEScanResults));
 int hostBleGetScannedDevicesCount();
 String hostBleGetScannedDeviceName(int index);
 bool hostBleConnectToDevice(int index);
