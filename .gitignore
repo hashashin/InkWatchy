@@ -1,6 +1,7 @@
 .pio
 .vscode/*
 !.vscode/tasks.json
+.devcontainer/gpg-bridge-bin/
 src/defines/images.h
 src/defines/fonts.h
 src/defines/book.h
