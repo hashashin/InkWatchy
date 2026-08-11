@@ -47,8 +47,11 @@ for dir in img/condition/*/; do
                     if [[ $f == *".txt"* ]]; then
                         continue
                     fi
+                    if [ ! -f "$f" ]; then
+                        continue
+                    fi
                     echo "Processing $f"
-                    generate_img $f out/$last_dir
+                    generate_img "$f" "out/$last_dir"
                 done
             else
                 echo "The define ${define} in ${dir} is turned off"
