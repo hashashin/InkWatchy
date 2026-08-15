@@ -7669,9 +7669,9 @@ class GSR7SEG : public WatchyGSR {
           int16_t  x1, y1;
           uint16_t w, h;
           display.setFont(&Seven_Segment10pt7b);
-          String dayOfWeek = dayStr(WatchTime.Local.Wday + 1);
+          String dayOfWeek = dayStr(WatchTime.Local.Wday);
           display.getTextBounds(dayOfWeek, 5, 85, &x1, &y1, &w, &h);
-          if(WatchTime.Local.Wday == 3) w = w - 5;
+          if(WatchTime.Local.Wday == 4) w = w - 5;
           display.setCursor(85 - w, 85);
           display.print(dayOfWeek);
 
@@ -7817,7 +7817,7 @@ class GSRStarryHorizon : public WatchyGSR {
           String T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
           Starry_drawCenteredString(T, 100, 115, false);
           String monthStr = monthShortStr(WatchTime.Local.Month + 1);
-          String dayOfWeek = dayShortStr(WatchTime.Local.Wday + 1);
+          String dayOfWeek = dayShortStr(WatchTime.Local.Wday);
           display.setFont(&FreeSansBold9pt7b);
           char* dateStr;
           asprintf(&dateStr, "%s %s %d", dayOfWeek.c_str(), monthStr.c_str(), WatchTime.Local.Day);
