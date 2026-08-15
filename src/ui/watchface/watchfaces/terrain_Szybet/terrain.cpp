@@ -186,7 +186,7 @@ static void drawBattery()
             writeImageN(LOW_FUEL_X, LOW_FUEL_Y, getImg("terrain/lowFuel"));
         }
     }
-    dis->fillRect(167, 74, 21, 6, SCBlack); // Clear
+    dis->fillRect(167, 74, 21, 6, SCWhite); // Clear
     if (rM.bat.percentage > 90)
     {
         writeImageN(167, 74, getImg("terrain/fullFuel"));
