@@ -4,6 +4,7 @@
 
 #include "defines.h"
 
+// For some reason this helps, but maybe also be the reason in crowded spaced it can't detects stuff
 #define SCAN_INTERVAL_MS 1000
 
 struct BleTagDevice
@@ -121,14 +122,9 @@ class BleTagExtScannerCallbacks : public BLEExtAdvertisingCallbacks
 
 static BleTagExtScannerCallbacks extScannerCallbacks;
 
-static void onScanComplete(BLEScanResults results)
-{
-    debugLog("Tag scan finished");
-}
-
 void startBleScan()
 {
-    hostBleStartScanAsync(SCAN_INTERVAL_MS / 1000, onScanComplete);
+    hostBleStartScanAsync(0, NULL);
 }
 
 void updateGeneralPage()
@@ -153,27 +149,67 @@ void updateGeneralPage()
         genpage_change(line.c_str(), scannedDevicesLines[i]);
     }
     general_page_set_main();
+    debugLog("updateGeneralPage end");
 }
 
 void initBleTagScanner()
 {
     debugLog("Init BLE tag scanner called");
+    scannedDeviceCount = 0;
+    pageNeedsUpdate = false;
 
     hostBleInitClient();
     pBLEScan->setAdvertisedDeviceCallbacks(NULL);
     pBLEScan->setExtendedScanCallback(&extScannerCallbacks);
-    pBLEScan->setExtScanParams();
+
+    // I assume whitelist + duplicate will fix problems in crowded places
+    esp_ble_gap_clear_whitelist();
+    for (int i = 0; i < BLE_TAG_DEVICE_COUNT; i++)
+    {
+        esp_bd_addr_t tag_addr;
+        sscanf(allowedDevices[i].macAddress, "%02x:%02x:%02x:%02x:%02x:%02x",
+               &tag_addr[0], &tag_addr[1], &tag_addr[2],
+               &tag_addr[3], &tag_addr[4], &tag_addr[5]);
+        esp_err_t ret = esp_ble_gap_update_whitelist(true, tag_addr, BLE_WL_ADDR_TYPE_RANDOM);
+        if (ret == ESP_OK)
+        {
+            debugLog("Added to whitelist: " + String(allowedDevices[i].macAddress));
+        }
+        else
+        {
+            debugLog("Failed to add to whitelist: " + String(allowedDevices[i].macAddress) + " err:" + String(ret));
+        }
+    }
+
+    esp_ble_ext_scan_params_t custom_params = {
+        .own_addr_type = BLE_ADDR_TYPE_PUBLIC,
+        .filter_policy = BLE_SCAN_FILTER_ALLOW_ONLY_WLST,
+        .scan_duplicate = BLE_SCAN_DUPLICATE_ENABLE,
+        .cfg_mask = ESP_BLE_GAP_EXT_SCAN_CFG_UNCODE_MASK | ESP_BLE_GAP_EXT_SCAN_CFG_CODE_MASK,
+        .uncoded_cfg = {BLE_SCAN_TYPE_PASSIVE, 4, 4},
+        .coded_cfg = {BLE_SCAN_TYPE_PASSIVE, 4, 4},
+    };
+    esp_err_t rc = pBLEScan->setExtScanParams(&custom_params);
+    if (rc != ESP_OK)
+    {
+        debugLog("Failed to set custom ext scan params: " + String(rc));
+    }
+    else
+    {
+        debugLog("Custom ext scan params set");
+    }
     delay(100);
 
     startBleScan();
     lastScanTime = millis();
 
-    resetSleepDelay(60 * 1000);
+    resetSleepDelay(120000);
 
     init_general_page(BLE_TAG_DEVICE_COUNT);
     general_page_set_title("BLE Tag Scanning...");
 
-    for(int i = 0; i < BLE_TAG_DEVICE_COUNT; i++) {
+    for (int i = 0; i < BLE_TAG_DEVICE_COUNT; i++)
+    {
         scannedDevicesLines[i] = genpage_add("");
     }
 
@@ -183,6 +219,7 @@ void initBleTagScanner()
 void exitBleTagScanner()
 {
     debugLog("Exit BLE tag scanner called");
+    pBLEScan->stopExtScan();
     hostBleDeInitEverything();
 }
 
