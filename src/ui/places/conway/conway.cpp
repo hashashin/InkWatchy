@@ -92,6 +92,7 @@ inline uint8_t getNumberOfNeighbors(uint8_t x, uint8_t y, uint8_t *conwayGrid, u
 
 void computeNewGeneration(uint8_t *currentGrid, uint8_t *newGrid, uint8_t conwayHeight, uint8_t conwayWidth)
 {
+    memset(newGrid, 0, conwayWidth * conwayHeight / 8); // For border pixels to be cleared from heap garbage, could be called in init but here it fixes conway everywhere
     for (uint8_t y = 1; y < (conwayHeight - 1); y++)
     {
         for (uint8_t x = 1; x < (conwayWidth - 1); x++)
@@ -118,6 +119,8 @@ void computeNewGeneration(uint8_t *currentGrid, uint8_t *newGrid, uint8_t conway
 // disUp(true) is needed here i quess
 void initConway()
 {
+    free(conwayAppGrid);
+    free(conwayAppNewGrid);
     conwayAppGrid = (uint8_t *)malloc((CONWAY_APP_WIDTH / 8) * CONWAY_APP_HEIGHT);
     conwayAppNewGrid = (uint8_t *)malloc((CONWAY_APP_WIDTH / 8) * CONWAY_APP_HEIGHT);
 
