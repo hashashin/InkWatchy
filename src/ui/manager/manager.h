@@ -47,6 +47,7 @@ typedef enum
     pong,
     paint,
     maze,
+    avoid,
     tetris,
     jumperGame,
     snake,
@@ -181,6 +182,9 @@ void switchPaint();
 #endif
 #if MAZE
 void switchMaze();
+#endif
+#if AVOID
+void switchAvoid();
 #endif
 #if TETRIS
 void switchTetris();

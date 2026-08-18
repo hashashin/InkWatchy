@@ -197,7 +197,7 @@ void initSettingsMenu()
 void initGamesMenu()
 {
     int count = -1;
-    entryMenu buttons[11];
+    entryMenu buttons[12];
 #if TETRIS
     {
         debugLog("Adding Tetris");
@@ -217,6 +217,13 @@ void initGamesMenu()
         debugLog("Adding maze");
         count = count + 1;
         buttons[count] = {"Maze", "maze/mazeIcon", switchMaze};
+    }
+#endif
+#if AVOID
+    {
+        debugLog("Adding avoid");
+        count = count + 1;
+        buttons[count] = {"Avoid", "avoid/avoidIcon", switchAvoid};
     }
 #endif
 #if JUMPER

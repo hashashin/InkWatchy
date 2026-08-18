@@ -235,6 +235,13 @@ void switchMaze()
 }
 #endif
 
+#if AVOID
+void switchAvoid()
+{
+    generalSwitch(avoid);
+}
+#endif
+
 #if TETRIS
 void switchTetris()
 {

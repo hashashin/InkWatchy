@@ -477,6 +477,13 @@ void loopManager()
 #endif
         break;
     }
+    case avoid:
+    {
+#if AVOID
+        managerLaunchFunc(avoid, initAvoid, loopAvoid, exitAvoid);
+#endif
+        break;
+    }
     case tetris:
     {
 #if TETRIS
