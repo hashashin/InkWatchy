@@ -331,6 +331,9 @@ The default is this:
 // Avoid game, requires ACC
 #define AVOID 1
 
+// 2048 game, requires ACC
+#define GAME_2048 1
+
 // Dice app
 #define DICE 1
 #define DICE_ANIMATION_TIME_MS 2000

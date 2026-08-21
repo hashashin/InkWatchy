@@ -484,6 +484,13 @@ void loopManager()
 #endif
         break;
     }
+    case game2048:
+    {
+#if GAME_2048
+        managerLaunchFunc(game2048, initGame2048, loopGame2048, exitGame2048);
+#endif
+        break;
+    }
     case tetris:
     {
 #if TETRIS

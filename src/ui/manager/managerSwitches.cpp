@@ -242,6 +242,13 @@ void switchAvoid()
 }
 #endif
 
+#if GAME_2048
+void switchGame2048()
+{
+    generalSwitch(game2048);
+}
+#endif
+
 #if TETRIS
 void switchTetris()
 {
