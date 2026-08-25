@@ -49,6 +49,8 @@ typedef enum
     gotchi,
     paint,
     maze,
+    avoid,
+    game2048,
     tetris,
     jumperGame,
     snake,
@@ -238,6 +240,12 @@ void switchPaint();
 #endif
 #if MAZE
 void switchMaze();
+#endif
+#if AVOID
+void switchAvoid();
+#endif
+#if GAME_2048
+void switchGame2048();
 #endif
 #if TETRIS
 void switchTetris();

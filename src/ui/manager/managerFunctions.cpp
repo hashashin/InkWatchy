@@ -307,6 +307,20 @@ void initGamesMenu()
         buttons[count] = {"Maze", "maze/mazeIcon", switchMaze};
     }
 #endif
+#if AVOID
+    {
+        debugLog("Adding avoid");
+        count = count + 1;
+        buttons[count] = {"Avoid", "avoid/avoidIcon", switchAvoid};
+    }
+#endif
+#if GAME_2048
+    {
+        debugLog("Adding 2048");
+        count = count + 1;
+        buttons[count] = {"2048", "game2048/2048Icon", switchGame2048};
+    }
+#endif
 #if JUMPER
     {
         debugLog("Adding jumper");

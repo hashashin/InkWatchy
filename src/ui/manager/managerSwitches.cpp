@@ -247,6 +247,20 @@ void switchMaze()
 }
 #endif
 
+#if AVOID
+void switchAvoid()
+{
+    generalSwitch(avoid);
+}
+#endif
+
+#if GAME_2048
+void switchGame2048()
+{
+    generalSwitch(game2048);
+}
+#endif
+
 #if TETRIS
 void switchTetris()
 {

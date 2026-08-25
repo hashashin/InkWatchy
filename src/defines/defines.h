@@ -193,6 +193,12 @@ extern uint16_t SCWhite;
 #if MAZE
 #include "../ui/places/maze/maze.h"
 #endif
+#if AVOID
+#include "../ui/places/avoid/avoid.h"
+#endif
+#if GAME_2048
+#include "../ui/places/game2048/game2048.h"
+#endif
 #if TETRIS
 #include "../ui/places/tetris/tetrisPlace.h"
 #endif

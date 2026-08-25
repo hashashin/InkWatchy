@@ -161,6 +161,7 @@ bufSize fsGetBlob(String conf, String dir)
         debugLog("Data was not compressed, just copy original data");
         memcpy(decompressed_buffer, compressed_data, original_size);
         output_written_size = original_size;
+        free(file_content_buffer);
     }
     else
     {
@@ -409,6 +410,7 @@ bool fsSetBlob(String conf, uint8_t* value, int size, String dir)
     }
     if(file.write(value, size) == false) {
         debugLog("Failed to write blob to file " + conf);
+        file.close();
         return false;
     }
     file.close();
