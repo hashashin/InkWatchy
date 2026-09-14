@@ -506,6 +506,13 @@ void loopManager()
 #endif
         break;
     }
+    case eightball:
+    {
+#if EIGHTBALL
+        managerLaunchFunc(eightball, initEightball, loopEightball, exitEightball);
+#endif
+        break;
+    }
     case tetris:
     {
 #if TETRIS

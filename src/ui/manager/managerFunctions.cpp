@@ -89,7 +89,7 @@ void initMainMenu()
         buttons[count] = {MENU_WIFI_TOOL ": " + wifiToolStatus(), "wifiTool", wifiToolFunc};
     }
 #endif
-#if PONG || TETRIS || JUMPER || SNAKE || DICE || PAINT
+#if PONG || TETRIS || JUMPER || SNAKE || DICE || PAINT || GAME_2048 || EIGHTBALL
     {
         debugLog("Adding games");
         count = count + 1;
@@ -285,7 +285,7 @@ void initUtilitiesMenu()
 void initGamesMenu()
 {
     int count = -1;
-    entryMenu buttons[13];
+    entryMenu buttons[14];
 #if TETRIS
     {
         debugLog("Adding Tetris");
@@ -319,6 +319,13 @@ void initGamesMenu()
         debugLog("Adding 2048");
         count = count + 1;
         buttons[count] = {"2048", "game2048/2048Icon", switchGame2048};
+    }
+#endif
+#if EIGHTBALL
+    {
+        debugLog("Adding 8ball");
+        count = count + 1;
+        buttons[count] = {"8Ball", "game8Ball/game8BallIcon", switchEightball};
     }
 #endif
 #if JUMPER
