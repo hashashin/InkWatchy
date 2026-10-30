@@ -179,6 +179,8 @@
 #define MENU_ALARMS "Alarmas"
 #define MENU_WEATHER "Clima"
 #define MENU_SETTINGS "Ajustes"
+#define MENU_INVERT_SCREEN "Invertir pantalla"
+#define MENU_INVERT_WATCHFACE "Invertir esfera"
 #define MENU_UTILITIES "Utilidades"
 #define MENU_HEART_MONITOR "Monitor cardiaco"
 #define MENU_HEALTH "Salud"

@@ -30,7 +30,7 @@
 #include "languages/localization_es.h"
 #else // Default fallback to English
 #include "languages/localization_en.h"
-#warning "Unsupported language! Defaulting to English. Please define INKWATCHY_LANG as EN, PL, DE, or SK in config.h"
+#warning "Unsupported language! Defaulting to English. Please define INKWATCHY_LANG as EN, PL, DE, SK, IT, or ES in config.h"
 #endif
 
 // Helper macro for building day name arrays at compile time

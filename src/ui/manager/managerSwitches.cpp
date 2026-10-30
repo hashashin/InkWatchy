@@ -28,6 +28,11 @@ void switchUtilitiesMenu()
     generalSwitch(utilitiesMenu);
 }
 
+void switchUiMenu()
+{
+    generalSwitch(uiMenu);
+}
+
 void switchGamesMenu()
 {
     generalSwitch(gamesMenu);

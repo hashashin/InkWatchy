@@ -196,6 +196,10 @@ void initSettingsMenu()
         buttons[count] = {MENU_PRESENCE_BEACON, "presence/beacon", switchPresenceBeaconCfg};
     }
 #endif
+    {
+        count = count + 1;
+        buttons[count] = {"UI", "ui", switchUiMenu};
+    }
 
     count = count + 1;
     initMenu(buttons, count, MENU_SETTINGS, 1);

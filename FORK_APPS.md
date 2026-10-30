@@ -168,6 +168,14 @@ Additional watchfaces: `WATCHFACE_PULSEPRO`, `WATCHFACE_ANALOG_PULSEPRO`, `WATCH
 
 The Pip-Boy port uses InkWatchy's native LittleFS font and image loaders. It reads weather from the existing Open-Meteo cache, respects the global language, 12/24-hour and temperature-unit settings, uses the shared daily step counter, and shows the original Wi-Fi configured/off indicator. On this watchface, press Up for light mode or Down for dark mode; the choice survives deep sleep and does not affect other watchfaces.
 
+## Upstream integration (2026-10-30)
+
+Integrated upstream through `e87e851d`, including native Starfield (`WATCHFACE_STARFIELD`), Retrojump (`WATCHFACE_RETROJUMP`), Cyber font updates, and Settings > UI controls for independently inverting menus and watchfaces. Existing fork apps, translations, and watchface indices are preserved; Retrojump is appended to the selector list.
+
+Existing local configurations remain usable: `INITIAL_SCREEN_INVERT` is accepted when `SCREEN_INVERT_COLORS` is absent, and `GSR_WATCHFACES=1` with `GSR_STARFIELD=1` enables native Starfield when `WATCHFACE_STARFIELD` is absent. Native Starfield calculates its timezone from the system settings instead of using `GSR_STARFIELD_TIMEZONE_THING`. New configurations should use `SCREEN_INVERT_COLORS` and `WATCHFACE_STARFIELD`.
+
+The fork keeps its existing platform 55.03.32 and custom ESP-IDF 5.5.1: upstream's platform 55.03.312 (Arduino 3.3.12 / ESP-IDF 5.5.5) failed to link BLE and exceeded Watchy_2 IRAM in the local profile. Regenerate filesystem images and fonts before uploading resources, so the new UI icon and renamed Cyber fonts are available. The new watchfaces default to disabled; enabling them requires checking the target's remaining flash and IRAM capacity.
+
 ## Build CI
 
 GitHub Actions builds the `Watchy_2` environment on every push and pull request using `.github/workflows/firmware.yml`.

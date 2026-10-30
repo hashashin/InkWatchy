@@ -3,10 +3,10 @@
  */
 
 #include "cyber.h"
-#include "cyberHelpers.h"
-#include <MoonPhase.h>
 
 #if WATCHFACE_CYBER
+#include "cyberHelpers.h"
+#include <MoonPhase.h>
 
 #define TEMP_CORD 36, 126
 #define WEATHER_ICON_CORD 3, 94
@@ -250,7 +250,7 @@ void cyberDrawWeather()
     // write the data
     setTextSize(1);
     dis->setTextColor(SCBlack);
-    setFont(getFont("cyber/RajdhaniL14"));
+    setFont(getFont("cyber/RajdhaniNumericL14"));
     int degPos = cyberRightTextXOffset(temp);
     dis->setCursor(41, 113);
     dis->print(temp);
@@ -332,5 +332,4 @@ void cyberDrawMoon()
     debugLog(String(mp.phaseName));
     writeImageN(MOON_IMG_CORD, getImg("cyber/" + cyberRemoveSpaces(String(mp.phaseName))));
 }
-
 #endif
